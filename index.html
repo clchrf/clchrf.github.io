@@ -103,7 +103,8 @@
   #intro.out{opacity:0;transform:scale(1.03);pointer-events:none}
   .intro-scope{position:relative;width:min(640px,86vw);aspect-ratio:600/240}
   .intro-svg{width:100%;height:100%;display:block;overflow:visible;transition:opacity .4s ease}
-  .intro-scope.dim .intro-svg{opacity:.18}
+  .intro-grid{transition:opacity .4s ease}
+  .intro-scope.dim .intro-grid{opacity:.22}
   .intro-grid line{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
   .intro-grid line.axis{stroke:var(--ink-3)}
   #introTrace{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;vector-effect:non-scaling-stroke;
@@ -113,9 +114,9 @@
   .intro-tl{top:-28px;left:0} .intro-br{bottom:-28px;right:0}
   .intro-read{transition:opacity .4s ease}
   .intro-scope.dim .intro-read{opacity:0}
-  .intro-sig{position:absolute;left:0;top:-8%;width:100%;height:116%;overflow:visible;pointer-events:none}
-  #sigPath,#sigDot{fill:none;stroke:var(--ink);stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round}
-  #sigPen{fill:var(--link);opacity:0;filter:drop-shadow(0 0 6px var(--link))}
+  #sigPath,#sigDot{fill:none;stroke:var(--ink);stroke-width:5.5px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:0}
+  #introTrace{stroke-linecap:round}
+  #introDot{filter:drop-shadow(0 0 6px var(--link))}
   .intro-name{position:absolute;left:0;right:0;bottom:-46px;text-align:center;
     opacity:0;transform:translateY(8px);transition:opacity .3s ease, transform .3s ease;pointer-events:none}
   .intro-name.on{opacity:1;transform:none}
@@ -377,15 +378,14 @@
         <line x1="0" y1="0" x2="600" y2="0"/><line x1="0" y1="240" x2="600" y2="240"/><line x1="0" y1="0" x2="0" y2="240"/><line x1="600" y1="0" x2="600" y2="240"/>
       </g>
       <path id="introTrace" d="M0 120"/>
+      <g transform="translate(-30 -40) scale(1.15)">
+      <path id="sigPath" d="M178 84 C166 60, 128 58, 108 80 C86 104, 88 150, 118 160 C140 167, 162 155, 176 138 C182 130, 186 122, 189 116 C188 134, 184 152, 192 158 C198 163, 208 156, 214 146 C218 136, 220 124, 222 116 C222 132, 220 150, 218 160 C224 136, 238 114, 252 116 C264 118, 260 146, 260 154 C260 164, 272 162, 280 150 C286 128, 298 112, 316 118 C304 110, 286 124, 290 146 C294 166, 316 160, 324 140 C330 118, 334 82, 340 54 C342 44, 336 44, 334 56 C330 90, 326 130, 328 152 C330 164, 342 162, 350 150 C354 140, 356 126, 358 116 C358 136, 356 156, 370 158 C382 160, 390 140, 392 116 C392 152, 388 192, 372 216 C360 234, 334 232, 338 214 C344 196, 408 190, 488 176"/>
+      <path id="sigDot" d="M189 98 l3 -6"/>
+      </g>
       <circle id="introDot" cx="0" cy="120" r="4"/>
     </svg>
     <div class="intro-read intro-tl">CH1 · 2.00 V/div</div>
     <div class="intro-read intro-br">1.00 ms/div · TRIG ↑</div>
-    <svg class="intro-sig" viewBox="70 30 440 220" aria-hidden="true">
-      <path id="sigPath" d="M178 84 C166 60, 128 58, 108 80 C86 104, 88 150, 118 160 C140 167, 162 155, 176 138 C182 130, 186 122, 189 116 C188 134, 184 152, 192 158 C198 163, 208 156, 214 146 C218 136, 220 124, 222 116 C222 132, 220 150, 218 160 C224 136, 238 114, 252 116 C264 118, 260 146, 260 154 C260 164, 272 162, 280 150 C286 128, 298 112, 316 118 C304 110, 286 124, 290 146 C294 166, 316 160, 324 140 C330 118, 334 82, 340 54 C342 44, 336 44, 334 56 C330 90, 326 130, 328 152 C330 164, 342 162, 350 150 C354 140, 356 126, 358 116 C358 136, 356 156, 370 158 C382 160, 390 140, 392 116 C392 152, 388 192, 372 216 C360 234, 334 232, 338 214 C344 196, 408 190, 488 176"/>
-      <path id="sigDot" d="M189 98 l3 -6"/>
-      <circle id="sigPen" cx="-20" cy="-20" r="4.5"/>
-    </svg>
     <div class="intro-name" id="introName"><small data-en="Hsin-Yen Lee · NTNU Electrical Engineering">李欣妍・師大電機</small></div>
   </div>
   <button type="button" id="introSkip" data-en="Skip →">跳過 →</button>
@@ -1545,37 +1545,41 @@
   function easeOut(x){ return x <= 0 ? 0 : x >= 1 ? 1 : 1 - Math.pow(1 - x, 3); }
   function playIntro(){
     if (INTRO.running) return;
-    var ov = $('intro'), path = $('introTrace'), dot = $('introDot'), t0 = performance.now(), N = 180, W = 600, MID = 120;
-    var sig = $('sigPath'), sigDot = $('sigDot'), pen = $('sigPen'), L = sig.getTotalLength(), DL = sigDot.getTotalLength();
-    sig.style.strokeDasharray = L; sig.style.strokeDashoffset = L;
-    sigDot.style.strokeDasharray = DL; sigDot.style.strokeDashoffset = DL;
-    pen.style.opacity = 0;
-    INTRO.running = true; INTRO.named = false; INTRO.dimmed = false;
+    var ov = $('intro'), path = $('introTrace'), dot = $('introDot'), t0 = performance.now(), N = 320, W = 600, MID = 120;
+    INTRO.running = true; INTRO.named = false; INTRO.dimmed = false; INTRO.formed = false;
     ov.hidden = false; ov.classList.remove('out');
     $('introName').classList.remove('on'); $('introScope').classList.remove('dim');
     document.body.classList.add('intro-play');
     $('introSkip').focus({preventScroll:true});
+    // signature sampled into the scope's coordinates (its <g> is translate(-30 -40) scale(1.15))
+    var sig = $('sigPath'), sigDot = $('sigDot'), L = sig.getTotalLength(), DL = sigDot.getTotalLength(), SP = [];
+    for (var j = 0; j <= N; j++) { var q = sig.getPointAtLength(L * j / N); SP.push([q.x * 1.15 - 30, q.y * 1.15 - 40]); }
+    sig.style.opacity = 0; sigDot.style.opacity = 0;
+    sigDot.style.strokeDasharray = DL; sigDot.style.strokeDashoffset = DL;
+    path.style.opacity = 1; path.style.strokeWidth = '2.5px'; dot.style.opacity = 1;
     function frame(now){
       if (!INTRO.running) return;
       var ms = now - t0, sweep = Math.min(1, ms / 300);
-      var amp = ms < 250 ? 0 : ms < 550 ? easeOut((ms - 250) / 300) : 1 - easeOut((ms - 550) / 250);
-      var freq = 2.5 + 4.5 * Math.min(1, Math.max(0, (ms - 250) / 900)), phase = ms / 1000 * 10, d = '', hx = 0, hy = MID;
+      var amp = ms < 250 ? 0 : easeOut((ms - 250) / 300);
+      var freq = 2.5 + 3 * Math.min(1, Math.max(0, (ms - 250) / 700)), phase = ms / 1000 * 10;
+      var mk = Math.min(1, Math.max(0, (ms - 650) / 800)), m = (1 - Math.cos(Math.PI * mk)) / 2;
+      var d = '', hx = 0, hy = MID;
       for (var i = 0; i <= N; i++) {
         var u = i / N; if (u > sweep) break;
-        var x = u * W, y = MID - amp * 92 * Math.sin(Math.PI * u) * Math.sin(2 * Math.PI * freq * u - phase);
+        var wx = u * W, wy = MID - amp * 80 * Math.sin(Math.PI * u) * Math.sin(2 * Math.PI * freq * u - phase);
+        var x = wx + (SP[i][0] - wx) * m, y = wy + (SP[i][1] - wy) * m;
         d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); hx = x; hy = y;
       }
-      path.setAttribute('d', d || 'M0 120'); dot.setAttribute('cx', hx); dot.setAttribute('cy', hy);
-      if (ms > 700 && !INTRO.dimmed) { INTRO.dimmed = true; $('introScope').classList.add('dim'); }
-      var WS = 720, WD = 900;
-      if (ms >= WS) {
-        var k = Math.min(1, (ms - WS) / WD), pr = (1 - Math.cos(Math.PI * k)) / 2, pt = sig.getPointAtLength(L * pr);
-        sig.style.strokeDashoffset = L * (1 - pr);
-        pen.setAttribute('cx', pt.x); pen.setAttribute('cy', pt.y); pen.style.opacity = k < 1 ? 1 : 0;
-        if (ms >= WS + WD) sigDot.style.strokeDashoffset = Math.max(0, 1 - (ms - WS - WD) / 90) * DL;
+      path.setAttribute('d', d || 'M0 120'); path.style.strokeWidth = (2.5 + 3 * m).toFixed(2) + 'px';
+      dot.setAttribute('cx', hx); dot.setAttribute('cy', hy);
+      if (ms > 650 && !INTRO.dimmed) { INTRO.dimmed = true; $('introScope').classList.add('dim'); }
+      if (mk >= 1 && !INTRO.formed) { INTRO.formed = true; sig.style.opacity = 1; sigDot.style.opacity = 1; path.style.opacity = 0; }
+      if (ms >= 1450) {
+        sigDot.style.strokeDashoffset = Math.max(0, 1 - (ms - 1450) / 90) * DL;
+        dot.style.opacity = Math.max(0, 1 - (ms - 1450) / 220);
       }
       if (ms > 1500 && !INTRO.named) { INTRO.named = true; $('introName').classList.add('on'); }
-      if (ms < 2000) INTRO.raf = requestAnimationFrame(frame); else endIntro();
+      if (ms < 2100) INTRO.raf = requestAnimationFrame(frame); else endIntro();
     }
     INTRO.raf = requestAnimationFrame(frame);
     clearTimeout(INTRO.guard);
