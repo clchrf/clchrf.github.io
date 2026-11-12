@@ -174,6 +174,11 @@
   /* projects */
   .proj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:36px}
   @media (max-width:760px){ .proj-grid{grid-template-columns:1fr} }
+  @media (min-width:761px){
+    .proj-grid > .proj:last-child:nth-child(odd){grid-column:1 / -1;flex-direction:row}
+    .proj-grid > .proj:last-child:nth-child(odd) .proj-media{flex:0 0 56%}
+    .proj-grid > .proj:last-child:nth-child(odd) .proj-body{justify-content:center;padding:32px 36px}
+  }
   .proj{display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;color:inherit;text-decoration:none;
     transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s}
   .proj:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
@@ -863,20 +868,6 @@
       });
       return sv(s + '<rect x="310" y="56" width="58" height="128" rx="14" style="fill:var(--card)"/>' +
         '<g class="c-arm"><path d="M326 160l18-40 16 12" stroke-width="6" style="stroke:var(--ink-2)" ' + S + '/></g><circle cx="326" cy="160" r="5" style="fill:var(--ink)"/>');
-    },
-    slope: function(){
-      var s = '';
-      for (var gx = 0; gx < 13; gx++) for (var gy = 0; gy < 7; gy++) {
-        var x = 30 + gx * 28, y = 30 + gy * 30, m = (gx - 6) / 2 - (3 - gy) / 1.5, ang = Math.atan(m), dx = Math.cos(ang) * 9, dy = Math.sin(ang) * 9;
-        s += '<path d="M' + (x - dx).toFixed(1) + ' ' + (y + dy).toFixed(1) + 'L' + (x + dx).toFixed(1) + ' ' + (y - dy).toFixed(1) + '" stroke-width="2.5" style="stroke:var(--ink-3)" ' + S + '/>';
-      }
-      var pts = [];
-      for (var tt = -6; tt <= 6.01; tt += 0.25) { var Yt = tt - 1 + 2.2 * Math.exp(-(tt + 6)); pts.push((30 + (tt + 6) * 28).toFixed(1) + ' ' + (120 - Yt * 15).toFixed(1)); }
-      var dSol = 'M' + pts.join('L');
-      return sv('<defs><path id="pSol" d="' + dSol + '"/></defs>' + s +
-        '<path pathLength="1" stroke-dasharray="1" stroke-dashoffset="' + (RM ? 0 : 1) + '" d="' + dSol + '" stroke-width="4" style="stroke:var(--ink)" ' + S + '>' +
-          (RM ? '' : '<animate attributeName="stroke-dashoffset" dur="4s" repeatCount="indefinite" keyTimes="0;0.6;1" values="1;0;0"/>') + '</path>' +
-        (RM ? '' : '<circle r="6" style="fill:var(--link)"><animateMotion dur="4s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.6;1"><mpath href="#pSol" xlink:href="#pSol"/></animateMotion></circle>'));
     }
   };
 
@@ -896,10 +887,7 @@
       tags:['LINE Bot','TypeScript'], url:null},
     {name:['機械手臂控制中心', 'Robot Arm Control Center'], meta:['個人專案・機器人', 'Personal project · Robotics'], art:'control',
       desc:['拉滑桿、輸入座標或示教播放來控制三軸機械手臂，旁邊還有 3D 模擬可以先看動作對不對。', 'Drive a 3-axis robot arm with sliders, coordinates or teach-and-playback, with a 3D simulation to check the motion first.'],
-      tags:['Python','Arduino'], url:'https://github.com/clchrf/robot-arm-control-center'},
-    {name:'engineering-math-ai', meta:['個人專案・教育', 'Personal project · Education'], art:'slope',
-      desc:['互動式工程數學學習網站：把斜率場畫出來給你看，答錯時會診斷你是哪一步想錯。', 'An interactive engineering-math site that draws slope fields for you and diagnoses which step went wrong when you miss a question.'],
-      tags:['Astro','TypeScript'], url:'https://github.com/clchrf/engineering-math-ai'}
+      tags:['Python','Arduino'], url:'https://github.com/clchrf/robot-arm-control-center'}
   ];
   var MORE = [
     {name:'freshflow', desc:['給小型食品批發商用的訂單、出貨、應收帳款與採購系統。', 'Orders, deliveries, receivables and purchasing for a small food wholesaler.'], url:'https://github.com/clchrf/freshflow', live:'https://freshflow-iota.vercel.app'},
