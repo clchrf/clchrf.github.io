@@ -294,6 +294,16 @@
   .pd-thumbs button:hover{opacity:.9}
   .pd-thumbs button[aria-current="true"]{border-color:var(--ink);opacity:1}
   .pd-thumbs img{display:block;width:100%;height:100%;object-fit:cover}
+  .pd-app{margin-top:28px}
+  .pd-app h3{font-size:17px;font-weight:700}
+  .pd-phones{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:12px}
+  @media (max-width:640px){ .pd-phones{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+    .pd-phones figure{flex:0 0 42%;scroll-snap-align:start} }
+  .pd-phones figure{margin:0}
+  .pd-phone{display:block;width:100%;padding:5px;border:none;border-radius:22px;background:#1d1d1f;cursor:zoom-in;
+    box-shadow:0 10px 24px -12px rgba(0,0,0,.35)}
+  .pd-phone img{display:block;width:100%;height:auto;border-radius:17px}
+  .pd-phones figcaption{font-size:13px;line-height:1.5;color:var(--ink-2);margin-top:8px;text-align:center}
   .pd-body{display:grid;gap:22px;margin-top:28px}
   .pd-body h3{font-size:17px;font-weight:700}
   .pd-body p, .pd-body li{color:var(--ink-2);font-size:16px;line-height:1.75}
@@ -316,6 +326,10 @@
   /* experience */
   .exp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:36px}
   @media (max-width:760px){ .exp-grid{grid-template-columns:1fr} }
+  .exp.design{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:28px;align-items:center}
+  @media (max-width:760px){ .exp.design{grid-template-columns:1fr;gap:18px} }
+  .exp.design .shot-open{border-radius:var(--r-sm);overflow:hidden}
+  .exp.design img{display:block;width:100%;height:auto;aspect-ratio:1}
   .exp .tag{display:inline-block;margin-bottom:12px}
   .exp p{color:var(--ink-2);font-size:16px;margin-top:8px}
 
@@ -508,7 +522,7 @@
       <div class="card span-4 about-text">
         <div class="label">ABOUT</div>
         <p data-en="I don't pick a technology and then look for a use. I start from <b>a problem I've actually run into</b>, then work out which mix of hardware, AI and software solves it.">我不是先選好一項技術再去找用途，而是<b>先遇到一個自己真的碰過的問題</b>，再想清楚該用哪一種硬體、AI 和軟體的組合來解。</p>
-        <p data-en="I studied electronics in vocational high school, transferred into NTNU's EE department, and kept branching out into computer vision, software and robotics. Outside class, most of my time goes to hackathons and robot arms. I was student council president in high school, and at NTNU I led the transfer student association, turning scattered information into a website and a chatbot.">高職念電子，轉學到師大電機系之後，興趣一路往電腦視覺、軟體和機器人延伸。課堂以外，大部分時間都花在黑客松和機械手臂上。高中當過北科附工學生會會長，大學又當了師大轉學生會會長，幫轉學生把資訊整理成網站和聊天機器人。</p>
+        <p data-en="I studied electronics at the NTUT-affiliated Taoyuan Agricultural &amp; Industrial Senior High School, spent my first year of university in Electronic Engineering at NKUST's Jiangong campus, then transferred into NTNU's EE department and kept branching out into computer vision, software and robotics. Outside class, most of my time goes to hackathons and robot arms. I was student council president in high school, and at NTNU I led the transfer student association, turning scattered information into a website and a chatbot.">高中念北科附工電子科，大一在高科大建工校區電子工程系，轉學到師大電機系之後，興趣一路往電腦視覺、軟體和機器人延伸。課堂以外，大部分時間都花在黑客松和機械手臂上。高中當過北科附工學生會會長，大學又當了師大轉學生會會長，幫轉學生把資訊整理成網站和聊天機器人。</p>
       </div>
       <div class="card span-2">
         <div class="label">BY THE NUMBERS</div>
@@ -591,6 +605,10 @@
       <div class="card exp"><span class="tag" data-en="Research assistant">研究助理</span><h3 data-en="Systematic review of MOOC AI courses">磨課師 AI 課程系統性文獻回顧</h3><p data-en="Part-time research assistant. Surveyed the AI courses on Taiwan's MOE MOOC platform, tagged them by competency, ran validity checks, and turned the results into a public course recommendation site.">論文研究學習型兼任助理。盤點教育部磨課師平台上的 AI 課程，做能力標記與效度檢定，最後做成對外的課程推薦網站。</p></div>
       <div class="card exp"><span class="tag" data-en="Leadership">領導</span><h3 data-en="Student president, in high school and at university">學生會會長，從高中到大學</h3><p data-en="Student council president at my high school, the NTUT-affiliated Taoyuan Agricultural &amp; Industrial Senior High School. At NTNU I led the Transfer Student Association: pulled together what transfer and change-of-major students need, ran events and onboarding, and built the ntnu-trans-hub site and the NtnuTransferHelper Q&amp;A bot.">高中是北科附工學生會會長。上大學後擔任師大轉學生會會長，整理轉學、轉系生需要的資訊，辦活動和新生輔導，也做了 ntnu-trans-hub 資訊站和 NtnuTransferHelper 問答機器人。</p></div>
       <div class="card exp"><span class="tag" data-en="Talks &amp; training">講座・研習</span><h3 data-en="Speaking and learning">講者與學習</h3><p data-en="Invited speaker at an NTNU gender lecture, participant in the Hsinchu Youth Innovation Forum, and a graduate of the “From AI to Inherent Safety” robotics and smart-manufacturing practicum.">師大性別講座受邀講者、新竹市青年創新論壇參與者，也上過「AI 到本質安全：機器人智慧製造場域探索實務班」。</p></div>
+      <div class="card exp design">
+        <button type="button" class="shot-open" id="debugOpen" aria-label="放大電機週主視覺" data-en-label="Enlarge the EE Week key visual"><img src="img/design-debug.jpg" alt="電機週主視覺：霓虹燈的 DEBUG 字樣，下面是一個頭部是故障雜訊電視的人" data-en-alt="EE Week key visual: neon DEBUG lettering above a figure whose head is a glitching TV" loading="lazy"></button>
+        <div><span class="tag" data-en="Design">設計</span><h3 data-en="EE Week key visual: DEBUG">電機週主視覺「DEBUG」</h3><p data-en="I designed the key visual for our EE department's EE Week: neon DEBUG lettering and a figure whose head is a glitching old TV.">幫電機系的電機週設計主視覺，主題是 DEBUG：霓虹燈字樣，配上一個頭是故障雜訊老電視的人。</p></div>
+      </div>
     </div>
   </section>
 
@@ -823,6 +841,7 @@
     <div class="pd-meta"><span class="rank" id="pdRank"></span><span class="pd-team" id="pdTeam"></span></div>
     <figure class="pd-media"><button type="button" class="pd-zoom" aria-label="放大" data-en-label="Enlarge"><img id="pdImg" alt=""></button></figure>
     <div class="pd-thumbs" id="pdThumbs"></div>
+    <section class="pd-app" id="pdAppSec"><h3 data-en="App screens">App 畫面</h3><div class="pd-phones" id="pdPhones"></div></section>
     <div class="pd-body">
       <section><h3 data-en="About the project">作品介紹</h3><p id="pdDesc"></p></section>
       <section><h3 data-en="What we built">做了什麼</h3><ul id="pdDid"></ul></section>
@@ -1006,7 +1025,12 @@
         ['跟鬧鐘整合，用溫度變化讓人自然起床', 'Alarm integration that uses temperature to wake you up gently'],
         ['電費直接顯示新台幣而不是度數，搭配語音、Siri 和桌面小工具', 'Shows cost in NT$ instead of kWh, plus voice control, Siri and widgets'],
         ['用氣流取代直接降溫，依公開研究估算可省約一成電', 'Uses airflow before cooling; public research suggests about 10% energy saved']],
-      imgs:['c-mitsu-1', 'c-mitsu-2', 'c-mitsu-3'], role:null, links:[]},
+      imgs:['c-mitsu-1', 'c-mitsu-2', 'c-mitsu-3'], role:null, links:[],
+      phones:[['c-mitsu-app-1', ['首頁：調溫度、風向和環境舒適度', 'Home: temperature, airflow and comfort']],
+        ['c-mitsu-app-2', ['掃描房間後設定風向禁區', 'Setting a no-blow zone on the scanned room']],
+        ['c-mitsu-app-3', ['空調鬧鐘：用溫度叫你起床', 'A/C alarm: waking you up with temperature']],
+        ['c-mitsu-app-4', ['睡眠時的溫度曲線', 'The overnight temperature curve']],
+        ['c-mitsu-app-5', ['用電量直接用新台幣顯示', 'Energy use shown in NT$']]]},
     kahao: {name:['卡好審', 'KaHaoShen'],
       pitch:['市民齁勝，承辦好審：補助申請和審核，一個系統一次解決。', 'Easier for citizens, easier for reviewers: one system for subsidy applications and review.'],
       desc:['我們訪談了青年局的承辦人員，發現高峰期一天上百件申請、七成會被退件。卡好審同時改善申請端和審核端，讓民眾一次就交對文件。', 'After interviewing youth-affairs staff we learned that at peak there are 100+ applications a day and about 70% get sent back. KaHaoShen fixes both the applicant side and the reviewer side so people submit the right documents the first time.'],
@@ -1127,7 +1151,8 @@
       imgs:['c-icash-1', 'c-icash-2', 'c-icash-3'], role:null, links:[]}
   };
   var AWARDS = [
-    ['2026', ['三菱重工空調創新 App 開發大賽', 'Mitsubishi Heavy Industries Air-Conditioning App Contest'], null, ['亞軍・特別獎', 'Runner-up · Special Award'], 1, null, 'mitsu'],
+    ['2026', ['三菱重工空調創新 App 開發大賽', 'Mitsubishi Heavy Industries Air-Conditioning App Contest'], ['AIRMON 智慧空調創新 APP 開發大賽', 'AIRMON Smart A/C App Contest'], ['亞軍・特別獎', 'Runner-up · Special Award'], 1,
+      ['img/award-airmon.jpg', '50% 45%', ['李欣妍在 AIRMON 智慧空調創新 APP 開發大賽頒獎典禮，拿著亞軍新台幣 25 萬元的大支票', 'Hsin-Yen at the AIRMON Smart A/C App Contest ceremony, holding the NT$250,000 runner-up check']], 'mitsu'],
     ['2026', ['梅竹黑客松（第 14 屆）', 'Meichu Hackathon (14th)'], ['創客交流組', 'Maker track'], ['第二名', '2nd place'], 1,
       ['img/award-meichu14.jpg', '50% 32%', ['李欣妍在第 14 屆梅竹黑客松背板前拿著第二名的獎牌', 'Hsin-Yen holding the 2nd place plaque at the 14th Meichu Hackathon']], 'kahao'],
     ['2026', ['台師大第八屆 Start Up 創業競技場', 'NTNU 8th Start Up Arena'], ['Plankton 團隊', 'Team Plankton'], ['優選', 'Merit Award'], 0,
@@ -1729,6 +1754,7 @@
   }
   function closeLightbox(){ var d = $('lightbox'); if (d.close) d.close(); else d.removeAttribute('open'); }
   $('lbClose').addEventListener('click', closeLightbox);
+  $('debugOpen').addEventListener('click', function(){ openLightbox('img/design-debug.jpg', t('電機週主視覺「DEBUG」', 'EE Week key visual: DEBUG')); });
   $('lightbox').addEventListener('click', function(e){ if (e.target === this) closeLightbox(); });
 
   /* ================= competition project dialog ================= */
@@ -1758,6 +1784,13 @@
       im.src = 'img/' + s + '.jpg'; im.alt = ''; im.loading = 'lazy'; b.appendChild(im);
       b.addEventListener('click', function(){ showProjImg(k); });
       th.appendChild(b);
+    });
+    var ph = $('pdPhones'); ph.innerHTML = ''; $('pdAppSec').hidden = !p.phones;
+    (p.phones || []).forEach(function(s){
+      var b = el('button', 'pd-phone'), im = el('img'); b.type = 'button';
+      im.src = 'img/' + s[0] + '.jpg'; im.alt = tx(s[1]); im.loading = 'lazy'; b.appendChild(im);
+      b.addEventListener('click', function(){ openLightbox(im.src, tx(s[1])); });
+      var f = el('figure'); f.appendChild(b); f.appendChild(el('figcaption', null, tx(s[1]))); ph.appendChild(f);
     });
     var ln = $('pdLinks'); ln.innerHTML = ''; ln.hidden = !p.links.length;
     p.links.forEach(function(l){
