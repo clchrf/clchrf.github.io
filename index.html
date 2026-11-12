@@ -236,6 +236,11 @@
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .photo-btn:hover{background:var(--line)}
   .photo-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .policy{max-width:760px}
+  .policy h2{font-size:21px;font-weight:700;letter-spacing:-0.01em;margin-top:30px}
+  .policy h2:first-child{margin-top:0}
+  .policy ul{margin:12px 0 0;padding-left:1.2em;display:grid;gap:10px}
+  .policy li{color:var(--ink-2);font-size:16px;line-height:1.75}
   .shot-open{display:block;width:100%;padding:0;border:none;background:none;cursor:zoom-in}
   #lightbox{border:none;padding:0;background:transparent;max-width:min(92vw,1100px);max-height:92vh;overflow:visible}
   #lightbox::backdrop{background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -732,6 +737,38 @@
   </div>
 </main>
 
+<!-- ===================== POLICY ===================== -->
+<main class="wrap" data-view="policy" hidden>
+  <div class="tool-top">
+    <a class="back" href="#top" data-en="‹ Home">‹ 首頁</a>
+    <h1 class="tool-title" data-en="Site policy">網站政策</h1>
+    <p class="tool-sub" data-en="Last updated: November 12, 2026">最後更新：2026 年 11 月 12 日</p>
+  </div>
+  <div class="panel policy">
+    <h2 data-en="Privacy">隱私</h2>
+    <ul>
+      <li data-en="This site uses no analytics, ads or tracking cookies, and it doesn't collect your personal information.">這個網站沒有使用分析工具、廣告或追蹤 cookie，也不會蒐集你的個人資料。</li>
+      <li data-en="Your browser (localStorage / sessionStorage) remembers three things: your language, your light or dark setting, and whether you've already seen the intro this visit. This stays on your device and you can clear it from your browser at any time.">網站會在你的瀏覽器裡（localStorage／sessionStorage）記住三件事：語言、深淺色設定，以及這次瀏覽是否看過開場動畫。這些資料只存在你的裝置上，可以隨時從瀏覽器清除。</li>
+      <li data-en="Every toolbox calculation runs in your browser. The values you type are never sent to a server.">工具箱的所有計算都在你的瀏覽器裡完成，輸入的數值不會傳到任何伺服器。</li>
+      <li data-en="The site is hosted on GitHub Pages and its fonts come from Google Fonts. When the page loads, these services may log connection details such as your IP address under their own privacy policies.">網站架設在 GitHub Pages，字型由 Google Fonts 提供；載入網頁時，這兩個服務可能依它們自己的隱私政策記錄連線資訊，例如 IP 位址。</li>
+    </ul>
+    <h2 data-en="Content and copyright">內容與著作權</h2>
+    <ul>
+      <li data-en="Unless noted otherwise, the text, photos and illustrations on this site are © Hsin-Yen Lee. Please ask before reposting them or using them commercially.">網站上的文字、照片與插圖，除另有標示外，著作權屬於李欣妍。轉載或商業使用前請先取得同意。</li>
+      <li data-en="Some projects were built together with teammates, and their results belong to the whole team. Competition names, logos and backdrop designs shown in photos belong to their organizers.">部分作品是和隊友一起完成的團隊專案，成果屬於整個團隊；照片中的比賽名稱、標誌與背板設計，屬於各主辦單位。</li>
+      <li data-en="Linked sites (GitHub, LinkedIn, project demos) are run by their own providers, and this site isn't responsible for their content.">連到的外部網站（GitHub、LinkedIn、作品示範頁）由各自的服務提供者管理，內容不在本站負責範圍內。</li>
+    </ul>
+    <h2 data-en="Toolbox disclaimer">工具箱聲明</h2>
+    <ul>
+      <li data-en="Toolbox results are for learning and reference. Double-check them before using them in a real circuit design or anything important.">工具箱的計算結果僅供學習與參考，實際設計電路或用於重要用途前，請再自行驗算。</li>
+    </ul>
+    <h2 data-en="Contact">聯絡</h2>
+    <ul>
+      <li data-en="If you appear in a photo or in the content and would like it changed or removed, or if you have questions about this policy, please reach me through LinkedIn or GitHub.">如果照片或內容中有你，希望修改或移除，或對本政策有任何問題，請透過 LinkedIn 或 GitHub 聯絡我。</li>
+    </ul>
+  </div>
+</main>
+
 <dialog id="lightbox" aria-label="照片" data-en-label="Photo">
   <button type="button" class="lb-close" id="lbClose" aria-label="關閉" data-en-label="Close">×</button>
   <img id="lbImg" alt="">
@@ -741,7 +778,7 @@
 <div class="wrap">
   <footer>
     <span data-en="© 2026 Hsin-Yen Lee">© 2026 李欣妍 Hsin-Yen Lee</span>
-    <span><button type="button" class="replay" id="introReplay" data-en="Replay intro">重播開場</button>　<a href="https://github.com/clchrf" target="_blank" rel="noopener">GitHub</a>　<a href="https://www.linkedin.com/in/cindy-lee-a92231382" target="_blank" rel="noopener">LinkedIn</a></span>
+    <span><a href="#policy" data-en="Site policy">網站政策</a>　<button type="button" class="replay" id="introReplay" data-en="Replay intro">重播開場</button>　<a href="https://github.com/clchrf" target="_blank" rel="noopener">GitHub</a>　<a href="https://www.linkedin.com/in/cindy-lee-a92231382" target="_blank" rel="noopener">LinkedIn</a></span>
   </footer>
 </div>
 
@@ -797,13 +834,13 @@
   new MutationObserver(drawThemeBtn).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
   /* ================= router ================= */
-  var VIEWS = ['tools','calc','kmap','timer'], current = 'home';
+  var VIEWS = ['tools','calc','kmap','timer','policy'], current = 'home';
   function route(){
     var h = decodeURIComponent(location.hash.replace(/^#/, ''));
     var view = VIEWS.indexOf(h) >= 0 ? h : 'home', changed = view !== current;
     document.querySelectorAll('[data-view]').forEach(function(v){ v.hidden = v.getAttribute('data-view') !== view; });
     document.querySelectorAll('.nav-links a').forEach(function(a){
-      if (view !== 'home' && a.getAttribute('data-nav') === 'tools') a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      if (view !== 'home' && view !== 'policy' && a.getAttribute('data-nav') === 'tools') a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
     current = view;
     if (view === 'home' && h) { var tg = document.getElementById(h); if (tg) { tg.scrollIntoView(); return; } }
