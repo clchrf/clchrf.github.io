@@ -452,6 +452,26 @@
   .hsv-ch label{display:grid;grid-template-columns:3.2em 1fr 3em;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:6px}
   .hsv-ch input[type=range]{width:100%;accent-color:var(--ink)}
   .hsv-ch output{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);font-weight:600}
+  /* file converter */
+  .drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;
+    border:2px dashed var(--line);border-radius:var(--r-md);padding:34px 18px;cursor:pointer;transition:border-color .15s, background .15s}
+  .drop:hover,.drop.drag{border-color:var(--ink-3);background:var(--fill-2)}
+  .drop:focus-within{border-color:var(--ink)}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .drop b{font-size:17px}
+  .drop span{font-size:14px;color:var(--ink-2)}
+  .cv-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+  .cv-list:empty{display:none}
+  .cv-list li{display:flex;align-items:center;gap:10px;background:var(--fill-2);border-radius:var(--r-sm);padding:10px 14px;font-size:15px;min-width:0}
+  .cv-list .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cv-list .st{font-size:13px;color:var(--ink-2);white-space:nowrap}
+  .cv-list .st.err{color:var(--red)}
+  .cv-list a.dl{font-weight:600;white-space:nowrap}
+  .cv-list .ic{border:none;background:var(--fill);color:var(--ink);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px;flex:0 0 auto}
+  .cv-list .ic:hover{background:var(--line)}
+  .cv-list .ic:disabled{opacity:.3;cursor:default}
+  .cv-how{margin:10px 0 0;padding-left:1.2em;display:grid;gap:6px}
+  .cv-how li{color:var(--ink-2);font-size:15px;line-height:1.7}
   .code{font-family:var(--mono);font-size:14px;line-height:1.7;background:var(--fill-2);border-radius:var(--r-sm);padding:16px 18px;margin-top:10px;overflow-x:auto;white-space:pre}
   .check{display:flex;gap:10px;align-items:center;font-size:15px;margin-top:16px;cursor:pointer}
   .check input{width:18px;height:18px;accent-color:var(--ink)}
@@ -503,7 +523,7 @@
       <div class="eyebrow rise" data-en="National Taiwan Normal University · Electrical Engineering">國立臺灣師範大學・電機工程學系</div>
       <h1 class="hero-title rise d1" data-en="Hey~ I'm <span class='nw'>Hsin-Yen Lee</span>">嗨咿~我是 <span class="nw">李欣妍</span></h1>
       <div class="btns rise d3">
-        <a class="pill dark" href="#work" data-en="See my work">看我做過的東西</a>
+        <a class="pill dark" href="#work" data-en="See cool stuff">看看酷東西</a>
         <a class="pill gray" href="#tools" data-en="Open the toolbox">逛逛工具箱</a>
       </div>
     </div>
@@ -838,6 +858,62 @@
   </div>
 </main>
 
+<!-- ===================== CONVERT ===================== -->
+<main class="wrap" data-view="convert" hidden>
+  <div class="tool-top">
+    <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
+    <h1 class="tool-title" data-en="File Converter">檔案轉換</h1>
+    <p class="tool-sub" data-en="Files are converted right here in your browser and are never uploaded. The first time you use a converter it downloads its library from a public CDN.">檔案在你的瀏覽器裡直接轉換，不會上傳到任何地方。第一次使用時會從公開 CDN 下載轉檔程式庫。</p>
+  </div>
+  <div class="seg" role="tablist" id="cvTabs" style="margin-top:18px">
+    <button type="button" role="tab" aria-selected="true" data-tab="heic" data-en="HEIC → JPG">HEIC → JPG</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="merge" data-en="Merge PDFs">PDF 合併</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="word" data-en="PDF → Word">PDF → Word</button>
+  </div>
+
+  <div data-cv="heic">
+    <div class="panel">
+      <label class="drop" id="heicDrop"><input type="file" id="heicFile" accept=".heic,.heif,image/heic,image/heif" multiple>
+        <b data-en="Choose HEIC photos">選擇 HEIC 照片</b><span data-en="or drop them here. You can pick several at once.">或拖到這裡，可以一次選很多張。</span></label>
+      <div class="fields" style="margin-top:18px">
+        <div class="field"><label for="heicQ" data-en="JPG quality">JPG 品質</label><select class="input" id="heicQ"><option value="0.95" data-en="Highest (95%)">最高（95%）</option><option value="0.9" selected data-en="High (90%)">高（90%）</option><option value="0.8" data-en="Smaller file (80%)">檔案較小（80%）</option></select></div>
+      </div>
+      <p class="note" id="heicMsg"></p>
+      <ul class="cv-list" id="heicList"></ul>
+      <div class="btns" id="heicAllBox" hidden style="margin-top:14px"><button type="button" class="pill dark" id="heicAll" data-en="Download all (ZIP)">全部下載（ZIP）</button></div>
+    </div>
+  </div>
+
+  <div data-cv="merge" hidden>
+    <div class="panel">
+      <label class="drop" id="mergeDrop"><input type="file" id="mergeFile" accept="application/pdf,.pdf" multiple>
+        <b data-en="Add PDFs">加入 PDF</b><span data-en="or drop them here. Use the arrows to change the order.">或拖到這裡，用箭頭調整順序。</span></label>
+      <ul class="cv-list" id="mergeList"></ul>
+      <p class="note" id="mergeMsg"></p>
+      <div class="btns" style="margin-top:14px"><button type="button" class="pill dark" id="mergeGo" disabled data-en="Merge and download">合併並下載</button></div>
+    </div>
+  </div>
+
+  <div data-cv="word" hidden>
+    <div class="panel">
+      <label class="drop" id="wordDrop"><input type="file" id="wordFile" accept="application/pdf,.pdf">
+        <b data-en="Choose a PDF">選擇 PDF</b><span data-en="or drop it here.">或拖到這裡。</span></label>
+      <label class="check" style="margin-top:16px"><input type="checkbox" id="wordImgs" checked> <span data-en="Keep images and graphics in their original positions">保留圖片和圖形，放在原本的位置</span></label>
+      <p class="note" id="wordMsg"></p>
+      <ul class="cv-list" id="wordList"></ul>
+    </div>
+    <div class="panel">
+      <div class="k" data-en="How it keeps the layout">怎麼盡量不跑版</div>
+      <ul class="cv-how">
+        <li data-en="Each PDF page becomes its own Word page with the same paper size and margins.">每一頁 PDF 都對應一頁 Word，紙張大小和邊界照原本設定。</li>
+        <li data-en="Text that reads top to bottom is joined back into flowing paragraphs, keeping indents, line spacing, font sizes, bold and colors.">由上往下讀的文件，換行的句子會接回成段落，保留縮排、行距、字級、粗體和顏色。</li>
+        <li data-en="Slides and multi-column pages keep every text block pinned to its spot, with charts and shapes kept as a background picture. The text is still editable.">簡報和多欄排版的頁面，每一段文字都固定在原本的位置，圖表和形狀變成背景圖，文字一樣可以編輯。</li>
+        <li data-en="Not possible: editing charts and shapes themselves, and scanned PDFs, which have no text and need OCR first.">做不到的：圖表和形狀本身沒辦法編輯；掃描檔沒有文字，要先做 OCR。</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
 <!-- ===================== KMAP ===================== -->
 <main class="wrap" data-view="kmap" hidden>
   <div class="tool-top">
@@ -1030,7 +1106,7 @@
   new MutationObserver(drawThemeBtn).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
   /* ================= router ================= */
-  var VIEWS = ['tools','calc','kmap','timer','hsv','deadline','policy'], current = 'home';
+  var VIEWS = ['tools','calc','kmap','timer','hsv','deadline','convert','policy'], current = 'home';
   function route(){
     var h = decodeURIComponent(location.hash.replace(/^#/, ''));
     var view = VIEWS.indexOf(h) >= 0 ? h : 'home', changed = view !== current;
@@ -1302,7 +1378,9 @@
     {href:'#hsv', name:['OpenCV HSV 色彩門檻', 'OpenCV HSV Picker'], desc:['上傳照片拉滑桿，即時看遮罩，直接複製 lower、upper 陣列。做顏色追蹤必備。', 'Upload a photo, drag the sliders, watch the mask, and copy the lower and upper arrays for color tracking.'],
       icon:'<path d="M22 5l7 7-3 3-7-7z M19 8L7 20l-2 7 7-2 12-12"/><path d="M9 21l4 4"/>'},
     {href:'#deadline', name:['比賽倒數', 'Deadline Countdown'], desc:['設定繳交截止時間，大字倒數可以全螢幕投影。跟簡報計時器是一對。', 'Set the submission deadline and project a big countdown. A pair with the pitch timer.'],
-      icon:'<path d="M9 4h16M9 30h16M11 4c0 8 12 8 12 13s-12 5-12 13M23 4c0 8-12 8-12 13s12 5 12 13"/>'}
+      icon:'<path d="M9 4h16M9 30h16M11 4c0 8 12 8 12 13s-12 5-12 13M23 4c0 8-12 8-12 13s12 5 12 13"/>'},
+    {href:'#convert', name:['檔案轉換', 'File Converter'], desc:['HEIC 轉 JPG、PDF 合併、PDF 轉可編輯的 Word。全部在瀏覽器裡轉，檔案不會上傳。', 'HEIC to JPG, merge PDFs, and PDF to editable Word. Everything converts in your browser; nothing is uploaded.'],
+      icon:'<path d="M8 4h12l6 6v8M8 4v26h10M20 4v6h6"/><path d="M22 24h9M27 20l4 4-4 4"/>'}
   ];
 
   /* ================= render home ================= */
@@ -1957,6 +2035,491 @@
   document.addEventListener('fullscreenchange', function(){ if (!document.fullscreenElement && current === 'deadline') releaseWake(); });
   if (DL.at) $('dlAt').value = toLocalInput(DL.at);
   setInterval(function(){ if (current === 'deadline') dlTick(); }, 250);
+
+  /* ================= file converter ================= */
+  var CDN = {
+    heic:'https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js',
+    zip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+    pdflib:'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
+    pdfjs:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+    pdfworker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+    cmaps:'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/'
+  };
+  var LIBS = {};
+  function loadLib(url){
+    if (!LIBS[url]) LIBS[url] = new Promise(function(res, rej){
+      var s = document.createElement('script'); s.src = url; s.async = true;
+      s.onload = res; s.onerror = function(){ delete LIBS[url]; s.remove(); rej(new Error('lib')); };
+      document.head.appendChild(s);
+    });
+    return LIBS[url];
+  }
+  var LIB_FAIL = ['轉檔程式庫下載失敗，請確認網路連線後再試一次。', 'Couldn\'t download the converter library. Check your connection and try again.'];
+  segInit('cvTabs', 'aria-selected', function(b){
+    document.querySelectorAll('[data-cv]').forEach(function(p){ p.hidden = p.getAttribute('data-cv') !== b.getAttribute('data-tab'); });
+  });
+  function dropZone(id, onFiles){
+    var z = $(id), inp = z.querySelector('input');
+    inp.addEventListener('change', function(){ var fs = [].slice.call(inp.files); inp.value = ''; if (fs.length) onFiles(fs); });
+    ['dragenter', 'dragover'].forEach(function(ev){ z.addEventListener(ev, function(e){ e.preventDefault(); z.classList.add('drag'); }); });
+    ['dragleave', 'drop'].forEach(function(ev){ z.addEventListener(ev, function(e){ e.preventDefault(); z.classList.remove('drag'); }); });
+    z.addEventListener('drop', function(e){ var fs = e.dataTransfer ? [].slice.call(e.dataTransfer.files) : []; if (fs.length) onFiles(fs); });
+  }
+  function baseName(n){ return n.replace(/\.[^.]+$/, ''); }
+  function fmtSize(b){ return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1048576).toFixed(1) + ' MB'; }
+  function cvRow(list, name){
+    var li = el('li'), st = el('span', 'st', t('等待中', 'Waiting'));
+    li.appendChild(el('span', 'nm', name)); li.appendChild(st); $(list).appendChild(li);
+    return {
+      li:li,
+      status:function(s){ st.className = 'st'; st.textContent = s; },
+      error:function(s){ st.className = 'st err'; st.textContent = s; },
+      done:function(blob, fname){
+        st.className = 'st'; st.textContent = fmtSize(blob.size);
+        var a = el('a', 'dl', t('下載', 'Download') + ' ↓'); a.href = URL.createObjectURL(blob); a.download = fname; li.appendChild(a);
+        return a;
+      }
+    };
+  }
+  function saveBlob(blob, fname){ var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click(); a.remove(); }
+
+  /* --- HEIC → JPG --- */
+  var HEIC_OUT = [];
+  async function heicOne(f, q){
+    try {
+      var bmp = await createImageBitmap(f), c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0);
+      var nb = await new Promise(function(r){ c.toBlob(r, 'image/jpeg', q); });
+      if (nb) return nb;
+    } catch (e) {}
+    await loadLib(CDN.heic);
+    return await window.HeicTo({blob:f, type:'image/jpeg', quality:q});
+  }
+  var heicBusy = Promise.resolve();
+  dropZone('heicDrop', function(files){
+    var q = +$('heicQ').value;
+    files.forEach(function(f){
+      var row = cvRow('heicList', f.name);
+      if (!/\.(heic|heif)$/i.test(f.name) && !/hei[cf]/i.test(f.type)) { row.error(t('不是 HEIC 檔', 'Not a HEIC file')); return; }
+      heicBusy = heicBusy.then(async function(){
+        row.status(t('轉換中…', 'Converting…'));
+        try {
+          var jpg = await heicOne(f, q), name = baseName(f.name) + '.jpg';
+          row.done(jpg, name); HEIC_OUT.push({blob:jpg, name:name});
+          $('heicAllBox').hidden = HEIC_OUT.length < 2;
+        } catch (e) { row.error(e && e.message === 'lib' ? tx(LIB_FAIL) : t('轉換失敗', 'Conversion failed')); }
+      });
+    });
+  });
+  $('heicAll').addEventListener('click', async function(){
+    try {
+      await loadLib(CDN.zip);
+      var z = new JSZip(), used = {};
+      HEIC_OUT.forEach(function(o){ var n = o.name, k = 1; while (used[n]) n = baseName(o.name) + '-' + (++k) + '.jpg'; used[n] = 1; z.file(n, o.blob); });
+      saveBlob(await z.generateAsync({type:'blob'}), 'heic-to-jpg.zip');
+    } catch (e) { $('heicMsg').textContent = tx(LIB_FAIL); }
+  });
+
+  /* --- PDF merge --- */
+  var MERGE = [];
+  function mergeRender(){
+    var ul = $('mergeList'); ul.innerHTML = '';
+    MERGE.forEach(function(f, i){
+      var li = el('li');
+      li.appendChild(el('span', 'st', (i + 1) + '.'));
+      li.appendChild(el('span', 'nm', f.name)); li.appendChild(el('span', 'st', fmtSize(f.size)));
+      [['↑', t('往上移', 'Move up'), i === 0, -1], ['↓', t('往下移', 'Move down'), i === MERGE.length - 1, 1]].forEach(function(b){
+        var bt = el('button', 'ic', b[0]); bt.type = 'button'; bt.setAttribute('aria-label', b[1] + '：' + f.name); bt.disabled = b[2];
+        bt.addEventListener('click', function(){ var j = i + b[3], tmp = MERGE[j]; MERGE[j] = MERGE[i]; MERGE[i] = tmp; mergeRender(); });
+        li.appendChild(bt);
+      });
+      var rm = el('button', 'ic', '×'); rm.type = 'button'; rm.setAttribute('aria-label', t('移除：', 'Remove: ') + f.name);
+      rm.addEventListener('click', function(){ MERGE.splice(i, 1); mergeRender(); });
+      li.appendChild(rm); ul.appendChild(li);
+    });
+    $('mergeGo').disabled = MERGE.length < 2;
+    $('mergeMsg').textContent = MERGE.length === 1 ? t('再加一個以上的 PDF 就可以合併。', 'Add at least one more PDF to merge.') : '';
+  }
+  dropZone('mergeDrop', function(files){
+    var bad = 0;
+    files.forEach(function(f){ if (/\.pdf$/i.test(f.name) || f.type === 'application/pdf') MERGE.push(f); else bad++; });
+    mergeRender();
+    if (bad) $('mergeMsg').textContent = t('有 ' + bad + ' 個檔案不是 PDF，已略過。', bad + ' file(s) weren\'t PDFs and were skipped.');
+  });
+  $('mergeGo').addEventListener('click', async function(){
+    var btn = this, msg = $('mergeMsg'); btn.disabled = true; msg.textContent = t('合併中…', 'Merging…');
+    try {
+      await loadLib(CDN.pdflib);
+      var out = await PDFLib.PDFDocument.create(), total = 0;
+      for (var i = 0; i < MERGE.length; i++) {
+        var src;
+        try { src = await PDFLib.PDFDocument.load(await MERGE[i].arrayBuffer(), {ignoreEncryption:true}); }
+        catch (e) { throw new Error(t('「' + MERGE[i].name + '」打不開，可能有密碼或檔案損壞。', '"' + MERGE[i].name + '" couldn\'t be opened. It may be password-protected or damaged.')); }
+        var pages = await out.copyPages(src, src.getPageIndices());
+        pages.forEach(function(p){ out.addPage(p); }); total += pages.length;
+      }
+      var blob = new Blob([await out.save()], {type:'application/pdf'}), name = baseName(MERGE[0].name) + '-merged.pdf';
+      saveBlob(blob, name);
+      msg.textContent = t('完成：' + MERGE.length + ' 個檔案、共 ' + total + ' 頁（' + fmtSize(blob.size) + '）。', 'Done: ' + MERGE.length + ' files, ' + total + ' pages (' + fmtSize(blob.size) + ').');
+    } catch (e) { msg.textContent = e && e.message === 'lib' ? tx(LIB_FAIL) : (e && e.message) || t('合併失敗。', 'Merge failed.'); }
+    btn.disabled = MERGE.length < 2;
+  });
+
+  /* --- PDF → Word (editable, layout kept as closely as possible) --- */
+  var CJK_RE = /[⺀-鿿豈-﫿＀-￯　-〿]/;
+  var BULLET_RE = /^([•●○◦▪■□◆◇►▶※\-–—*]|\(?\d{1,3}[\.\)、]|[一二三四五六七八九十]+、|\([一二三四五六七八九十]+\))/;
+  function xesc(s){ return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function fontMap(n){
+    n = (n || '').replace(/^[A-Z]{6}\+/, '');
+    var ea = /kai|標楷/i.test(n) ? 'DFKai-SB' : /ming|song|sun|宋|明|serif/i.test(n) && !/sans/i.test(n) ? 'PMingLiU' : 'Microsoft JhengHei';
+    var latin = /times|roman|georgia|garamond|cambria|minion/i.test(n) ? 'Times New Roman' : /arial|helvetica/i.test(n) ? 'Arial' :
+      /courier|mono|consol/i.test(n) ? 'Courier New' : /verdana/i.test(n) ? 'Verdana' : /segoe/i.test(n) ? 'Segoe UI' : /calibri/i.test(n) ? 'Calibri' :
+      (ea === 'PMingLiU' ? 'Times New Roman' : 'Calibri');
+    return {latin:latin, ea:ea};
+  }
+  function objGet(page, id){
+    return new Promise(function(res){
+      var store = String(id).indexOf('g_') === 0 ? page.commonObjs : page.objs, done = false;
+      var fin = function(v){ if (!done) { done = true; res(v || null); } };
+      try { store.get(id, fin); } catch (e) { fin(null); }
+      setTimeout(fin, 4000);
+    });
+  }
+  function imgToCanvas(o){
+    if (!o || !o.width || !o.height) return null;
+    var c = document.createElement('canvas'); c.width = o.width; c.height = o.height;
+    var g = c.getContext('2d');
+    if (o.bitmap) { g.drawImage(o.bitmap, 0, 0); return c; }
+    if (!o.data) return null;
+    var im = g.createImageData(o.width, o.height), d = im.data, s = o.data, n = o.width * o.height, i;
+    if (o.kind === 3) d.set(s.length > n * 4 ? s.subarray(0, n * 4) : s);
+    else if (o.kind === 2) for (i = 0; i < n; i++) { d[i * 4] = s[i * 3]; d[i * 4 + 1] = s[i * 3 + 1]; d[i * 4 + 2] = s[i * 3 + 2]; d[i * 4 + 3] = 255; }
+    else if (o.kind === 1) {
+      var rb = (o.width + 7) >> 3;
+      for (var y = 0; y < o.height; y++) for (var x = 0; x < o.width; x++) {
+        var v = (s[y * rb + (x >> 3)] >> (7 - (x & 7))) & 1 ? 255 : 0, k = (y * o.width + x) * 4;
+        d[k] = d[k + 1] = d[k + 2] = v; d[k + 3] = 255;
+      }
+    } else return null;
+    g.putImageData(im, 0, 0); return c;
+  }
+  async function canvasToImage(c){
+    var max = 2200, k = Math.min(1, max / Math.max(c.width, c.height));
+    if (k < 1) { var c2 = document.createElement('canvas'); c2.width = Math.round(c.width * k); c2.height = Math.round(c.height * k); c2.getContext('2d').drawImage(c, 0, 0, c2.width, c2.height); c = c2; }
+    var px = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, alpha = false;
+    for (var i = 3; i < px.length; i += 16) if (px[i] < 250) { alpha = true; break; }
+    var type = alpha ? 'image/png' : 'image/jpeg';
+    var blob = await new Promise(function(r){ c.toBlob(r, type, 0.88); });
+    return blob ? {blob:blob, ext:alpha ? 'png' : 'jpeg'} : null;
+  }
+  function runsXml(runs){
+    return runs.map(function(r){
+      var f = fontMap(r.font), hs = Math.max(2, Math.round(r.size * 2));
+      var pr = '<w:rPr><w:rFonts w:ascii="' + f.latin + '" w:hAnsi="' + f.latin + '" w:eastAsia="' + f.ea + '" w:cs="' + f.latin + '"/>' +
+        (r.bold ? '<w:b/><w:bCs/>' : '') + (r.italic ? '<w:i/><w:iCs/>' : '') + (r.color ? '<w:color w:val="' + r.color + '"/>' : '') + '<w:sz w:val="' + hs + '"/><w:szCs w:val="' + hs + '"/>' +
+        (r.sup ? '<w:vertAlign w:val="superscript"/>' : '') + '</w:rPr>';
+      return '<w:r>' + pr + (r.tab ? '<w:tab/>' : '<w:t xml:space="preserve">' + xesc(r.text) + '</w:t>') + '</w:r>';
+    }).join('');
+  }
+  function anchorXml(im){
+    var E = 12700, n = im.n;
+    return '<w:r><w:drawing><wp:anchor distT="0" distB="0" distL="0" distR="0" simplePos="0" relativeHeight="' + (251658240 + n) + '" behindDoc="1" locked="0" layoutInCell="1" allowOverlap="1">' +
+      '<wp:simplePos x="0" y="0"/><wp:positionH relativeFrom="page"><wp:posOffset>' + Math.round(im.x * E) + '</wp:posOffset></wp:positionH>' +
+      '<wp:positionV relativeFrom="page"><wp:posOffset>' + Math.round(im.y * E) + '</wp:posOffset></wp:positionV>' +
+      '<wp:extent cx="' + Math.round(im.w * E) + '" cy="' + Math.round(im.h * E) + '"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/>' +
+      '<wp:docPr id="' + n + '" name="Picture ' + n + '"/><wp:cNvGraphicFramePr/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
+      '<pic:pic><pic:nvPicPr><pic:cNvPr id="' + n + '" name="image' + n + '.' + im.ext + '"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdImg' + n + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>' +
+      '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + Math.round(im.w * E) + '" cy="' + Math.round(im.h * E) + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic>' +
+      '</a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>';
+  }
+  function joinText(a, b){
+    var ea = a.slice(-1), sb = b.charAt(0);
+    if (!ea || !sb || /\s/.test(ea) || /\s/.test(sb) || CJK_RE.test(ea) || CJK_RE.test(sb)) return '';
+    return ' ';
+  }
+  function hex(c){ return c.map(function(v){ var s = Math.round(Math.max(0, Math.min(255, v))).toString(16); return s.length < 2 ? '0' + s : s; }).join('').toUpperCase(); }
+  // sample each text item's color (and the background behind it) from the rendered page
+  function sampleColors(items, px, PW, PH, S){
+    var cl = function(v, m){ return Math.max(0, Math.min(m - 1, v)); };
+    items.forEach(function(it){
+      var x0 = cl(Math.floor(it.x * S), PW), x1 = cl(Math.ceil((it.x + it.w) * S), PW), y0 = cl(Math.floor((it.y - it.size * 0.9) * S), PH), y1 = cl(Math.ceil((it.y + it.size * 0.25) * S), PH);
+      it.box = [x0, y0, x1, y1];
+      if (x1 - x0 < 2 || y1 - y0 < 2) return;
+      var ring = {}, inner = {}, add = function(hs, x, y){
+        var k = (y * PW + x) * 4, r = px[k], g = px[k + 1], b = px[k + 2], key = (r >> 3) << 10 | (g >> 3) << 5 | (b >> 3);
+        var h = hs[key] || (hs[key] = [0, 0, 0, 0]); h[0]++; h[1] += r; h[2] += g; h[3] += b;
+      };
+      var rx0 = cl(x0 - 2, PW), rx1 = cl(x1 + 2, PW), ry0 = cl(y0 - 2, PH), ry1 = cl(y1 + 2, PH), x, y;
+      for (x = rx0; x <= rx1; x++) { add(ring, x, ry0); add(ring, x, ry1); }
+      for (y = ry0; y <= ry1; y++) { add(ring, rx0, y); add(ring, rx1, y); }
+      var step = Math.max(1, Math.round(Math.sqrt((x1 - x0) * (y1 - y0) / 5000)));
+      for (y = y0; y < y1; y += step) for (x = x0; x < x1; x += step) add(inner, x, y);
+      var top = function(hs, skip){
+        var best = null;
+        Object.keys(hs).forEach(function(k){
+          var h = hs[k], c = [h[1] / h[0], h[2] / h[0], h[3] / h[0]];
+          if (skip && Math.abs(c[0] - skip[0]) + Math.abs(c[1] - skip[1]) + Math.abs(c[2] - skip[2]) < 90) return;
+          if (!best || h[0] > best.n) best = {n:h[0], c:c};
+        });
+        return best;
+      };
+      var bg = top(ring) || top(inner), fg = bg && top(inner, bg.c);
+      it.bg = bg ? bg.c : [255, 255, 255];
+      if (fg && fg.n >= 2) it.color = fg.c;
+    });
+  }
+  function pageLayout(items, W){
+    // 1. group into lines by baseline
+    items.sort(function(a, b){ return a.y - b.y || a.x - b.x; });
+    var lines = [];
+    items.forEach(function(it){
+      var L = null;
+      for (var k = lines.length - 1; k >= 0 && k >= lines.length - 4; k--) {
+        var c = lines[k];
+        if (Math.abs(c.y - it.y) <= 0.5 * Math.max(c.size, it.size)) { L = c; break; }
+      }
+      if (!L) { L = {y:it.y, size:it.size, items:[]}; lines.push(L); }
+      L.items.push(it);
+    });
+    // 2. per line: cells (split on wide gaps)
+    lines.forEach(function(L){
+      L.items.sort(function(a, b){ return a.x - b.x; });
+      var main = L.items.reduce(function(m, it){ return it.s.length * it.size > m.s.length * m.size ? it : m; }, L.items[0]);
+      L.size = main.size; L.y = main.y;
+      var cells = [], cur = null, prev = null;
+      L.items.forEach(function(it){
+        if (prev && it.s === prev.s && Math.abs(it.x - prev.x) < 1.5) { prev.bold = true; return; }   // fake bold (drawn twice)
+        var gap = prev ? it.x - (prev.x + prev.w) : 0;
+        if (!cur || gap > Math.max(1.8 * L.size, 16)) { cur = {x:it.x, items:[]}; cells.push(cur); }
+        else if (gap > 0.22 * L.size && joinText(prev.s, it.s)) it.pre = ' ';
+        it.sup = it.size < 0.8 * L.size && it.y < L.y - 0.2 * L.size;
+        cur.items.push(it); prev = it;
+      });
+      L.cells = cells; L.x0 = cells[0].x;
+      L.x1 = Math.max.apply(null, L.items.map(function(i){ return i.x + i.w; }));
+      L.text = L.items.map(function(i){ return i.s; }).join('');
+    });
+    var left = Math.min.apply(null, lines.map(function(l){ return l.x0; }));
+    var right = Math.max.apply(null, lines.map(function(l){ return l.x1; }));
+    var mL = Math.max(6, Math.min(left - 1, 160)), mR = Math.max(6, Math.min(W - right - 6, 160)), textR = W - mR;
+    // 3. join wrapped lines back into paragraphs
+    var paras = [];
+    lines.forEach(function(L){
+      var P = paras[paras.length - 1], pl = P && P.lines[P.lines.length - 1], pitch = pl ? L.y - pl.y : 0;
+      var lineR = P ? Math.max.apply(null, P.lines.map(function(l){ return l.x1; })) : 0;
+      // a line only wraps when the next line's first word wouldn't have fit after it
+      var ft = L.text.trim(), tokW = CJK_RE.test(ft.charAt(0)) ? L.size : (((ft.match(/^\S+/) || [''])[0]).length + 1) * 0.5 * L.size;
+      var colR = Math.min(textR, Math.max(lineR, L.x1));
+      var ok = P && L.cells.length === 1 && pl.cells.length === 1 && Math.abs(L.size - pl.size) < 0.6 &&
+        pitch > 0.95 * L.size && pitch < 2 * L.size && (P.lines.length < 2 || Math.abs(pitch - P.pitch) < 1.6) &&
+        pl.x1 + tokW > colR - 0.6 * L.size && !BULLET_RE.test(ft) && !/[：:]$/.test(pl.text.trim()) &&
+        L.x0 < pl.x1 && L.x1 > pl.x0 &&
+        (P.lines.length === 1 ? (L.x0 <= pl.x0 + 1 && pl.x0 - L.x0 < 5 * L.size) : Math.abs(L.x0 - P.lines[1].x0) < 2);
+      if (ok) { P.lines.push(L); if (P.lines.length === 2) P.pitch = pitch; }
+      else paras.push({lines:[L], pitch:0});
+    });
+    // 4. geometry and runs
+    paras.forEach(function(P){
+      var L0 = P.lines[0], size = L0.size;
+      P.size = size; P.multi = P.lines.length > 1;
+      P.lineH = Math.max(P.multi ? P.pitch : size * 1.2, size * 1.08); P.baseOff = P.lineH - 0.24 * size;
+      P.top = L0.y - P.baseOff;
+      P.x1 = Math.max.apply(null, P.lines.map(function(l){ return l.x1; }));
+      P.jc = ''; P.fl = 0;
+      if (P.multi) { P.x0b = P.lines[1].x0; P.fl = L0.x0 - P.x0b; P.jc = 'both'; }
+      else if (L0.cells.length === 1) {
+        var mid = (L0.x0 + L0.x1) / 2, cMid = (mL + textR) / 2;
+        if (Math.abs(mid - cMid) < Math.max(2 * size, 0.02 * W) && L0.x0 - mL > 3 * size) P.jc = 'center';
+        else if (textR - L0.x1 < 8 && L0.x0 - mL > 0.35 * (textR - mL)) P.jc = 'right';
+      }
+      var runs = [];
+      P.lines.forEach(function(L, li){
+        L.cells.forEach(function(c, ci){
+          if (ci > 0) runs.push({tab:true, size:size, font:c.items[0].font});
+          c.items.forEach(function(it, ii){
+            var text = (ii > 0 && it.pre ? ' ' : '') + it.s;
+            if (li > 0 && ci === 0 && ii === 0) {
+              var pt = runs.length ? runs[runs.length - 1].text || '' : '';
+              if (/[A-Za-z]-$/.test(pt) && /^[a-z]/.test(it.s)) runs[runs.length - 1].text = pt.slice(0, -1);
+              else text = joinText(pt, it.s) + text;
+            }
+            var r = runs[runs.length - 1], key = [it.font, Math.round(it.size * 2), !!it.bold, !!it.italic, !!it.sup, it.hex || ''].join('|');
+            if (r && !r.tab && r.key === key) r.text += text;
+            else runs.push({key:key, text:text, size:it.size, font:it.font, bold:it.bold, italic:it.italic, sup:it.sup, color:it.hex});
+          });
+        });
+      });
+      P.runs = runs;
+    });
+    return {paras:paras, mL:mL, mR:mR, textR:textR};
+  }
+  var tw = function(v){ return Math.round(v * 20); };
+  function spacingXml(before, lineH){ return '<w:spacing w:before="' + tw(before) + '" w:after="0" w:line="' + tw(lineH) + '" w:lineRule="exact"/>'; }
+  function indXml(il, ir, fl){ return '<w:ind w:left="' + Math.max(0, tw(il)) + '" w:right="' + Math.max(0, tw(ir)) + '"' + (fl > 0.5 ? ' w:firstLine="' + tw(fl) + '"' : fl < -0.5 ? ' w:hanging="' + tw(-fl) + '"' : '') + '/>'; }
+  function tabsXml(tabs){ return tabs.length ? '<w:tabs>' + tabs.map(function(p){ return '<w:tab w:val="left" w:pos="' + Math.max(0, p) + '"/>'; }).join('') + '</w:tabs>' : ''; }
+  // flowing paragraphs: nicest to edit, used when the page reads top to bottom without overlaps
+  function emitFlow(lay, H){
+    var out = [], prevBottom = null, topMargin = null, drift = 0;
+    lay.paras.forEach(function(P){
+      if (topMargin === null) { topMargin = Math.max(6, Math.min(P.top, 200)); prevBottom = topMargin; }
+      var gap = P.top - prevBottom; if (gap < -0.35 * P.size) drift++;
+      var before = Math.max(0, gap); prevBottom = Math.max(P.top, prevBottom) + P.lineH * P.lines.length;
+      var L0 = P.lines[0], il = 0, ir = 0, tabs = [];
+      if (P.multi) { il = P.x0b - lay.mL; ir = lay.textR - P.x1; }
+      else if (!P.jc) il = L0.x0 - lay.mL;
+      if (L0.cells.length > 1) tabs = L0.cells.slice(1).map(function(c){ return tw(c.x - lay.mL); });
+      out.push({ppr:tabsXml(tabs) + spacingXml(before, P.lineH) + indXml(il, ir, P.fl) + (P.jc ? '<w:jc w:val="' + P.jc + '"/>' : ''), runs:runsXml(P.runs, true)});
+    });
+    return {paras:out, mT:topMargin === null ? 36 : topMargin, ok:drift === 0 && prevBottom < H - 8};
+  }
+  // positioned paragraphs (Word frames): every block stays exactly where it was; still plain editable text
+  function emitFrames(lay, W){
+    return lay.paras.map(function(P){
+      var L0 = P.lines[0], fx, fw, il = 0, fl = 0, tabs = [];
+      if (P.multi) { fx = Math.min(L0.x0, P.x0b); fw = Math.min((P.x1 - fx) * 1.015 + 1, W - fx); il = P.x0b - fx; fl = P.fl; }
+      else {
+        fw = Math.min((L0.x1 - L0.x0) * 1.12 + P.size, W);
+        if (P.jc === 'center') { var mid = (L0.x0 + L0.x1) / 2, half = Math.min(fw / 2, mid, W - mid); fx = mid - half; fw = 2 * half; }
+        else if (P.jc === 'right') { fx = L0.x1 - fw; if (fx < 0) { fw += fx; fx = 0; } }
+        else { fx = L0.x0; fw = Math.min(fw, W - fx); }
+        if (L0.cells.length > 1) tabs = L0.cells.slice(1).map(function(c){ return tw(c.x - fx); });
+      }
+      var fp = '<w:framePr w:w="' + tw(Math.max(fw, P.size)) + '" w:hSpace="0" w:vSpace="0" w:wrap="around" w:vAnchor="page" w:hAnchor="page" w:x="' + tw(Math.max(0, fx)) + '" w:y="' + tw(Math.max(0, P.top)) + '"/>';
+      return {ppr:fp + tabsXml(tabs) + spacingXml(0, P.lineH) + indXml(il, 0, fl) + (P.jc ? '<w:jc w:val="' + P.jc + '"/>' : ''), runs:runsXml(P.runs, false)};
+    });
+  }
+  async function pdfToDocx(file, keepImgs, prog){
+    await loadLib(CDN.pdfjs);
+    var lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = CDN.pdfworker;
+    var pdf;
+    try { pdf = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()), cMapUrl:CDN.cmaps, cMapPacked:true, isEvalSupported:false}).promise; }
+    catch (e) { throw new Error(e && e.name === 'PasswordException' ? t('這個 PDF 有密碼，請先解除密碼。', 'This PDF is password-protected. Remove the password first.') : t('這個 PDF 打不開，檔案可能損壞。', 'This PDF couldn\'t be opened. It may be damaged.')); }
+    await loadLib(CDN.zip);
+    var zip = new JSZip(), body = '', rels = '', imgN = 0, textCount = 0, OPS = lib.OPS, S = 2;
+    var addImage = function(enc, x, y, w, h){
+      imgN++;
+      zip.file('word/media/image' + imgN + '.' + enc.ext, enc.blob);
+      rels += '<Relationship Id="rIdImg' + imgN + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image' + imgN + '.' + enc.ext + '"/>';
+      return anchorXml({n:imgN, x:x, y:y, w:w, h:h, ext:enc.ext});
+    };
+    for (var pn = 1; pn <= pdf.numPages; pn++) {
+      prog(pn, pdf.numPages);
+      var page = await pdf.getPage(pn), vp = page.getViewport({scale:1}), W = vp.width, H = vp.height;
+      var ops = await page.getOperatorList(), tc = await page.getTextContent(), items = [];
+      tc.items.forEach(function(it){
+        if (!it.str || !it.str.trim()) return;
+        var m = lib.Util.transform(vp.transform, it.transform), size = Math.hypot(m[2], m[3]);
+        if (!(size > 1) || Math.abs(m[1]) > 0.2 * Math.abs(m[0]) || Math.abs(m[2]) > 0.2 * Math.abs(m[3])) return;   // skip rotated text
+        var fo = null; try { fo = page.commonObjs.get(it.fontName); } catch (e) {}
+        var fn = (fo && fo.name) || '';
+        items.push({s:it.str.replace(/\s+/g, ' '), x:m[4], y:m[5], w:Math.abs(it.width) || it.str.length * size * 0.5, size:size, font:fn,
+          bold:!!(fo && (fo.bold || fo.black)) || /bold|black|heavy|semibold|demi|w[6-9]\b/i.test(fn), italic:!!(fo && fo.italic) || /italic|oblique/i.test(fn)});
+      });
+      textCount += items.length;
+      // read embedded images before rendering (rendering frees them)
+      var pageImgs = [];
+      if (keepImgs) {
+        var stack = [], ctm = [1, 0, 0, 1, 0, 0], found = [];
+        for (var i = 0; i < ops.fnArray.length; i++) {
+          var fnc = ops.fnArray[i], a = ops.argsArray[i];
+          if (fnc === OPS.save) stack.push(ctm.slice());
+          else if (fnc === OPS.restore) ctm = stack.pop() || ctm;
+          else if (fnc === OPS.transform) ctm = lib.Util.transform(ctm, a);
+          else if (fnc === OPS.paintFormXObjectBegin) { stack.push(ctm.slice()); if (a && a[0]) ctm = lib.Util.transform(ctm, a[0]); }
+          else if (fnc === OPS.paintFormXObjectEnd) ctm = stack.pop() || ctm;
+          else if (fnc === OPS.paintImageXObject || fnc === OPS.paintInlineImageXObject || fnc === OPS.paintJpegXObject) {
+            var mm = lib.Util.transform(vp.transform, ctm), pts = [[0, 0], [1, 0], [0, 1], [1, 1]].map(function(p){ return [mm[0] * p[0] + mm[2] * p[1] + mm[4], mm[1] * p[0] + mm[3] * p[1] + mm[5]]; });
+            var xs = pts.map(function(p){ return p[0]; }), ys = pts.map(function(p){ return p[1]; });
+            var bx = Math.min.apply(null, xs), by = Math.min.apply(null, ys), bw = Math.max.apply(null, xs) - bx, bh = Math.max.apply(null, ys) - by;
+            if (bw >= 6 && bh >= 6) found.push({ref:a[0], inline:fnc === OPS.paintInlineImageXObject, x:bx, y:by, w:bw, h:bh});
+          }
+        }
+        for (var j = 0; j < found.length && j < 60; j++) {
+          var fd = found[j], o = fd.inline ? fd.ref : await objGet(page, fd.ref), ic = imgToCanvas(o);
+          if (!ic) continue;
+          var enc = await canvasToImage(ic);
+          if (enc) pageImgs.push({enc:enc, x:fd.x, y:fd.y, w:fd.w, h:fd.h});
+        }
+      }
+      // render the page once: text colors, and the background for positioned pages
+      var cv = document.createElement('canvas'), svp = page.getViewport({scale:S});
+      cv.width = Math.ceil(svp.width); cv.height = Math.ceil(svp.height);
+      var g = cv.getContext('2d', {willReadFrequently:true});
+      g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+      await page.render({canvasContext:g, viewport:svp, intent:'print'}).promise;   // print intent keeps going in background tabs
+      if (items.length) sampleColors(items, g.getImageData(0, 0, cv.width, cv.height).data, cv.width, cv.height, S);
+      var lay = items.length ? pageLayout(items, W) : null, flow = null, frames = W > H || !lay;
+      var colorize = function(white){
+        items.forEach(function(it){
+          var c = it.color; it.hex = '';
+          if (!c || Math.max(c[0], c[1], c[2]) < 80) return;
+          if (!white && Math.min(c[0], c[1], c[2]) > 225) return;
+          it.hex = hex(c);
+        });
+      };
+      if (lay && !frames) { colorize(false); lay = pageLayout(items, W); flow = emitFlow(lay, H); if (!flow.ok) frames = true; }
+      var paras, mT = 36, mL = 36, mR = 36, anchors = '';
+      if (frames) {
+        colorize(true);
+        if (items.length) { lay = pageLayout(items, W); paras = emitFrames(lay, W); }
+        else paras = [];
+        if (keepImgs) {
+          items.forEach(function(it){ if (!it.box) return; g.fillStyle = 'rgb(' + it.bg.map(Math.round).join(',') + ')'; g.fillRect(it.box[0] - 1, it.box[1] - 1, it.box[2] - it.box[0] + 2, it.box[3] - it.box[1] + 2); });
+          var bgImg = await new Promise(function(r){ cv.toBlob(r, 'image/jpeg', 0.86); });
+          if (bgImg) anchors = addImage({blob:bgImg, ext:'jpeg'}, 0, 0, W, H);
+        }
+      } else {
+        paras = flow.paras; mT = flow.mT; mL = lay.mL; mR = lay.mR;
+        pageImgs.forEach(function(pi){ anchors += addImage(pi.enc, pi.x, pi.y, pi.w, pi.h); });
+      }
+      cv.width = cv.height = 1;
+      var last = pn === pdf.numPages;
+      var sect = '<w:sectPr>' + (last ? '' : '<w:type w:val="nextPage"/>') + '<w:pgSz w:w="' + Math.round(W * 20) + '" w:h="' + Math.round(H * 20) + '"' + (W > H ? ' w:orient="landscape"' : '') + '/>' +
+        '<w:pgMar w:top="' + Math.round(mT * 20) + '" w:right="' + Math.round(mR * 20) + '" w:bottom="200" w:left="' + Math.round(mL * 20) + '" w:header="0" w:footer="0" w:gutter="0"/></w:sectPr>';
+      // frames float, so the page's last (normal) paragraph carries the images and the section break
+      if (frames || !paras.length) paras = paras.concat([{ppr:'<w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/>', runs:''}]);
+      paras.forEach(function(p, k){
+        var isLast = k === paras.length - 1;
+        body += '<w:p><w:pPr>' + p.ppr + (isLast && !last ? sect : '') + '</w:pPr>' + (isLast ? anchors : '') + p.runs + '</w:p>';
+      });
+      if (last) body += sect;
+      page.cleanup();
+    }
+    pdf.destroy();
+    if (!textCount) throw new Error(t('這個 PDF 裡沒有文字（可能是掃描檔），要先做 OCR 才能轉成可以編輯的 Word。', 'This PDF has no text (it may be a scan). It needs OCR before it can become an editable Word file.'));
+    var W_NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+    zip.file('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+      '<Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/>' +
+      '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+      '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>');
+    zip.file('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+    zip.file('word/_rels/document.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' + rels + '</Relationships>');
+    zip.file('word/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ' + W_NS + '><w:docDefaults><w:rPrDefault><w:rPr>' +
+      '<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Microsoft JhengHei" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US" w:eastAsia="zh-TW"/></w:rPr></w:rPrDefault>' +
+      '<w:pPrDefault><w:pPr><w:widowControl w:val="0"/><w:autoSpaceDE w:val="0"/><w:autoSpaceDN w:val="0"/><w:snapToGrid w:val="0"/><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
+      '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>');
+    zip.file('word/document.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ' + W_NS +
+      ' xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
+      '<w:body>' + body + '</w:body></w:document>');
+    return zip.generateAsync({type:'blob', compression:'DEFLATE', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  }
+  var wordBusy = Promise.resolve();
+  dropZone('wordDrop', function(files){
+    var f = files[0], row = cvRow('wordList', f.name);
+    $('wordMsg').textContent = files.length > 1 ? t('一次轉一個檔案，只處理第一個。', 'One file at a time; only the first was used.') : '';
+    if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { row.error(t('不是 PDF', 'Not a PDF')); return; }
+    var keep = $('wordImgs').checked;
+    wordBusy = wordBusy.then(async function(){
+      row.status(t('準備中…', 'Preparing…'));
+      try {
+        var blob = await pdfToDocx(f, keep, function(i, n){ row.status(t('第 ' + i + ' / ' + n + ' 頁', 'Page ' + i + ' / ' + n)); });
+        row.done(blob, baseName(f.name) + '.docx');
+      } catch (e) { row.error(e && e.message === 'lib' ? tx(LIB_FAIL) : (e && e.message) || t('轉換失敗', 'Conversion failed')); }
+    });
+  });
 
   /* ================= pitch timer ================= */
   var TM = {segs:[], idx:0, running:false, endAt:0, remain:0, fired:{}, warn:60, danger:30};
