@@ -1219,17 +1219,10 @@
       var top = el('div', 'award-top'); top.appendChild(el('span', 'yr', w[0]));
       top.appendChild(el('span', 'see', t('看作品', 'See project') + ' →')); body.appendChild(top);
       var h = el('h3'), ob = el('button', 'award-open', tx(w[1])); ob.type = 'button';
-      ob.addEventListener('click', function(){ openProj(w[6], {comp:w[1], year:w[0], rank:w[3]}); });
+      ob.addEventListener('click', function(){ openProj(w[6], {comp:w[1], year:w[0], rank:w[3], photo:w[5]}); });
       h.appendChild(ob); body.appendChild(h);
       if (w[2]) body.appendChild(el('div', 'sub', tx(w[2])));
       foot.appendChild(el('span', 'rank' + (w[4] ? '' : ' soft'), tx(w[3])));
-      if (w[5]) {
-        var pb = el('button', 'photo-btn'); pb.type = 'button';
-        pb.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M9 6l1.5-2h3L15 6"/></svg><span></span>';
-        pb.querySelector('span').textContent = t('看照片', 'Photo');
-        pb.addEventListener('click', function(){ openLightbox(w[5][0], tx(w[5][2])); });
-        foot.appendChild(pb);
-      }
       body.appendChild(foot);
       c.appendChild(body); ag.appendChild(c);
     });
@@ -1758,12 +1751,11 @@
   $('lightbox').addEventListener('click', function(e){ if (e.target === this) closeLightbox(); });
 
   /* ================= competition project dialog ================= */
-  var PD = {key:null, ctx:null, i:0};
+  var PD = {key:null, ctx:null, i:0, list:[]};
   function fillList(ul, items){ ul.innerHTML = ''; items.forEach(function(x){ ul.appendChild(el('li', null, tx(x))); }); }
   function showProjImg(i){
-    var p = COMP[PD.key]; PD.i = i;
-    var img = $('pdImg'); img.src = 'img/' + p.imgs[i] + '.jpg';
-    img.alt = tx(p.name) + t('　簡報第 ' + (i + 1) + ' 張', ', slide ' + (i + 1));
+    PD.i = i;
+    var img = $('pdImg'); img.src = PD.list[i][0]; img.alt = PD.list[i][1];
     $('pdThumbs').querySelectorAll('button').forEach(function(b, k){ b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
   }
   function fillProj(){
@@ -1777,11 +1769,14 @@
     fillList($('pdDid'), p.did);
     $('pdRoleSec').hidden = !p.role;
     if (p.role) fillList($('pdRole'), p.role);
-    var th = $('pdThumbs'); th.innerHTML = ''; th.hidden = p.imgs.length < 2;
-    p.imgs.forEach(function(s, k){
+    PD.list = (c.photo ? [[c.photo[0], tx(c.photo[2])]] : []).concat(p.imgs.map(function(s, k){
+      return ['img/' + s + '.jpg', tx(p.name) + t('　簡報第 ' + (k + 1) + ' 張', ', slide ' + (k + 1))];
+    }));
+    var th = $('pdThumbs'); th.innerHTML = ''; th.hidden = PD.list.length < 2;
+    PD.list.forEach(function(s, k){
       var b = el('button'), im = el('img'); b.type = 'button';
-      b.setAttribute('aria-label', t('第 ' + (k + 1) + ' 張', 'Slide ' + (k + 1)));
-      im.src = 'img/' + s + '.jpg'; im.alt = ''; im.loading = 'lazy'; b.appendChild(im);
+      b.setAttribute('aria-label', t('第 ' + (k + 1) + ' 張', 'Image ' + (k + 1)));
+      im.src = s[0]; im.alt = ''; b.appendChild(im);
       b.addEventListener('click', function(){ showProjImg(k); });
       th.appendChild(b);
     });
@@ -1796,7 +1791,7 @@
     p.links.forEach(function(l){
       var a = el('a', 'pd-link', tx(l[0]) + ' ↗'); a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; ln.appendChild(a);
     });
-    showProjImg(Math.min(PD.i, p.imgs.length - 1));
+    showProjImg(Math.min(PD.i, PD.list.length - 1));
   }
   function openProj(key, ctx){
     if (!COMP[key]) return;
