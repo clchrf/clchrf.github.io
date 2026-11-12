@@ -48,7 +48,7 @@
   body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
   h1,h2,h3{margin:0;text-wrap:balance}
   p{margin:0}
-  a{color:var(--link)}
+  a{color:var(--ink)}
   button{font:inherit;color:inherit}
   :focus-visible{outline:3px solid color-mix(in srgb, var(--link) 55%, transparent);outline-offset:2px}
   .wrap{max-width:1080px;margin:0 auto}
@@ -213,7 +213,9 @@
   .proj p{color:var(--ink-2);font-size:16px}
   .proj .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
   .proj .tag{font-size:12px;padding:3px 10px}
-  .go{color:var(--link);font-size:15px;font-weight:500;margin-top:auto;padding-top:8px}
+  .go{color:var(--ink);font-size:15px;font-weight:600;margin-top:auto;padding-top:8px;align-self:flex-start;
+    border-bottom:1.5px solid var(--line);transition:border-color .15s}
+  .proj:hover .go{border-color:var(--ink)}
   .more{margin-top:22px;padding:8px 30px}
   .mrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center;padding:18px 0;border-top:1px solid var(--line)}
   .mrow:first-child{border-top:none}
@@ -264,7 +266,8 @@
   .award{position:relative;transition:box-shadow .2s, transform .2s}
   .award:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
   .award-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-  .award .see{font-size:13px;font-weight:600;color:var(--link)}
+  .award .see{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .award:hover .see{color:var(--ink)}
   .award-open{all:unset;cursor:pointer}
   .award-open::after{content:"";position:absolute;inset:0;border-radius:var(--r-md)}
   .award-open:focus-visible::after{outline:2px solid var(--link);outline-offset:2px}
@@ -423,6 +426,33 @@
   .screen[data-state="over"]{box-shadow:inset 0 0 0 2px var(--red)}
   .screen:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0;padding:6vw}
   .screen:fullscreen .t-clock{font-size:min(30vw,52vh)}
+  .dl-clock{font-size:clamp(56px,12vw,150px)}
+  .screen:fullscreen .dl-clock{font-size:min(15vw,40vh)}
+  .dl-clock small{font-size:.42em;font-weight:600;letter-spacing:0;margin:0 .18em 0 .04em;opacity:.7}
+
+  /* capacitor codes */
+  .cap-units{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .cap-units span{background:var(--fill);border-radius:999px;padding:6px 14px;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+
+  /* hsv picker */
+  .hsv-file{position:relative;overflow:hidden}
+  .hsv-file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .hsv-file:focus-within{outline:3px solid color-mix(in srgb, var(--ink) 40%, transparent);outline-offset:2px}
+  .hsv-views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+  @media (max-width:700px){ .hsv-views{grid-template-columns:1fr} }
+  .hsv-views figure{margin:0}
+  .hsv-views canvas{display:block;width:100%;height:auto;border-radius:var(--r-sm);background:var(--fill-2)}
+  #hsvSrc{cursor:crosshair}
+  .hsv-views figcaption{font-size:13px;color:var(--ink-2);margin-top:6px}
+  .panel.drag{box-shadow:0 0 0 3px var(--ink-3), var(--shadow)}
+  .hsv-sliders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 28px}
+  @media (max-width:700px){ .hsv-sliders{grid-template-columns:1fr} }
+  .hsv-ch .k{display:flex;justify-content:space-between}
+  .hsv-ch .bar{height:10px;border-radius:5px;margin:10px 0 4px}
+  .hsv-ch label{display:grid;grid-template-columns:3.2em 1fr 3em;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:6px}
+  .hsv-ch input[type=range]{width:100%;accent-color:var(--ink)}
+  .hsv-ch output{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);font-weight:600}
+  .code{font-family:var(--mono);font-size:14px;line-height:1.7;background:var(--fill-2);border-radius:var(--r-sm);padding:16px 18px;margin-top:10px;overflow-x:auto;white-space:pre}
   .check{display:flex;gap:10px;align-items:center;font-size:15px;margin-top:16px;cursor:pointer}
   .check input{width:18px;height:18px;accent-color:var(--ink)}
 </style>
@@ -653,6 +683,7 @@
     <button type="button" role="tab" aria-selected="false" data-tab="led" data-en="LED resistor">LED 限流</button>
     <button type="button" role="tab" aria-selected="false" data-tab="div" data-en="Voltage divider">分壓</button>
     <button type="button" role="tab" aria-selected="false" data-tab="rc" data-en="RC time constant">RC 時間常數</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="cap" data-en="Capacitor codes">電容代碼</button>
   </div>
 
   <div data-panel="res">
@@ -720,6 +751,89 @@
       <div class="big" id="rcTau">—</div>
       <p class="note" id="rcNote"></p>
       <div class="svg-box" style="margin-top:20px"><svg class="tool-svg" id="rcSvg" viewBox="0 0 520 220" style="min-width:460px" role="img" aria-label="RC charging curve"></svg></div>
+    </div>
+  </div>
+
+  <div data-panel="cap" hidden>
+    <div class="panel">
+      <div class="fields">
+        <div class="field"><label for="capCode" data-en="Code printed on the capacitor">電容上的代碼</label><input class="input" id="capCode" value="104" placeholder="例如 104、472J、4R7" data-en-ph="e.g. 104, 472J, 4R7" autocomplete="off"></div>
+      </div>
+      <div class="chips" id="capChips" style="margin-top:14px">
+        <button type="button" class="chip" data-c="104">104</button><button type="button" class="chip" data-c="103">103</button>
+        <button type="button" class="chip" data-c="102">102</button><button type="button" class="chip" data-c="220">220</button>
+        <button type="button" class="chip" data-c="105">105</button><button type="button" class="chip" data-c="4R7">4R7</button>
+      </div>
+      <div class="big" id="capValue" style="margin-top:20px">—</div>
+      <div class="cap-units" id="capUnits"></div>
+      <p class="note" id="capNote"></p>
+    </div>
+    <div class="panel">
+      <div class="rev">
+        <div class="field"><label for="capReverse" data-en="Find the code for a capacitance">輸入容值找代碼</label><input class="input" id="capReverse" placeholder="例如 100n、0.1u、47p" data-en-ph="e.g. 100n, 0.1u, 47p" autocomplete="off"></div>
+        <button type="button" class="pill dark" id="capReverseBtn" data-en="Find code">找代碼</button>
+      </div>
+      <p class="note" id="capReverseMsg"></p>
+      <p class="note" data-en="How it reads: the first two digits are the value, the third is how many zeros to add, in pF. 104 = 10 × 10⁴ pF = 100 nF. An R marks the decimal point, and a trailing letter is the tolerance.">怎麼讀：前兩位是數字，第三位是後面補幾個 0，單位是 pF。104 = 10 × 10⁴ pF = 100 nF。R 代表小數點，最後的英文字母是誤差。</p>
+    </div>
+  </div>
+</main>
+
+<!-- ===================== HSV ===================== -->
+<main class="wrap" data-view="hsv" hidden>
+  <div class="tool-top">
+    <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
+    <h1 class="tool-title" data-en="OpenCV HSV Threshold Picker">OpenCV HSV 色彩門檻</h1>
+    <p class="tool-sub" data-en="Upload a photo, drag the sliders and watch the mask update, then copy the lower and upper arrays straight into cv2.inRange. Click the photo to pick a color. The photo never leaves your device.">上傳一張照片，拉滑桿即時看遮罩，再把 lower、upper 陣列直接複製到 cv2.inRange。點照片可以直接吸顏色。照片不會離開這台裝置。</p>
+  </div>
+  <div class="panel">
+    <div class="chips" style="align-items:center;gap:12px">
+      <label class="pill dark hsv-file"><input type="file" id="hsvFile" accept="image/*"><span data-en="Choose a photo">選擇照片</span></label>
+      <button type="button" class="pill gray" id="hsvDemo" data-en="Try a sample">用範例圖</button>
+      <div class="seg" id="hsvMode"><button type="button" data-m="mask" aria-pressed="true" data-en="Mask">遮罩</button><button type="button" data-m="keep" aria-pressed="false" data-en="Kept colors">保留的顏色</button></div>
+    </div>
+    <p class="note" id="hsvMsg" data-en="You can also drop an image onto this panel.">也可以直接把圖片拖到這裡。</p>
+    <div class="hsv-views" id="hsvViews" hidden>
+      <figure><canvas id="hsvSrc" aria-label="原圖，點一下吸取顏色" data-en-label="Original photo, click to pick a color"></canvas><figcaption data-en="Original (click to pick)">原圖（點一下吸色）</figcaption></figure>
+      <figure><canvas id="hsvOut" aria-label="遮罩結果" data-en-label="Mask result"></canvas><figcaption id="hsvCount"></figcaption></figure>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="hsv-sliders" id="hsvSliders"></div>
+    <p class="note" id="hsvWrap"></p>
+  </div>
+  <div class="panel">
+    <div class="k">Python</div>
+    <pre class="code" id="hsvCode"></pre>
+    <div class="btns" style="margin-top:14px"><button type="button" class="pill dark" id="hsvCopy" data-en="Copy code">複製程式碼</button><button type="button" class="pill gray" id="hsvReset" data-en="Reset sliders">重設滑桿</button></div>
+  </div>
+</main>
+
+<!-- ===================== DEADLINE ===================== -->
+<main class="wrap" data-view="deadline" hidden>
+  <div class="tool-top">
+    <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
+    <h1 class="tool-title" data-en="Deadline Countdown">比賽倒數</h1>
+    <p class="tool-sub" data-en="Set the submission deadline and put a big countdown on the projector. It turns amber with an hour left and red with ten minutes left. Your deadline is saved in this browser.">設定繳交截止時間，大字倒數，可以全螢幕投影。剩一小時變黃、剩十分鐘變紅。截止時間會記在這個瀏覽器裡。</p>
+  </div>
+  <div class="screen" id="dlDisplay" data-state="idle">
+    <div class="t-label" id="dlLabel"></div>
+    <div class="t-clock dl-clock" id="dlClock">—</div>
+    <div class="t-next" id="dlWhen"></div>
+  </div>
+  <div class="btns" style="margin-top:18px">
+    <button type="button" class="pill dark" id="dlFull" data-en="Fullscreen">全螢幕</button>
+  </div>
+  <p class="note" id="dlMsg"></p>
+  <div class="panel">
+    <div class="fields">
+      <div class="field"><label for="dlName" data-en="What's due">倒數什麼</label><input class="input" id="dlName" placeholder="繳交截止" data-en-ph="Submission deadline" maxlength="40"></div>
+      <div class="field"><label for="dlAt" data-en="Deadline">截止時間</label><input class="input" id="dlAt" type="datetime-local"></div>
+    </div>
+    <div class="k" style="margin-top:20px" data-en="Hackathon presets (from now)">黑客松常見長度（從現在開始算）</div>
+    <div class="chips" id="dlPresets" style="margin-top:10px">
+      <button type="button" class="chip" data-h="12" data-en="12 hours">12 小時</button><button type="button" class="chip" data-h="24" data-en="24 hours">24 小時</button>
+      <button type="button" class="chip" data-h="36" data-en="36 hours">36 小時</button><button type="button" class="chip" data-h="48" data-en="48 hours">48 小時</button>
     </div>
   </div>
 </main>
@@ -916,7 +1030,7 @@
   new MutationObserver(drawThemeBtn).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
   /* ================= router ================= */
-  var VIEWS = ['tools','calc','kmap','timer','policy'], current = 'home';
+  var VIEWS = ['tools','calc','kmap','timer','hsv','deadline','policy'], current = 'home';
   function route(){
     var h = decodeURIComponent(location.hash.replace(/^#/, ''));
     var view = VIEWS.indexOf(h) >= 0 ? h : 'home', changed = view !== current;
@@ -1179,12 +1293,16 @@
     ['img/g-mascot.jpg', ['把問題講清楚', 'Making the problem clear'], ['決賽簡報裡的痛點分析', 'The problem breakdown in a final pitch'], ['李欣妍站在大螢幕旁簡報，螢幕上有手繪吉祥物', 'Hsin-Yen presenting next to a big screen showing a hand-drawn mascot']]
   ];
   var TOOLS = [
-    {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、LED 限流電阻、分壓、RC 時間常數，數值可以直接打 4.7k。', 'Resistor color codes, LED resistors, voltage dividers and RC time constants. Type values like 4.7k.'],
+    {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、電容代碼、LED 限流電阻、分壓、RC 時間常數，數值可以直接打 4.7k。', 'Resistor colors, capacitor codes, LED resistors, voltage dividers and RC time constants. Type values like 4.7k.'],
       icon:'<path d="M3 17h6M25 17h6"/><rect x="9" y="11" width="16" height="12" rx="4"/><path d="M14 11v12M18 11v12M21 11v12"/>'},
     {href:'#kmap', name:['卡諾圖化簡', 'Karnaugh Map Solver'], desc:['點格子或輸入 Σm，自動化簡成 SOP／POS，順便畫出邏輯電路。', 'Click cells or type Σm. Get the minimal SOP / POS form and the logic circuit.'],
       icon:'<path d="M4 12h8M4 22h8M12 7h7a10 10 0 0 1 0 20h-7z M29 17h3"/>'},
     {href:'#timer', name:['簡報計時器', 'Pitch Timer'], desc:['黑客松 pitch 用。簡報接 Q&A 連續倒數，剩一分鐘變黃、三十秒變紅。', 'For hackathon pitches. Pitch then Q&A back to back; amber at one minute, red at thirty seconds.'],
-      icon:'<circle cx="17" cy="19" r="11"/><path d="M17 19v-6M13 4h8M17 4v4M26 9l2-2"/>'}
+      icon:'<circle cx="17" cy="19" r="11"/><path d="M17 19v-6M13 4h8M17 4v4M26 9l2-2"/>'},
+    {href:'#hsv', name:['OpenCV HSV 色彩門檻', 'OpenCV HSV Picker'], desc:['上傳照片拉滑桿，即時看遮罩，直接複製 lower、upper 陣列。做顏色追蹤必備。', 'Upload a photo, drag the sliders, watch the mask, and copy the lower and upper arrays for color tracking.'],
+      icon:'<path d="M22 5l7 7-3 3-7-7z M19 8L7 20l-2 7 7-2 12-12"/><path d="M9 21l4 4"/>'},
+    {href:'#deadline', name:['比賽倒數', 'Deadline Countdown'], desc:['設定繳交截止時間，大字倒數可以全螢幕投影。跟簡報計時器是一對。', 'Set the submission deadline and project a big countdown. A pair with the pitch timer.'],
+      icon:'<path d="M9 4h16M9 30h16M11 4c0 8 12 8 12 13s-12 5-12 13M23 4c0 8-12 8-12 13s12 5 12 13"/>'}
   ];
 
   /* ================= render home ================= */
@@ -1640,6 +1758,206 @@
   segInit('formSeg', 'aria-pressed', function(b){ KM.form = b.getAttribute('data-form'); renderKmap(); });
   $('kmClear').addEventListener('click', function(){ kmReset(KM.n); syncText(); renderKmap(); });
 
+  /* ================= capacitor codes ================= */
+  var CAP_TOL = {B:'±0.1 pF', C:'±0.25 pF', D:'±0.5 pF', F:'±1%', G:'±2%', J:'±5%', K:'±10%', M:'±20%', Z:'+80% / −20%'};
+  var CAP_V = {'0J':'6.3 V', '1A':'10 V', '1C':'16 V', '1E':'25 V', '1V':'35 V', '1H':'50 V', '1J':'63 V', '1K':'80 V', '2A':'100 V', '2D':'200 V', '2E':'250 V', '2G':'400 V', '2J':'630 V'};
+  function capDecode(raw){
+    var s = String(raw).toUpperCase().replace(/[\s\-_]/g, ''), volt = null, tol = null, how = '', m;
+    if (!s) return null;
+    m = s.match(/^(\d[A-Z])(\d.*)$/); if (m && CAP_V[m[1]]) { volt = CAP_V[m[1]]; s = m[2]; }
+    m = s.match(/^(.+?)([BCDFGJKMZ])$/); if (m) { tol = m[2]; s = m[1]; }
+    var pf;
+    if (/^(\d*R\d+|\d+R)$/.test(s)) { pf = parseFloat(s.replace('R', '.')); how = t('R 代表小數點', 'R is the decimal point'); }
+    else if (/^\d{3}$/.test(s)) {
+      var e = +s[2], mant = +s.slice(0, 2);
+      pf = mant * (e === 8 ? 0.01 : e === 9 ? 0.1 : Math.pow(10, e));
+      how = s + ' = ' + mant + ' × 10' + '⁰¹²³⁴⁵⁶⁷⁸⁹'[e] + ' pF';
+      if (e === 8 || e === 9) how = s + ' = ' + mant + ' × ' + (e === 8 ? '0.01' : '0.1') + ' pF';
+    }
+    else if (/^\d{1,2}$/.test(s)) { pf = +s; how = t('一到兩位數字就直接是 pF', 'One or two digits are the value in pF'); }
+    else return null;
+    return {pf:pf, tol:tol, volt:volt, how:how};
+  }
+  function calcCap(){
+    var r = capDecode($('capCode').value);
+    if (!r) { $('capValue').textContent = '—'; $('capUnits').innerHTML = ''; $('capNote').textContent = $('capCode').value.trim() ? t('看不懂這個代碼。試試 104、472J 或 4R7 這種寫法。', 'That code doesn\'t look right. Try something like 104, 472J or 4R7.') : ''; return; }
+    $('capValue').textContent = fmtSI(r.pf * 1e-12, 'F');
+    var u = $('capUnits'); u.innerHTML = '';
+    [[1, 'pF'], [1e-3, 'nF'], [1e-6, 'µF']].forEach(function(x){ u.appendChild(el('span', null, trim4(r.pf * x[0]) + ' ' + x[1])); });
+    var bits = [r.how];
+    if (r.tol) bits.push(t('誤差 ', 'Tolerance ') + CAP_TOL[r.tol] + t('（' + r.tol + '）', ' (' + r.tol + ')'));
+    if (r.volt) bits.push(t('耐壓 ', 'Rated ') + r.volt);
+    $('capNote').textContent = bits.join(t('，', ', '));
+  }
+  function capReverse(){
+    var raw = $('capReverse').value.trim(), v = parseSI(raw), msg = $('capReverseMsg');
+    if (!raw) { msg.textContent = ''; return; }
+    if (!(v > 0) || !/[pnuµμm]/i.test(raw.replace(/F$/i, ''))) { msg.textContent = t('請加上單位，例如 100n、0.1u、47p。', 'Add a unit, like 100n, 0.1u or 47p.'); return; }
+    var pf = v / 1e-12, code, exact = true;
+    if (pf < 10) { var r1 = Math.round(pf * 10) / 10; exact = Math.abs(r1 - pf) < 1e-9; code = String(r1).indexOf('.') < 0 ? r1 + 'R0' : String(r1).replace('.', 'R'); if (r1 < 1) code = code.replace(/^0/, ''); }
+    else {
+      var e = Math.floor(Math.log10(pf) + 1e-9) - 1, mant = pf / Math.pow(10, e), rm = Math.round(mant);
+      if (rm >= 100) { rm = 10; e += 1; }
+      exact = Math.abs(rm - mant) < 1e-6;
+      if (e > 7) { msg.textContent = t('這個容值太大，通常會直接印容值（例如 470µF），不會用三位數代碼。', 'That\'s too large for a 3-digit code; big capacitors print the value directly (like 470µF).'); return; }
+      code = rm + '' + e;
+    }
+    msg.textContent = (exact ? t('代碼：', 'Code: ') : t('沒有剛好的代碼，最接近的是 ', 'No exact code; the closest is ')) + code + t('（' + fmtSI(capDecode(code).pf * 1e-12, 'F') + '）', ' (' + fmtSI(capDecode(code).pf * 1e-12, 'F') + ')');
+    $('capCode').value = code; calcCap();
+  }
+  $('capCode').addEventListener('input', calcCap);
+  $('capReverseBtn').addEventListener('click', capReverse);
+  $('capReverse').addEventListener('keydown', function(e){ if (e.key === 'Enter') capReverse(); });
+  document.querySelectorAll('#capChips .chip').forEach(function(c){ c.addEventListener('click', function(){ $('capCode').value = c.getAttribute('data-c'); calcCap(); }); });
+
+  /* ================= HSV threshold picker ================= */
+  var HSV = {w:0, h:0, px:null, hsv:null, lo:[0, 0, 0], hi:[179, 255, 255], mode:'mask', raf:0};
+  var HSV_CH = [['H', 179, 'linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)', ['色相 H（0–179）', 'Hue H (0–179)']],
+    ['S', 255, 'linear-gradient(to right,#fff,#e5383b)', ['飽和度 S（0–255）', 'Saturation S (0–255)']],
+    ['V', 255, 'linear-gradient(to right,#000,#fff)', ['明度 V（0–255）', 'Value V (0–255)']]];
+  (function(){
+    var box = $('hsvSliders');
+    HSV_CH.forEach(function(c, i){
+      var d = el('div', 'hsv-ch');
+      d.innerHTML = '<div class="k"><span data-en="' + c[3][1] + '">' + c[3][0] + '</span></div><div class="bar" style="background:' + c[2] + '"></div>' +
+        '<label><span data-en="Lower">下限</span><input type="range" min="0" max="' + c[1] + '" data-i="' + i + '" data-b="lo"><output></output></label>' +
+        '<label><span data-en="Upper">上限</span><input type="range" min="0" max="' + c[1] + '" data-i="' + i + '" data-b="hi"><output></output></label>';
+      box.appendChild(d);
+    });
+    box.querySelectorAll('input').forEach(function(r){
+      r.addEventListener('input', function(){ HSV[r.getAttribute('data-b')][+r.getAttribute('data-i')] = +r.value; hsvSync(false); hsvQueue(); });
+    });
+  })();
+  function hsvSync(setInputs){
+    $('hsvSliders').querySelectorAll('input').forEach(function(r){
+      var v = HSV[r.getAttribute('data-b')][+r.getAttribute('data-i')];
+      if (setInputs) r.value = v;
+      r.nextElementSibling.textContent = v;
+    });
+    var lo = HSV.lo, hi = HSV.hi, wrap = lo[0] > hi[0];
+    $('hsvWrap').textContent = wrap ? t('H 下限大於上限，代表範圍跨過 0（像紅色）。OpenCV 不會自動繞回，所以程式碼會用兩段 inRange 再合起來。', 'The H lower bound is above the upper bound, so the range wraps past 0 (like red). OpenCV doesn\'t wrap, so the code ORs two inRange calls.') :
+      (lo[1] > hi[1] || lo[2] > hi[2]) ? t('S 或 V 的下限比上限大，這樣什麼都選不到。', 'An S or V lower bound is above its upper bound, so nothing will match.') : '';
+    var arr = function(a){ return 'np.array([' + a.join(', ') + '])'; };
+    $('hsvCode').textContent = 'import cv2\nimport numpy as np\n\nhsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\n' + (wrap ?
+      'lower1 = ' + arr([lo[0], lo[1], lo[2]]) + '\nupper1 = ' + arr([179, hi[1], hi[2]]) + '\nlower2 = ' + arr([0, lo[1], lo[2]]) + '\nupper2 = ' + arr([hi[0], hi[1], hi[2]]) +
+      '\nmask = cv2.inRange(hsv, lower1, upper1) | cv2.inRange(hsv, lower2, upper2)' :
+      'lower = ' + arr(lo) + '\nupper = ' + arr(hi) + '\nmask = cv2.inRange(hsv, lower, upper)');
+  }
+  function hsvQueue(){ if (!HSV.raf) HSV.raf = requestAnimationFrame(function(){ HSV.raf = 0; hsvRender(); }); }
+  function hsvLoad(src){
+    var max = 900, w = src.width, h = src.height, k = Math.min(1, max / Math.max(w, h));
+    w = Math.max(1, Math.round(w * k)); h = Math.max(1, Math.round(h * k));
+    var c = $('hsvSrc'), o = $('hsvOut'); c.width = o.width = w; c.height = o.height = h;
+    var g = c.getContext('2d', {willReadFrequently:true}); g.drawImage(src, 0, 0, w, h);
+    var px = g.getImageData(0, 0, w, h).data, n = w * h, hsv = new Uint8Array(n * 3);
+    for (var i = 0; i < n; i++) {
+      var r = px[i * 4], gg = px[i * 4 + 1], b = px[i * 4 + 2], v = Math.max(r, gg, b), mn = Math.min(r, gg, b), d = v - mn, hh = 0;
+      if (d) { hh = v === r ? 60 * (gg - b) / d : v === gg ? 120 + 60 * (b - r) / d : 240 + 60 * (r - gg) / d; if (hh < 0) hh += 360; }
+      hsv[i * 3] = Math.round(hh / 2) % 180; hsv[i * 3 + 1] = v ? Math.round(255 * d / v) : 0; hsv[i * 3 + 2] = v;
+    }
+    HSV.w = w; HSV.h = h; HSV.px = px; HSV.hsv = hsv;
+    $('hsvViews').hidden = false; $('hsvMsg').textContent = '';
+    hsvRender();
+  }
+  function hsvRender(){
+    if (!HSV.hsv) return;
+    var n = HSV.w * HSV.h, out = new ImageData(HSV.w, HSV.h), o = out.data, hv = HSV.hsv, px = HSV.px, lo = HSV.lo, hi = HSV.hi, wrap = lo[0] > hi[0], keep = HSV.mode === 'keep', hit = 0;
+    for (var i = 0; i < n; i++) {
+      var H = hv[i * 3], S = hv[i * 3 + 1], V = hv[i * 3 + 2];
+      var ok = (wrap ? (H >= lo[0] || H <= hi[0]) : (H >= lo[0] && H <= hi[0])) && S >= lo[1] && S <= hi[1] && V >= lo[2] && V <= hi[2], j = i * 4;
+      if (ok) hit++;
+      if (keep) { o[j] = ok ? px[j] : 0; o[j + 1] = ok ? px[j + 1] : 0; o[j + 2] = ok ? px[j + 2] : 0; }
+      else { o[j] = o[j + 1] = o[j + 2] = ok ? 255 : 0; }
+      o[j + 3] = 255;
+    }
+    $('hsvOut').getContext('2d').putImageData(out, 0, 0);
+    $('hsvCount').textContent = t('選到 ' + (hit / n * 100).toFixed(1) + '% 的像素', (hit / n * 100).toFixed(1) + '% of pixels selected');
+  }
+  function hsvFromFile(f){
+    if (!f || !/^image\//.test(f.type)) { $('hsvMsg').textContent = t('請選一張圖片檔。', 'Please choose an image file.'); return; }
+    var url = URL.createObjectURL(f), im = new Image();
+    im.onload = function(){ hsvLoad(im); URL.revokeObjectURL(url); };
+    im.onerror = function(){ $('hsvMsg').textContent = t('這張圖讀不出來，換成 JPG 或 PNG 試試看。', 'Couldn\'t read that image. Try a JPG or PNG.'); URL.revokeObjectURL(url); };
+    im.src = url;
+  }
+  function hsvDemo(){
+    var c = document.createElement('canvas'); c.width = 720; c.height = 480;
+    var g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 720, 480);
+    gr.addColorStop(0, '#d9d4cc'); gr.addColorStop(1, '#8f8a83'); g.fillStyle = gr; g.fillRect(0, 0, 720, 480);
+    [['#e63946', 140, 150, 80], ['#2a9d8f', 330, 120, 64], ['#f4a261', 520, 170, 74], ['#457b9d', 220, 330, 70], ['#ffd60a', 430, 340, 60], ['#7b2cbf', 610, 360, 52]].forEach(function(b){
+      var rg = g.createRadialGradient(b[1] - b[3] / 3, b[2] - b[3] / 3, b[3] / 6, b[1], b[2], b[3]);
+      rg.addColorStop(0, '#ffffff'); rg.addColorStop(0.25, b[0]); rg.addColorStop(1, '#111111');
+      g.fillStyle = rg; g.beginPath(); g.arc(b[1], b[2], b[3], 0, Math.PI * 2); g.fill();
+    });
+    hsvLoad(c);
+    HSV.lo = [100, 120, 60]; HSV.hi = [125, 255, 255]; hsvSync(true); hsvRender();
+  }
+  $('hsvFile').addEventListener('change', function(){ hsvFromFile(this.files[0]); this.value = ''; });
+  $('hsvDemo').addEventListener('click', hsvDemo);
+  segInit('hsvMode', 'aria-pressed', function(b){ HSV.mode = b.getAttribute('data-m'); hsvRender(); });
+  (function(){
+    var p = $('hsvFile').closest('.panel');
+    ['dragenter', 'dragover'].forEach(function(ev){ p.addEventListener(ev, function(e){ e.preventDefault(); p.classList.add('drag'); }); });
+    ['dragleave', 'drop'].forEach(function(ev){ p.addEventListener(ev, function(e){ e.preventDefault(); p.classList.remove('drag'); }); });
+    p.addEventListener('drop', function(e){ if (e.dataTransfer && e.dataTransfer.files[0]) hsvFromFile(e.dataTransfer.files[0]); });
+  })();
+  $('hsvSrc').addEventListener('click', function(e){
+    if (!HSV.hsv) return;
+    var r = this.getBoundingClientRect(), x = Math.floor((e.clientX - r.left) / r.width * HSV.w), y = Math.floor((e.clientY - r.top) / r.height * HSV.h);
+    var hs = [], ss = 0, vs = 0, cnt = 0;
+    for (var dy = -2; dy <= 2; dy++) for (var dx = -2; dx <= 2; dx++) {
+      var xx = Math.min(HSV.w - 1, Math.max(0, x + dx)), yy = Math.min(HSV.h - 1, Math.max(0, y + dy)), i = (yy * HSV.w + xx) * 3;
+      hs.push(HSV.hsv[i]); ss += HSV.hsv[i + 1]; vs += HSV.hsv[i + 2]; cnt++;
+    }
+    hs.sort(function(a, b){ return a - b; });
+    var H = hs[hs.length >> 1], S = Math.round(ss / cnt), V = Math.round(vs / cnt), cl = function(v, m){ return Math.max(0, Math.min(m, v)); };
+    HSV.lo = [(H - 10 + 180) % 180, cl(S - 70, 255), cl(V - 70, 255)];
+    HSV.hi = [(H + 10) % 180, cl(S + 70, 255), cl(V + 70, 255)];
+    if (HSV.lo[1] < 40) HSV.lo[1] = Math.min(40, S);
+    hsvSync(true); hsvRender();
+  });
+  $('hsvReset').addEventListener('click', function(){ HSV.lo = [0, 0, 0]; HSV.hi = [179, 255, 255]; hsvSync(true); hsvRender(); });
+  $('hsvCopy').addEventListener('click', function(){
+    var txt = $('hsvCode').textContent, b = this, done = function(){ var o = b.textContent; b.textContent = t('已複製', 'Copied'); setTimeout(function(){ b.textContent = o; }, 1400); };
+    try { navigator.clipboard.writeText(txt).then(done, function(){ selectCode(); }); } catch (e) { selectCode(); }
+    function selectCode(){ var rg = document.createRange(); rg.selectNodeContents($('hsvCode')); var s = getSelection(); s.removeAllRanges(); s.addRange(rg); }
+  });
+  hsvSync(true);
+
+  /* ================= deadline countdown ================= */
+  var DL = {at:load('hy-deadline', null)};
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+  function toLocalInput(ms){ var d = new Date(ms); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+  function dlSet(ms){ DL.at = ms; save('hy-deadline', ms); $('dlAt').value = ms ? toLocalInput(ms) : ''; dlTick(); }
+  function dlTick(){
+    var c = $('dlClock'), name = $('dlName').value.trim() || t('繳交截止', 'Submission deadline');
+    if (!DL.at) { c.textContent = '—'; $('dlLabel').textContent = name; $('dlWhen').textContent = t('先在下面設定截止時間', 'Set a deadline below'); $('dlDisplay').dataset.state = 'idle'; return; }
+    var rem = DL.at - Date.now(), over = rem <= 0, a = Math.abs(rem), s = over ? Math.floor(a / 1000) : Math.ceil(a / 1000);
+    var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sc = s % 60;
+    var hms = (d || h ? (d ? pad2(h) : h) + ':' : '') + (d || h ? pad2(m) : m) + ':' + pad2(sc);
+    c.innerHTML = (over ? '+' : '') + (d ? d + '<small>' + t('天', 'd') + '</small>' : '') + hms;
+    $('dlDisplay').dataset.state = over ? 'over' : rem <= 600000 ? 'danger' : rem <= 3600000 ? 'warn' : 'idle';
+    $('dlLabel').textContent = name + (over ? t('・時間到', ' · time\'s up') : '');
+    $('dlWhen').textContent = t('截止：', 'Due ') + new Date(DL.at).toLocaleString(LANG === 'en' ? 'en-US' : 'zh-TW', {month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit'});
+  }
+  $('dlName').value = load('hy-deadline-name', '');
+  $('dlName').addEventListener('input', function(){ save('hy-deadline-name', this.value); dlTick(); });
+  $('dlAt').addEventListener('change', function(){ var v = this.value ? new Date(this.value).getTime() : null; dlSet(isFinite(v) ? v : null); });
+  document.querySelectorAll('#dlPresets .chip').forEach(function(c){
+    c.addEventListener('click', function(){ var ms = Date.now() + (+c.getAttribute('data-h')) * 3600000; dlSet(Math.ceil(ms / 60000) * 60000); });
+  });
+  $('dlFull').addEventListener('click', function(){
+    var st = $('dlDisplay');
+    try {
+      if (document.fullscreenElement) { document.exitFullscreen(); return; }
+      var p = st.requestFullscreen && st.requestFullscreen();
+      if (p && p.then) p.then(requestWake, function(){ $('dlMsg').textContent = t('這個檢視模式不支援全螢幕。', 'Fullscreen isn\'t available in this view.'); });
+    } catch (e) {}
+  });
+  document.addEventListener('fullscreenchange', function(){ if (!document.fullscreenElement && current === 'deadline') releaseWake(); });
+  if (DL.at) $('dlAt').value = toLocalInput(DL.at);
+  setInterval(function(){ if (current === 'deadline') dlTick(); }, 250);
+
   /* ================= pitch timer ================= */
   var TM = {segs:[], idx:0, running:false, endAt:0, remain:0, fired:{}, warn:60, danger:30};
   var audioCtx = null, wakeLock = null;
@@ -1813,6 +2131,8 @@
     if (TM.segs.length) tmRender(TM.running ? TM.endAt - performance.now() : TM.remain);
     if ($('resReverseMsg').textContent) $('resReverseMsg').textContent = '';
     if ($('projDlg').open && PD.key) fillProj();
+    calcCap(); if ($('capReverseMsg').textContent) $('capReverseMsg').textContent = '';
+    hsvSync(false); if (HSV.hsv) hsvRender(); dlTick();
   }
   $('langBtn').addEventListener('click', function(){ LANG = LANG === 'en' ? 'zh' : 'en'; save('hy-lang', LANG); renderAll(); });
 
