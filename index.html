@@ -258,6 +258,49 @@
   .finals{margin-top:18px}
   .finals .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .finals .tag{font-size:14px;padding:7px 14px}
+  .tag.fin{border:none;font-family:inherit;cursor:pointer;text-align:left;transition:background .15s}
+  .tag.fin::after{content:" →";color:var(--ink-3)}
+  .tag.fin:hover{background:var(--line)}
+  .award{position:relative;transition:box-shadow .2s, transform .2s}
+  .award:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+  .award-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .award .see{font-size:13px;font-weight:600;color:var(--link)}
+  .award-open{all:unset;cursor:pointer}
+  .award-open::after{content:"";position:absolute;inset:0;border-radius:var(--r-md)}
+  .award-open:focus-visible::after{outline:2px solid var(--link);outline-offset:2px}
+  .award .photo-btn{position:relative;z-index:1}
+  @media (prefers-reduced-motion: reduce){ .award, .award:hover{transform:none;transition:none} }
+
+  /* competition project dialog */
+  #projDlg{border:none;padding:0;background:var(--card);color:var(--ink);border-radius:var(--r-lg);width:min(880px,calc(100vw - 32px));
+    max-width:none;max-height:calc(100dvh - 48px);overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.45);overscroll-behavior:contain}
+  #projDlg::backdrop{background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .pd{padding:30px 36px 36px}
+  @media (max-width:600px){ .pd{padding:22px 18px 26px} }
+  .pd-close{position:sticky;top:0;float:right;margin:-8px -14px 0 12px;width:36px;height:36px;border-radius:50%;border:none;background:var(--fill);
+    color:var(--ink);font-size:22px;line-height:1;cursor:pointer;z-index:2}
+  .pd-close:hover{background:var(--line)}
+  .pd h2{font-size:clamp(26px,4.4vw,36px);font-weight:700;letter-spacing:-0.02em;line-height:1.2;margin-top:6px}
+  .pd-pitch{color:var(--ink-2);font-size:17px;line-height:1.6;margin-top:8px}
+  .pd .rank{display:inline-block;margin-top:14px}
+  .pd-media{margin:22px 0 0;border-radius:var(--r-md);overflow:hidden;background:var(--fill-2);aspect-ratio:16/9}
+  .pd-zoom{display:block;width:100%;height:100%;padding:0;border:none;background:none;cursor:zoom-in}
+  .pd-media img{display:block;width:100%;height:100%;object-fit:contain}
+  .pd-thumbs{display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
+  .pd-thumbs button{flex:0 1 104px;min-width:0;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;
+    background:var(--fill-2);cursor:pointer;opacity:.6;transition:opacity .15s}
+  .pd-thumbs button:hover{opacity:.9}
+  .pd-thumbs button[aria-current="true"]{border-color:var(--ink);opacity:1}
+  .pd-thumbs img{display:block;width:100%;height:100%;object-fit:cover}
+  .pd-body{display:grid;gap:22px;margin-top:28px}
+  .pd-body h3{font-size:17px;font-weight:700}
+  .pd-body p, .pd-body li{color:var(--ink-2);font-size:16px;line-height:1.75}
+  .pd-body p{margin-top:6px}
+  .pd-body ul{margin:8px 0 0;padding-left:1.2em;display:grid;gap:6px}
+  .pd-links{display:flex;flex-wrap:wrap;gap:10px}
+  .pd-link{display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-ink);
+    font-size:15px;font-weight:600;text-decoration:none}
+  .pd-link:hover{opacity:.85}
 
   /* gallery */
   .gallery{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,31%);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
@@ -518,12 +561,12 @@
   <section class="sec" id="awards">
     <div class="sec-head">
       <h2 data-en="Awards">比賽</h2>
-      <p data-en="More than a dozen hackathons so far. Some ended with a trophy, some ended at the finals.">黑客松打了十幾場，有拿獎回家的，也有進了決賽就回家的。</p>
+      <p data-en="I've taken part in many hackathons and startup competitions. Award or not, every one of them taught me something valuable.">參加過許多黑客松與創業競賽，不論有沒有得名，都有獲得非常寶貴的經驗。</p>
     </div>
     <div class="award-grid" id="awardGrid"></div>
     <div class="card finals">
-      <div class="label">ALSO REACHED THE FINALS</div>
-      <h3 style="margin-top:6px" data-en="Also reached the finals">也進過決賽</h3>
+      <div class="label">FINALIST</div>
+      <h3 style="margin-top:6px" data-en="Finalist, no award">進入決賽但未得獎</h3>
       <div class="chips" id="finalsList"></div>
     </div>
   </section>
@@ -769,6 +812,24 @@
   </div>
 </main>
 
+<dialog id="projDlg" aria-labelledby="pdTitle">
+  <div class="pd">
+    <button type="button" class="pd-close" id="pdClose" aria-label="關閉" data-en-label="Close">×</button>
+    <div class="label" id="pdComp"></div>
+    <h2 id="pdTitle"></h2>
+    <p class="pd-pitch" id="pdPitch"></p>
+    <span class="rank" id="pdRank"></span>
+    <figure class="pd-media"><button type="button" class="pd-zoom" aria-label="放大" data-en-label="Enlarge"><img id="pdImg" alt=""></button></figure>
+    <div class="pd-thumbs" id="pdThumbs"></div>
+    <div class="pd-body">
+      <section><h3 data-en="About the project">作品介紹</h3><p id="pdDesc"></p></section>
+      <section><h3 data-en="What we built">做了什麼</h3><ul id="pdDid"></ul></section>
+      <section id="pdRoleSec"><h3 data-en="My part">我負責</h3><ul id="pdRole"></ul></section>
+      <div class="pd-links" id="pdLinks"></div>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="lightbox" aria-label="照片" data-en-label="Photo">
   <button type="button" class="lb-close" id="lbClose" aria-label="關閉" data-en-label="Close">×</button>
   <img id="lbImg" alt="">
@@ -932,24 +993,155 @@
     {name:'ntnu-trans-hub', desc:['師大轉學生、轉系生資訊站：學分抵免、排課、校園生活。', 'An info hub for NTNU transfer students: credit transfer, scheduling, campus life.'], url:'https://github.com/clchrf/ntnu-trans-hub'},
     {name:'moocs-public', desc:['磨課師平台 AI 課程盤點與能力導向的課程推薦網站。', 'A survey of AI courses on Taiwan\'s MOOC platform, with competency-based recommendations.'], url:'https://github.com/moocs-ai/moocs-public', live:'https://moocs-ai.github.io/moocs-public/'}
   ];
+  /* competition → project shown in the project dialog; role:null hides 我負責 */
+  var GH = 'https://github.com/';
+  var COMP = {
+    mitsu: {name:['三菱重工空調 App', 'Mitsubishi Heavy Industries A/C App'],
+      pitch:['讓冷氣看得懂房間，也聽得懂「好熱」。', 'An air conditioner that understands your room, and understands "I\'m hot".'],
+      desc:['大家其實看不太懂溫度數字和用電度數，所以我們把冷氣改成用「感覺」跟「錢」來溝通：掃一次房間，冷氣就知道風該往哪吹；覺得熱就按一下，剩下交給演算法。', 'Most people don\'t really get temperature numbers or kWh, so we made the A/C talk in feelings and money: scan the room once and it knows where to blow; feel hot, press one button, and the algorithm handles the rest.'],
+      did:[['用 Apple RoomPlan 掃描房間格局，設定「風向禁區」和「常待區」', 'Scan the room with Apple RoomPlan, then set no-blow zones and frequent-stay zones'],
+        ['「覺得熱」一鍵模糊控制：先把風帶到人身上，再慢慢降溫加風速', 'One-button "I\'m hot" fuzzy control: airflow on you first, then lower temperature and more fan'],
+        ['跟鬧鐘整合，用溫度變化讓人自然起床', 'Alarm integration that uses temperature to wake you up gently'],
+        ['電費直接顯示新台幣而不是度數，搭配語音、Siri 和桌面小工具', 'Shows cost in NT$ instead of kWh, plus voice control, Siri and widgets'],
+        ['用氣流取代直接降溫，依公開研究估算可省約一成電', 'Uses airflow before cooling; public research suggests about 10% energy saved']],
+      imgs:['c-mitsu-1', 'c-mitsu-2', 'c-mitsu-3'], role:null, links:[]},
+    kahao: {name:['卡好審', 'KaHaoShen'],
+      pitch:['市民齁勝，承辦好審：補助申請和審核，一個系統一次解決。', 'Easier for citizens, easier for reviewers: one system for subsidy applications and review.'],
+      desc:['我們訪談了青年局的承辦人員，發現高峰期一天上百件申請、七成會被退件。卡好審同時改善申請端和審核端，讓民眾一次就交對文件。', 'After interviewing youth-affairs staff we learned that at peak there are 100+ applications a day and about 70% get sent back. KaHaoShen fixes both the applicant side and the reviewer side so people submit the right documents the first time.'],
+      did:[['輸入工具名稱就即時比對可補助名單，依付款方式自動產生要上傳的欄位', 'Type a tool name to check eligibility instantly; upload fields adapt to the payment method'],
+        ['用 Tesseract.js 辨識信用卡號並以 Luhn 檢查，敏感資訊直接在瀏覽器遮罩', 'Card-number OCR with Tesseract.js plus a Luhn check; sensitive data is masked in the browser'],
+        ['把各家銀行 App 截圖自動轉成去個資的教學圖', 'Turns bank-app screenshots into privacy-safe tutorial images automatically'],
+        ['承辦人後台一條龍做 SOP、審案件', 'An all-in-one back office for reviewers to build SOPs and review cases'],
+        ['官方 LINE 智慧化：回答常見問題、推播案件狀態、一步步教補件', 'A smarter official LINE account: FAQs, case-status pushes and step-by-step resubmission help']],
+      imgs:['c-kahao-1', 'c-kahao-2', 'c-kahao-3'], role:null,
+      links:[[['後續版本 MayDru', 'Follow-up: MayDru'], GH + 'PlanktonLab/MayDru']]},
+    eden: {name:['神農計劃 Eden Cube', 'Project Shennong · Eden Cube'],
+      pitch:['用很多台微型溫室主動收集資料，再用 AI 改變農業。', 'Many micro greenhouses collecting data on purpose, then AI to change farming.'],
+      desc:['溫室裡的資料大多又少又雜。Eden Cube 是一個個可以完全控制環境的微型溫室方塊，30 台一起跑就像一間實驗室，產出可以複現的種植資料，拿來訓練「人工農夫智慧 AFI」。', 'Greenhouse data is scarce and messy. Eden Cube is a micro greenhouse with a fully controlled environment; run 30 of them and you have a lab producing reproducible growing data to train AFI, an artificial farmer intelligence.'],
+      did:[['微型溫室方塊：光照、溫濕度、營養液都可以控制和記錄', 'A micro greenhouse cube where light, temperature, humidity and nutrients are controlled and logged'],
+        ['多台同時實驗，大量產生可複現的種植資料', 'Many cubes in parallel, producing reproducible growing data at scale'],
+        ['先從高單價的草莓切入，再延伸到其他作物', 'Starts with high-value strawberries, then expands to other crops'],
+        ['商業模式：B2B SaaS，把訓練好的 AFI 賣給溫室業者', 'Business model: B2B SaaS, selling the trained AFI to greenhouse operators']],
+      imgs:['c-eden-1', 'c-eden-2', 'c-eden-3'],
+      role:[['CMO & COO：負責行銷、公關和營運', 'CMO & COO: marketing, PR and operations']], links:[]},
+    wallet: {name:['智慧錢包', 'Smart Wallet'],
+      pitch:['記錄你錢包的每一次開合，讓健忘的人也能好好記帳。', 'Logs every time your wallet opens, so even forgetful people keep their books.'],
+      desc:['下載了記帳 App 卻總是忘記記？我們做了一張藍牙卡片，放進任何錢包裡，錢包就變成智慧錢包。每次打開都會記下時間和地點，晚上回家再補上細節就好。', 'Downloaded a budgeting app and still forget to use it? We made a Bluetooth card that turns any wallet into a smart wallet. Each time it opens it logs the time and place, and you fill in the details at night.'],
+      did:[['藍牙智慧卡片：偵測錢包開合，記錄時間和地點', 'A Bluetooth card that detects the wallet opening and logs time and place'],
+        ['透過藍牙同步到手機 App，晚上依提醒補上消費內容', 'Syncs to the phone app over Bluetooth; reminders help you fill in each purchase'],
+        ['AI 預測花費、估算當日預算', 'AI spending prediction and a daily budget estimate'],
+        ['各家超商會員條碼整合在同一個 App', 'All your store loyalty barcodes in one app']],
+      imgs:['c-wallet-1', 'c-wallet-2', 'c-wallet-3'], role:null, links:[]},
+    planter: {name:['花嘿盆', 'Hua Hei Pen'],
+      pitch:['平常是種菜的盆栽，災難來的時候是你的防災站。', 'A planter for growing vegetables every day, and a disaster station when it counts.'],
+      desc:['921 大地震的那天我們想到：防災用品常常放到過期也沒人管。花嘿盆是新竹貢丸造型的水耕盆栽，平常默默感測環境、種菜；災難發生時提供照明、電源，還能用 LoRa 讓搜救人員找到你。', 'On the anniversary of the 921 earthquake we noticed emergency kits usually sit forgotten until they expire. Hua Hei Pen is a hydroponic planter shaped like a Hsinchu meatball. Day to day it senses the room and grows food; in a disaster it gives light and power and uses LoRa to help rescuers find you.'],
+      did:[['溫濕度、煙霧和可燃性氣體感測，時時監測居家安全', 'Temperature, humidity, smoke and flammable-gas sensors watch the home'],
+        ['亮度偵測、緊急照明，災難時可以幫手機充電', 'Light sensing, emergency lighting and phone charging during a disaster'],
+        ['LoRa 無線通訊，讓搜救人員更快找到人；災後一鍵報平安', 'LoRa radio so rescuers can find you faster; one-tap "I\'m safe" afterwards'],
+        ['水耕種菜加澆水提醒，平常種的菜災難時就能吃', 'Hydroponics with watering reminders, so the food you grow is there when you need it']],
+      imgs:['c-planter-1', 'c-planter-2', 'c-planter-3'], role:null, links:[]},
+    mindpal: {name:['MindPal 心靈夥伴', 'MindPal'],
+      pitch:['你的心靈，我來相伴。', 'Your mind, with company.'],
+      desc:['結合認知行為治療（CBT）和佛教正念的 AI 情緒陪伴 App，給半夜睡不著、不知道找誰說的年輕人一個隨時可以用、完全匿名的地方。', 'An AI emotional-support app that combines cognitive behavioural therapy with Buddhist mindfulness, giving young people an anonymous place to turn at any hour.'],
+      did:[['情緒日記支援文字和語音，用 NLP 辨識 10 種自動化負面思考', 'Mood journal by text or voice, with NLP that spots 10 kinds of automatic negative thoughts'],
+        ['CBT 認知重構：一步步引導找出想法、換個角度看', 'CBT reframing that walks you through finding and rethinking the thought'],
+        ['偵測到焦慮時推送 3 到 5 分鐘的呼吸練習', 'Pushes a 3–5 minute breathing exercise when it detects anxiety'],
+        ['個人化的正念語錄、文章和放鬆音樂', 'Personalised mindfulness quotes, articles and calming music']],
+      imgs:['c-mindpal-1', 'c-mindpal-2', 'c-mindpal-3'], role:null, links:[]},
+    payhalf: {name:['台北通「陪辦」', 'Taipei Pass "Accompany"'],
+      pitch:['不是介面更簡單，是讓長輩有人陪。', 'Not a simpler interface, but someone by your side.'],
+      desc:['長輩在自己的台北通上辦事，家人、里長或 1999 客服在遠端一步一步陪著；資料要不要給、申請要不要送，只有長輩本人能按。', 'Elders apply for services in their own Taipei Pass app while family, the village chief or the 1999 hotline guide them remotely. Only the elder can choose to share data or submit.'],
+      did:[['按一下「請人陪我辦」，用 6 位數配對讓家人或客服遠端陪填', 'Tap "Help me with this" and pair with a 6-digit code so someone can guide you remotely'],
+        ['每一項個資都先問過長輩，陪辦的人看不到', 'Every piece of personal data needs the elder\'s OK, and helpers can\'t see it'],
+        ['一頁一題、大字、會念出來', 'One question per page, large text, read aloud'],
+        ['1999 和里長的工作台同步看進度，局處可以自己做表單', 'A workspace for 1999 and village chiefs, plus a form builder for city agencies']],
+      imgs:['c-payhalf-1'],
+      role:[['寫了「陪辦」微服務的第一版，修 QR Code 掃描和朗讀', 'Wrote the first version of the Accompany microservice and fixed QR scanning and read-aloud'],
+        ['做雙手機即時同步和承辦人表單後台，並整理後端 API 需求', 'Built real-time two-phone sync and the agency form builder, and drafted the backend API requirements']],
+      links:[[['線上體驗', 'Live demo'], 'https://payhalf.plankton.tw/#/demo'], ['GitHub', GH + 'PlanktonLab/PayHalf']]},
+    howturn: {name:['HowTurn × dieturn', 'HowTurn × dieturn'],
+      pitch:['台灣機車專屬導航：每個左轉路口，提前告訴你要不要兩段式待轉。', 'Scooter navigation for Taiwan: before every left turn, it tells you whether to do a two-stage turn.'],
+      desc:['導航軟體都沒有「待轉格」的圖資，騎到陌生路口只能用猜的。我們用 YOLO 從航拍正射影像找出待轉格，轉成經緯度，再疊到導航路線上。', 'No navigation app maps two-stage turn boxes, so riders have to guess at unfamiliar junctions. We used YOLO on aerial orthophotos to find the boxes, turned them into coordinates, and laid them over the route.'],
+      did:[['dieturn：YOLO OBB 模型從航拍圖偵測待轉格', 'dieturn: a YOLO OBB model that detects turn boxes in aerial photos'],
+        ['全台 29,925 個路口找出 18,243 個待轉格', 'Found 18,243 turn boxes across 29,925 junctions in Taiwan'],
+        ['HowTurn：在每個左轉前提示要靠左直接轉，還是靠右進待轉區', 'HowTurn: before each left turn, says whether to keep left or pull into the turn box']],
+      imgs:['c-howturn-1'], role:null,
+      links:[['HowTurn', GH + 'PlanktonLab/HowTurn'], ['dieturn', GH + 'PlanktonLab/dieturn']]},
+    zhizhu: {name:['知諸人', 'Zhi Zhu Ren'],
+      pitch:['城市諸事通：幫交通指揮官把散落的資料變成下一步。', 'A city know-it-all: turning scattered data into the next move for traffic commanders.'],
+      desc:['車流、人流、災害資料分散在不同系統，現場常常只能靠經驗判斷。知諸人把資料整合起來，用 AI Agent 加上記憶系統，保存每次事件的處置經驗，下次直接給建議。', 'Traffic, crowd and disaster data live in separate systems, so decisions often come down to gut feeling. Zhi Zhu Ren pulls the data together and uses an AI agent with memory to keep what was learned from each incident and suggest the next action.'],
+      did:[['整合公車、停車、YouBike、活動和天氣等即時資料', 'Combines live bus, parking, YouBike, event and weather data'],
+        ['知諸 Agent 做決策，搭配 RAG 記憶和正式 SOP', 'A decision agent backed by RAG memory and formal SOPs'],
+        ['從「假如 BL17 人數增加到 4 萬」這種提問推出行動建議', 'Turns what-if questions like "what if BL17 hits 40,000 people" into action plans'],
+        ['在 AWS 上用 Lambda、API Gateway、CloudFront 搭起來', 'Built on AWS with Lambda, API Gateway and CloudFront']],
+      imgs:['c-zhizhu-1', 'c-zhizhu-2', 'c-zhizhu-3'],
+      role:[['做 YouBike 調度建議和城市活動提醒，串外部資料模組', 'Built YouBike rebalancing suggestions, city-event alerts and the external data modules'],
+        ['用 DynamoDB 存歷史紀錄，做 MCP server 和前端面板', 'Stored history in DynamoDB and built an MCP server and the front-end panel']],
+      links:[]},
+    walili: {name:['哇哩勒 Walletless', 'Walletless'],
+      pitch:['手機放口袋，上公車就自動付款。', 'Keep your phone in your pocket; board the bus and you\'ve paid.'],
+      desc:['46.1% 的長者靠公車移動，但上車刷卡對行動不便、手提重物的人來說很焦慮。哇哩勒用 UWB 室內定位晶片，偵測到乘客上車就從新竹通自動扣款。', '46.1% of older people get around by bus, and tapping a card while boarding is stressful if you have limited mobility or full hands. Walletless uses UWB indoor positioning to detect boarding and charge the Hsinchu Pass app automatically.'],
+      did:[['UWB 室內定位：上車自動扣款，不用拿出卡片', 'UWB indoor positioning: pay automatically without taking out a card'],
+        ['結合新竹通的敬老卡和愛心卡點數', 'Works with the senior and disability card credits in Hsinchu Pass'],
+        ['偵測到長者過馬路時延長綠燈', 'Extends the green light when an elder is crossing'],
+        ['算過成本：一台公車只要約一萬元，比實體刷卡機便宜', 'Costed out at about NT$10,000 per bus, cheaper than card readers']],
+      imgs:['c-walili-1', 'c-walili-2'], role:null, links:[]},
+    scambino: {name:['Scambino', 'Scambino'],
+      pitch:['Let the scam be no more：個人防詐小助理。', 'Let the scam be no more: a personal anti-scam assistant.'],
+      desc:['詐騙一年造成上千億的損失，打 165 又常常要等。Scambino 把 AI 防詐助理、郵件掃描和網站檢查做在一起，規劃讓模型直接跑在 Snapdragon 筆電上，資料不用離開裝置。', 'Fraud costs Taiwan billions every year and the 165 hotline is often busy. Scambino combines an AI anti-scam assistant, mail scanning and website checks, with a plan to run the model on Snapdragon laptops so data never leaves the device.'],
+      did:[['AI 防詐助理：貼上可疑訊息，一步步引導處理', 'AI assistant: paste a suspicious message and get step-by-step guidance'],
+        ['Gmail 擴充功能掃描郵件，抽出偽裝連結背後的真實網址', 'A Gmail extension that scans mail and reveals the real URL behind disguised links'],
+        ['網站即時掃描、合約放大鏡、自動產生報案 PDF', 'Live website scanning, a contract magnifier and auto-generated police reports']],
+      imgs:['c-scambino-1', 'c-scambino-2', 'c-scambino-3'], role:null,
+      links:[['GitHub', GH + 'PlanktonLab/Scambino']]},
+    hakka: {name:['小客家', 'Xiao Hakka'],
+      pitch:['客語使用者的好朋友。', 'A good friend for Hakka speakers.'],
+      desc:['ChatGPT 不支援客語，很多獨居的長輩也沒人可以用客語聊天。小客家是喚醒式的客家語音助理，喊一聲「阿客你好」就能聊天、問天氣、學做客家菜。', 'ChatGPT doesn\'t speak Hakka, and many elders living alone have no one to chat with in it. Xiao Hakka is a wake-word Hakka voice assistant: say "Ah-Hak, ngi ho" to chat, ask about the weather or learn Hakka dishes.'],
+      did:[['「阿客你好」喚醒的客語語音互動', 'Hakka voice interaction with the wake word "Ah-Hak, ngi ho"'],
+        ['客家小廚師：拍下冰箱的食材，推薦可以做的客家菜', 'Hakka chef: snap your ingredients and get a Hakka dish to make'],
+        ['料理秘笈一步一步教，還能陪長輩聊天、提醒事情', 'Step-by-step recipes, plus everyday chat and reminders for elders']],
+      imgs:['c-hakka-1', 'c-hakka-2', 'c-hakka-3'], role:null, links:[]},
+    rounded: {name:['圓角廣告 Rounded Ads', 'Rounded Ads'],
+      pitch:['戶外廣告界的 Google Ads。', 'Google Ads for outdoor advertising.'],
+      desc:['台灣的戶外廣告價格不透明、要打電話談、投了也不知道效果。Rounded Ads 讓小店家也能在地圖上選螢幕、自己上架廣告，再用邊緣 AI 回報真實的觀看數據。', 'Outdoor ads in Taiwan have opaque pricing, phone-call booking and no measurable results. Rounded Ads lets even small shops pick screens on a map and launch ads themselves, with edge AI reporting real viewing data.'],
+      did:[['三步驟自助投放：在地圖選螢幕、上傳素材、線上付款', 'Self-serve in three steps: pick screens on a map, upload, pay online'],
+        ['Rounded Eye：邊緣 AI 匿名統計觀看人數和停留時間，不存任何影像', 'Rounded Eye: edge AI counts viewers and dwell time anonymously, storing no images'],
+        ['用圓角螢幕當品牌識別，一眼就認得', 'Rounded screens as the brand signature, recognisable at a glance']],
+      imgs:['c-rounded-1', 'c-rounded-2', 'c-rounded-3'],
+      role:[['CMO：負責行銷和品牌', 'CMO: marketing and brand']], links:[]},
+    brolink: {name:['Bro Link', 'Bro Link'],
+      pitch:['太空資料的去中心化信任層。', 'A decentralised trust layer for space data.'],
+      desc:['AI 和 Deepfake 讓衛星影像越來越難相信。Bro Link 用物理來驗證：拿照片的時間和 GPS，跟衛星軌道模型比對，如果那時候衛星根本在地球另一邊，就直接拒絕。', 'AI and deepfakes make satellite imagery harder to trust. Bro Link verifies with physics: it checks a photo\'s timestamp and GPS against the satellite\'s orbit, and rejects it if the satellite was on the other side of the Earth.'],
+      did:[['四層架構：資料來源、儲存、驗證 Oracle、交易結算', 'A four-layer stack: source, storage, verification oracle, settlement'],
+        ['用 SGP4 軌道模型驗證衛星影像真偽', 'Verifies satellite images with the SGP4 orbital model'],
+        ['讓閒置的衛星資料可以安全交易', 'Lets idle satellite data be traded safely']],
+      imgs:['c-brolink-1', 'c-brolink-2', 'c-brolink-3'], role:null, links:[]},
+    icash: {name:['OPEN 獎', 'OPEN Award'],
+      pitch:['讓你用 icash Pay 就像在開獎。', 'Make paying with icash Pay feel like a prize draw.'],
+      desc:['大學生轉帳都用 LINE Pay，因為朋友都在那裡。我們想把朋友之間的支付變成一種社交：手機碰一下就轉帳，再加上 OPEN 小將的寵物養成和門市打卡，讓人有理由每天打開 icash Pay。', 'Students send money with LINE Pay because that\'s where their friends are. We wanted paying friends to feel social: tap phones to transfer, then add an OPEN-chan pet to raise and store check-ins, so there\'s a reason to open icash Pay every day.'],
+      did:[['面對面碰手機轉帳，付款的瞬間雙方一起震動', 'Tap phones to pay face to face, and both phones buzz together'],
+        ['寵物養成：每日簽到、消費回饋讓 OPEN 小將長大', 'Raise an OPEN-chan pet through daily check-ins and spending rewards'],
+        ['7-ELEVEN 門市打卡，把人帶進實體店', 'Check in at 7-ELEVEN stores to bring people into shops']],
+      imgs:['c-icash-1', 'c-icash-2', 'c-icash-3'], role:null, links:[]}
+  };
   var AWARDS = [
-    ['2026', ['三菱重工空調創新 App 開發大賽', 'Mitsubishi Heavy Industries Air-Conditioning App Contest'], null, ['亞軍・特別獎', 'Runner-up · Special Award'], 1, null],
+    ['2026', ['三菱重工空調創新 App 開發大賽', 'Mitsubishi Heavy Industries Air-Conditioning App Contest'], null, ['亞軍・特別獎', 'Runner-up · Special Award'], 1, null, 'mitsu'],
     ['2026', ['梅竹黑客松（第 14 屆）', 'Meichu Hackathon (14th)'], ['創客交流組', 'Maker track'], ['第二名', '2nd place'], 1,
-      ['img/award-meichu14.jpg', '50% 32%', ['李欣妍在第 14 屆梅竹黑客松背板前拿著第二名的獎牌', 'Hsin-Yen holding the 2nd place plaque at the 14th Meichu Hackathon']]],
+      ['img/award-meichu14.jpg', '50% 32%', ['李欣妍在第 14 屆梅竹黑客松背板前拿著第二名的獎牌', 'Hsin-Yen holding the 2nd place plaque at the 14th Meichu Hackathon']], 'kahao'],
     ['2026', ['台師大第八屆 Start Up 創業競技場', 'NTNU 8th Start Up Arena'], ['Plankton 團隊', 'Team Plankton'], ['優選', 'Merit Award'], 0,
-      ['img/award-startup.jpg', '50% 55%', ['Plankton 團隊攤位上的植栽裝置與平板簡報', 'The Plankton planter device and a tablet presentation at the team booth']]],
+      ['img/award-startup.jpg', '50% 55%', ['Plankton 團隊攤位上的植栽裝置與平板簡報', 'The Plankton planter device and a tablet presentation at the team booth']], 'eden'],
     ['2025', ['SPARKFUL 黑客松', 'SPARKFUL Hackathon'], ['Hack to the Top', 'Hack to the Top'], ['首獎', 'First Prize'], 1,
-      ['img/award-sparkful-2.jpg', '50% 38%', ['李欣妍拿著 SPARKFUL 黑客松首獎的獎座和新台幣十萬元大支票', 'Hsin-Yen holding the trophy and the NT$100,000 first-prize check from the SPARKFUL Hackathon']]],
+      ['img/award-sparkful-2.jpg', '50% 38%', ['李欣妍拿著 SPARKFUL 黑客松首獎的獎座和新台幣十萬元大支票', 'Hsin-Yen holding the trophy and the NT$100,000 first-prize check from the SPARKFUL Hackathon']], 'wallet'],
     ['2025', ['梅竹黑客松（第 13 屆）', 'Meichu Hackathon (13th)'], ['創客交流組', 'Maker track'], ['第三名', '3rd place'], 1,
-      ['img/award-meichu13.jpg', '50% 72%', ['李欣妍站在 2025 梅竹黑客松背板前', 'Hsin-Yen in front of the 2025 Meichu Hackathon backdrop']]],
-    ['2025', ['三好 AI 創新應用競賽', 'Sanhao AI Innovation Competition'], null, ['佳作', 'Honorable Mention'], 0, null]
+      ['img/award-meichu13.jpg', '50% 72%', ['李欣妍站在 2025 梅竹黑客松背板前', 'Hsin-Yen in front of the 2025 Meichu Hackathon backdrop']], 'planter'],
+    ['2025', ['三好 AI 創新應用競賽', 'Sanhao AI Innovation Competition'], null, ['佳作', 'Honorable Mention'], 0, null, 'mindpal']
   ];
   var FINALS = [
-    ['2026 臺北秋季程式設計節・城市通微服務大黑客松', '2026 Taipei Autumn Coding Festival · City Pass Microservices Hackathon'],
-    ['2026 FUTUREMODE × SITCON Hackathon', '2026 FUTUREMODE × SITCON Hackathon'],
-    ['2026 雲湧智生：臺灣生成式 AI 應用黑客松', '2026 Taiwan Generative AI Application Hackathon'],
-    ['新竹政策黑客松', 'Hsinchu Policy Hackathon'], ['高通 AI 黑客松', 'Qualcomm AI Hackathon'], ['客家 AI 黑客松', 'Hakka AI Hackathon'],
-    ['台灣新創世界盃創業競賽', 'Startup World Cup Taiwan'], ['太空創新黑客松', 'Space Innovation Hackathon'], ['統一企業商業競賽', 'Uni-President Business Competition']
+    [['2026 臺北秋季程式設計節・城市通微服務大黑客松', '2026 Taipei Autumn Coding Festival · City Pass Microservices Hackathon'], 'payhalf'],
+    [['2026 FUTUREMODE × SITCON Hackathon', '2026 FUTUREMODE × SITCON Hackathon'], 'howturn'],
+    [['2026 雲湧智生：臺灣生成式 AI 應用黑客松', '2026 Taiwan Generative AI Application Hackathon'], 'zhizhu'],
+    [['新竹政策黑客松', 'Hsinchu Policy Hackathon'], 'walili'], [['高通 AI 黑客松', 'Qualcomm AI Hackathon'], 'scambino'], [['客家 AI 黑客松', 'Hakka AI Hackathon'], 'hakka'],
+    [['台灣新創世界盃創業競賽', 'Startup World Cup Taiwan'], 'rounded'], [['太空創新黑客松', 'Space Innovation Hackathon'], 'brolink'], [['統一企業商業競賽', 'Uni-President Business Competition'], 'icash']
   ];
   var MOMENTS = [
     ['img/g-921.jpg', ['上台 pitch', 'Pitching'], ['921 防災主題的提案', 'A disaster-preparedness pitch about the 921 earthquake'], ['李欣妍在台上簡報，投影片寫著 921 大地震', 'Hsin-Yen presenting on stage with a slide about the 921 earthquake']],
@@ -997,8 +1189,11 @@
     var ag = $('awardGrid'); ag.innerHTML = '';
     AWARDS.forEach(function(w){
       var c = el('div', 'award'), body = el('div', 'award-body'), foot = el('div', 'award-foot');
-      body.appendChild(el('div', 'yr', w[0]));
-      body.appendChild(el('h3', null, tx(w[1])));
+      var top = el('div', 'award-top'); top.appendChild(el('span', 'yr', w[0]));
+      top.appendChild(el('span', 'see', t('看作品', 'See project') + ' →')); body.appendChild(top);
+      var h = el('h3'), ob = el('button', 'award-open', tx(w[1])); ob.type = 'button';
+      ob.addEventListener('click', function(){ openProj(w[6], {comp:w[1], year:w[0], rank:w[3]}); });
+      h.appendChild(ob); body.appendChild(h);
       if (w[2]) body.appendChild(el('div', 'sub', tx(w[2])));
       foot.appendChild(el('span', 'rank' + (w[4] ? '' : ' soft'), tx(w[3])));
       if (w[5]) {
@@ -1012,7 +1207,11 @@
       c.appendChild(body); ag.appendChild(c);
     });
     var fl = $('finalsList'); fl.innerHTML = '';
-    FINALS.forEach(function(f){ fl.appendChild(el('span', 'tag', tx(f))); });
+    FINALS.forEach(function(f){
+      var b = el('button', 'tag fin', tx(f[0])); b.type = 'button';
+      b.addEventListener('click', function(){ openProj(f[1], {comp:f[0], year:null, rank:['決賽', 'Finalist']}); });
+      fl.appendChild(b);
+    });
     var gal = $('gallery'); gal.innerHTML = '';
     MOMENTS.forEach(function(m){
       var f = el('figure', 'shot'), im = el('img'), open = el('button', 'shot-open');
@@ -1530,6 +1729,51 @@
   $('lbClose').addEventListener('click', closeLightbox);
   $('lightbox').addEventListener('click', function(e){ if (e.target === this) closeLightbox(); });
 
+  /* ================= competition project dialog ================= */
+  var PD = {key:null, ctx:null, i:0};
+  function fillList(ul, items){ ul.innerHTML = ''; items.forEach(function(x){ ul.appendChild(el('li', null, tx(x))); }); }
+  function showProjImg(i){
+    var p = COMP[PD.key]; PD.i = i;
+    var img = $('pdImg'); img.src = 'img/' + p.imgs[i] + '.jpg';
+    img.alt = tx(p.name) + t('　簡報第 ' + (i + 1) + ' 張', ', slide ' + (i + 1));
+    $('pdThumbs').querySelectorAll('button').forEach(function(b, k){ b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+  }
+  function fillProj(){
+    var p = COMP[PD.key], c = PD.ctx;
+    $('pdComp').textContent = (c.year ? c.year + '・' : '') + tx(c.comp);
+    $('pdTitle').textContent = tx(p.name);
+    $('pdPitch').textContent = tx(p.pitch);
+    $('pdRank').textContent = tx(c.rank);
+    $('pdDesc').textContent = tx(p.desc);
+    fillList($('pdDid'), p.did);
+    $('pdRoleSec').hidden = !p.role;
+    if (p.role) fillList($('pdRole'), p.role);
+    var th = $('pdThumbs'); th.innerHTML = ''; th.hidden = p.imgs.length < 2;
+    p.imgs.forEach(function(s, k){
+      var b = el('button'), im = el('img'); b.type = 'button';
+      b.setAttribute('aria-label', t('第 ' + (k + 1) + ' 張', 'Slide ' + (k + 1)));
+      im.src = 'img/' + s + '.jpg'; im.alt = ''; im.loading = 'lazy'; b.appendChild(im);
+      b.addEventListener('click', function(){ showProjImg(k); });
+      th.appendChild(b);
+    });
+    var ln = $('pdLinks'); ln.innerHTML = ''; ln.hidden = !p.links.length;
+    p.links.forEach(function(l){
+      var a = el('a', 'pd-link', tx(l[0]) + ' ↗'); a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; ln.appendChild(a);
+    });
+    showProjImg(Math.min(PD.i, p.imgs.length - 1));
+  }
+  function openProj(key, ctx){
+    if (!COMP[key]) return;
+    PD.key = key; PD.ctx = ctx; PD.i = 0; fillProj();
+    var d = $('projDlg');
+    if (d.showModal) { if (!d.open) d.showModal(); } else d.setAttribute('open', '');
+    d.scrollTop = 0;
+  }
+  function closeProj(){ var d = $('projDlg'); if (d.close) d.close(); else d.removeAttribute('open'); }
+  $('pdClose').addEventListener('click', closeProj);
+  $('projDlg').addEventListener('click', function(e){ if (e.target === this) closeProj(); });
+  document.querySelector('.pd-zoom').addEventListener('click', function(){ var im = $('pdImg'); openLightbox(im.src, im.alt); });
+
   /* ================= language switch ================= */
   function renderAll(){
     applyStatic();
@@ -1537,6 +1781,7 @@
     renderRes(); calcLED(); calcDiv(); calcRC(); renderKmap();
     if (TM.segs.length) tmRender(TM.running ? TM.endAt - performance.now() : TM.remain);
     if ($('resReverseMsg').textContent) $('resReverseMsg').textContent = '';
+    if ($('projDlg').open && PD.key) fillProj();
   }
   $('langBtn').addEventListener('click', function(){ LANG = LANG === 'en' ? 'zh' : 'en'; save('hy-lang', LANG); renderAll(); });
 
