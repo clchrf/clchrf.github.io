@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-XUyJjYLYO0OvLCZqKZSziW/sgOK4G/ObADTcrCOHfCI=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rS6aQNHZhF9gF8OLsxX88aqa/mkhN3UxCYOcZPpZgoY=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -401,9 +401,8 @@
   /* toolbox */
   .tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:36px}
   @media (max-width:860px){ .tool-grid{grid-template-columns:1fr} }
-  .tool-card{display:flex;flex-direction:column;gap:12px;color:inherit;text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s}
+  .tool-card{display:flex;flex-direction:column;padding:0;overflow:hidden;color:inherit;text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s}
   .tool-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
-  .tool-card:hover .tile{transform:rotate(-6deg) scale(1.08)}
   .tile{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
   .shot{overflow:hidden}
   .shot img{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
@@ -412,6 +411,19 @@
   .tile{width:60px;height:60px;border-radius:16px;background:var(--fill);display:grid;place-items:center}
   .tile svg{width:34px;height:34px;stroke:var(--ink);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .tool-card p{color:var(--ink-2);font-size:15.5px}
+  .tool-media{aspect-ratio:2/1}
+  .tool-media svg{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .tool-card:hover .tool-media svg{transform:scale(1.04)}
+  .tool-body{display:flex;flex-direction:column;gap:8px;padding:20px 24px 24px;flex:1}
+  .tool-body .go{margin-top:auto}
+  .km-g{stroke-dasharray:1;stroke-dashoffset:1;animation:kmdraw 4s ease-in-out infinite}
+  .km-g2{animation-delay:1s}
+  @keyframes kmdraw{0%,10%{stroke-dashoffset:1}40%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:1}}
+  .tm-ring{stroke-dasharray:1;animation:tmring 6s linear infinite}
+  @keyframes tmring{from{stroke-dashoffset:0}to{stroke-dashoffset:1}}
+  .dl-colon{animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:.15}}
+  @media (prefers-reduced-motion: reduce){ .km-g{animation:none;stroke-dashoffset:0} .tm-ring,.dl-colon,.tool-card:hover .tool-media svg{animation:none;transform:none} }
   .tool-card p .ln{display:block}
   .privacy{font-size:14px;color:var(--ink-3);margin-top:18px;text-align:center}
 
@@ -651,8 +663,10 @@
     <div class="bento">
       <div class="card span-4 about-text">
         <div class="label">ABOUT</div>
-        <p data-en="I don't pick a technology and then look for a use. I start from <b>a problem I've actually run into</b>, then work out which mix of hardware, AI and software solves it.">我不是先選好一項技術再去找用途，而是<b>先遇到一個自己真的碰過的問題</b>，再想清楚該用哪一種硬體、AI 和軟體的組合來解。</p>
-        <p data-en="I studied electronics at the NTUT-affiliated Taoyuan Agricultural &amp; Industrial Senior High School, spent my first year of university in Electronic Engineering at NKUST's Jiangong campus, then transferred into NTNU's EE department and kept branching out into computer vision, software and robotics. Outside class, most of my time goes to hackathons and robot arms. I was student council president in high school, and at NTNU I led the transfer student association, turning scattered information into a website and a chatbot.">高中念北科附工電子科，大一在高科大建工校區電子工程系，轉學到師大電機系之後，興趣一路往電腦視覺、軟體和機器人延伸。課堂以外，大部分時間都花在黑客松和機械手臂上。高中當過北科附工學生會會長，大學又當了師大轉學生會會長，幫轉學生把資訊整理成網站和聊天機器人。</p>
+        <p data-en="Hey! I'm Hsin-Yen, an Electrical Engineering student at National Taiwan Normal University.">嗨咿！我是欣妍，目前就讀臺師大電機系。</p>
+        <p data-en="I love trying new things like AI, robotics and programming, and I love exploring and finding interesting new stuff!">我很喜歡接觸新的事物，像是 AI、機器人、程式開發，也喜歡到處探索、發現有趣的新東西！</p>
+        <p data-en="I like turning my ideas into real things, so I've built many different kinds of projects, and I'm always up for hackathons and startup competitions.">平常很喜歡把自己的想法實際做出來，所以做過不少不同類型的專案，也熱衷於參加黑客松和創業競賽。</p>
+        <p data-en="I also really enjoy talking with people and sharing what I've learned!">我也很喜歡跟人交流、分享自己學到的東西！</p>
       </div>
       <div class="card span-2">
         <div class="label">BY THE NUMBERS</div>
@@ -1541,6 +1555,63 @@
     var ul = $('cvOld'); ul.innerHTML = ''; $('cvOldBox').hidden = CVS.length < 2;
     CVS.slice(1).forEach(function(c){ var li = el('li'), l = el('a', null, fmt(c.date)); l.href = c.file; l.setAttribute('download', ''); li.appendChild(l); ul.appendChild(li); });
   }
+  // line-art covers for the toolbox cards, same style as the project illustrations
+  var TOOL_ART = {
+    calc: function(){
+      var bands = ['#7a4a22', '#1b1b1b', '#d23a2a', '#c9a227'], b = '';
+      bands.forEach(function(c, i){ b += '<rect x="' + (166 + i * 18 + (i === 3 ? 10 : 0)) + '" y="96" width="9" height="48" rx="2" style="fill:' + c + '"/>'; });
+      return sv('<path d="M40 120H360" stroke-width="6" style="stroke:var(--ink-3)" ' + S + '/>' +
+        '<rect x="140" y="88" width="120" height="64" rx="30" stroke-width="5" style="fill:var(--card);stroke:var(--ink)"/>' + b +
+        (RM ? '' : '<circle r="6" style="fill:var(--link)"><animateMotion dur="2.6s" repeatCount="indefinite" path="M40 120H360"/></circle>') +
+        '<rect x="148" y="176" width="104" height="34" rx="17" style="fill:var(--ink)"/><text x="200" y="198" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--card)">4.7 k&#937;</text>' +
+        '<g transform="translate(300 40)"><path d="M0 0V22M14 0V22M-14 11H0M14 11H28" stroke-width="4" style="stroke:var(--ink)" ' + S + '/><text x="7" y="44" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--ink-2)">104</text></g>');
+    },
+    kmap: function(){
+      var v = [1,0,0,1, 0,1,1,0, 0,1,1,0, 1,0,0,1], g = '';
+      for (var i = 0; i < 16; i++) {
+        var x = 120 + (i % 4) * 42, y = 36 + Math.floor(i / 4) * 42;
+        g += '<rect x="' + x + '" y="' + y + '" width="36" height="36" rx="8" style="fill:var(--fill)"/><text x="' + (x + 18) + '" y="' + (y + 24) + '" text-anchor="middle" font-size="15" font-weight="700" style="fill:' + (v[i] ? 'var(--ink)' : 'var(--ink-3)') + '">' + v[i] + '</text>';
+      }
+      return sv(g + '<rect class="km-g" x="159" y="75" width="84" height="84" rx="12" pathLength="1" stroke-width="4" style="fill:none;stroke:var(--link)"/>' +
+        '<path class="km-g km-g2" d="M117 33h40M117 33v40M287 33h-40M287 33v40M117 207h40M117 207v-40M287 207h-40M287 207v-40" pathLength="1" stroke-width="4" style="fill:none;stroke:var(--red)" ' + S + '/>' +
+        '<text x="336" y="110" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--ink)">F =</text><text x="336" y="132" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--ink-2)">BD + B&#8242;D&#8242;</text>');
+    },
+    timer: function(){
+      return sv('<circle cx="200" cy="124" r="78" stroke-width="12" style="fill:none;stroke:var(--fill)"/>' +
+        '<circle class="tm-ring" cx="200" cy="124" r="78" pathLength="1" stroke-width="12" transform="rotate(-90 200 124)" style="fill:none;stroke:var(--ink)" stroke-linecap="round"/>' +
+        '<path d="M186 30h28M200 30v16" stroke-width="6" style="stroke:var(--ink)" ' + S + '/>' +
+        '<text x="200" y="134" text-anchor="middle" font-size="34" font-weight="700" style="fill:var(--ink)">3:00</text>' +
+        '<rect x="300" y="60" width="70" height="28" rx="14" style="fill:var(--fill)"/><text x="335" y="79" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--ink)">Pitch</text>' +
+        '<rect x="300" y="100" width="70" height="28" rx="14" style="fill:var(--fill)"/><text x="335" y="119" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--ink)">Demo</text>' +
+        '<circle cx="48" cy="80" r="9" style="fill:var(--warn)"/><circle cx="48" cy="112" r="9" style="fill:var(--red)"/>');
+    },
+    hsv: function(){
+      var u = 'g' + (++TOOL_ART.n);
+      var sl = function(y, grad, x1, x2, dx){ return '<rect x="60" y="' + y + '" width="180" height="10" rx="5" style="fill:url(#' + u + grad + ')"/>' +
+        '<circle class="c-knob" style="--dx:' + dx + 'px;fill:var(--card);stroke:var(--ink)" cx="' + x1 + '" cy="' + (y + 5) + '" r="9" stroke-width="3"/><circle cx="' + x2 + '" cy="' + (y + 5) + '" r="9" stroke-width="3" style="fill:var(--card);stroke:var(--ink)"/>'; };
+      return sv('<defs><linearGradient id="' + u + 'gH"><stop offset="0" stop-color="#f00"/><stop offset=".33" stop-color="#0f0"/><stop offset=".66" stop-color="#00f"/><stop offset="1" stop-color="#f00"/></linearGradient>' +
+        '<linearGradient id="' + u + 'gS"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e5383b"/></linearGradient><linearGradient id="' + u + 'gV"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>' +
+        sl(70, 'gH', 120, 170, 24) + sl(115, 'gS', 100, 225, -18) + sl(160, 'gV', 90, 220, 30) +
+        '<rect x="270" y="56" width="90" height="128" rx="12" style="fill:#000"/><circle cx="315" cy="104" r="22" style="fill:#fff"/><circle cx="300" cy="150" r="12" style="fill:#fff"/>' +
+        '<text x="315" y="206" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--ink-2)">mask</text>');
+    },
+    deadline: function(){
+      var d = function(x, txt){ return '<rect x="' + x + '" y="78" width="62" height="84" rx="12" style="fill:var(--screen)"/><text x="' + (x + 31) + '" y="136" text-anchor="middle" font-size="40" font-weight="700" style="fill:var(--screen-ink)">' + txt + '</text>'; };
+      var colon = function(x){ return '<g class="dl-colon"><circle cx="' + x + '" cy="108" r="5" style="fill:var(--ink)"/><circle cx="' + x + '" cy="134" r="5" style="fill:var(--ink)"/></g>'; };
+      return sv(d(70, '23') + colon(146) + d(158, '59') + colon(234) + d(246, '59') +
+        '<rect x="70" y="182" width="238" height="8" rx="4" style="fill:var(--fill)"/><rect class="c-fill" x="70" y="182" width="238" height="8" rx="4" style="--sx:.55;transform-origin:70px 186px;fill:var(--red)"/>' +
+        '<text x="189" y="58" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--ink-2)">' + t('繳交截止', 'Submission due') + '</text>');
+    },
+    convert: function(){
+      var doc = function(x, label, fill){ return '<path d="M' + x + ' 52h56l22 22v102h-78z" stroke-width="5" style="fill:var(--card);stroke:var(--ink)" stroke-linejoin="round"/><path d="M' + (x + 56) + ' 52v22h22" stroke-width="5" style="fill:none;stroke:var(--ink)" stroke-linejoin="round"/>' +
+        '<rect x="' + (x + 10) + '" y="120" width="58" height="26" rx="6" style="fill:' + fill + '"/><text x="' + (x + 39) + '" y="138" text-anchor="middle" font-size="13" font-weight="700" style="fill:#fff">' + label + '</text>'; };
+      return sv(doc(66, 'PDF', '#d23a2a') + doc(256, 'DOCX', '#2f6fd6') +
+        '<path d="M170 114H236" stroke-width="8" style="stroke:var(--fill)" ' + S + '/><path class="t-flow" pathLength="1" d="M170 114H236" stroke-width="8" style="stroke:var(--link)" ' + S + '/>' +
+        '<path d="M226 102l14 12-14 12" stroke-width="6" style="fill:none;stroke:var(--ink)" ' + S + '/>' +
+        '<text x="203" y="210" text-anchor="middle" font-size="13" font-weight="600" style="fill:var(--ink-2)">HEIC &#8594; JPG &#183; PDF + PDF</text>');
+    }
+  };
+  TOOL_ART.n = 0;
   var TOOLS = [
     {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、電容代碼、LED 限流電阻、分壓、RC 時間常數，|常用計算 All in one。', 'Resistor colors, capacitor codes, LED resistors, dividers and RC time constants.|Everyday calculations, all in one.'],
       icon:'<path d="M3 17h6M25 17h6"/><rect x="9" y="11" width="16" height="12" rx="4"/><path d="M14 11v12M18 11v12M21 11v12"/>'},
@@ -1620,8 +1691,10 @@
       box.innerHTML = '';
       TOOLS.forEach(function(tl){
         var a = el('a', 'card tool-card'); a.href = tl.href;
-        a.innerHTML = '<div class="tile"><svg viewBox="0 0 34 34" aria-hidden="true">' + tl.icon + '</svg></div>';
-        a.appendChild(el('h3', null, tx(tl.name))); var dp = el('p'); tx(tl.desc).split('|').forEach(function(l){ dp.appendChild(el('span', 'ln', l)); }); a.appendChild(dp); a.appendChild(el('span', 'go', t('打開 →', 'Open →')));
+        var media = el('div', 'proj-media tool-media'); media.innerHTML = TOOL_ART[tl.href.slice(1)](); a.appendChild(media);
+        var body = el('div', 'tool-body');
+        body.appendChild(el('h3', null, tx(tl.name))); var dp = el('p'); tx(tl.desc).split('|').forEach(function(l){ dp.appendChild(el('span', 'ln', l)); }); body.appendChild(dp); body.appendChild(el('span', 'go', t('打開 →', 'Open →')));
+        a.appendChild(body);
         box.appendChild(a);
       });
     });
