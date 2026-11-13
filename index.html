@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-k/6Zi9aYArOUQ+/G94NFnEGlZQObB+MdefjEPxOHr0k=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pifn828VOcsBeeKZd1hZf8WAMuR/35vITw/RiysWF4s=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -1250,6 +1250,25 @@
       es.forEach(function(e){ if (e.isIntersecting) { lis.forEach(function(li){ li.classList.add('lit'); }); io.disconnect(); } });
     }, {threshold:0.4});
     io.observe(path);
+  })();
+  /* numbers count up from 0 the first time the card scrolls into view */
+  (function(){
+    var bs = [].slice.call(document.querySelectorAll('.nums b'));
+    if (!bs.length || RM || !('IntersectionObserver' in window)) return;
+    var ends = bs.map(function(b){ var n = parseInt(b.textContent, 10); b.style.minWidth = String(n).length + 'ch'; b.textContent = '0'; return n; });
+    var run = function(){
+      var t0 = Date.now(), dur = 1300;
+      (function step(){
+        var k = Math.min(1, (Date.now() - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        bs.forEach(function(b, i){ b.textContent = k < 1 ? Math.round(ends[i] * e) : ends[i]; });
+        if (k < 1) setTimeout(step, 30);
+      })();
+    };
+    var box = bs[0].closest('.nums'), done = false;
+    var go = function(){ if (done) return; done = true; io.disconnect(); window.removeEventListener('scroll', check); run(); };
+    var check = function(){ var r = box.getBoundingClientRect(); if (r.top < innerHeight * 0.85 && r.bottom > 0) go(); };   // backup if the observer is throttled
+    var io = new IntersectionObserver(function(es){ if (es.some(function(e){ return e.isIntersecting; })) go(); }, {threshold:0.5});
+    io.observe(box); window.addEventListener('scroll', check, {passive:true}); check();
   })();
   /* mobile menu */
   function setMenu(open){
