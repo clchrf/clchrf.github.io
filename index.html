@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rS6aQNHZhF9gF8OLsxX88aqa/mkhN3UxCYOcZPpZgoY=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-k/6Zi9aYArOUQ+/G94NFnEGlZQObB+MdefjEPxOHr0k=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -538,7 +538,7 @@
   .hsv-sliders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 28px}
   @media (max-width:700px){ .hsv-sliders{grid-template-columns:1fr} }
   .hsv-ch .k{display:flex;justify-content:space-between}
-  .hsv-ch .bar{height:10px;border-radius:5px;margin:10px 0 4px}
+  .hsv-ch .hsv-bar{height:10px;border-radius:5px;margin:10px 0 4px}
   .hsv-ch label{display:grid;grid-template-columns:3.2em 1fr 3em;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:6px}
   .hsv-ch input[type=range]{width:100%;accent-color:var(--ink)}
   #hsvWrap{min-height:3.4em}
@@ -2155,7 +2155,7 @@
     var box = $('hsvSliders');
     HSV_CH.forEach(function(c, i){
       var d = el('div', 'hsv-ch');
-      d.innerHTML = '<div class="k"><span data-en="' + c[3][1] + '">' + c[3][0] + '</span></div><div class="bar" style="background:' + c[2] + '"></div>' +
+      d.innerHTML = '<div class="k"><span data-en="' + c[3][1] + '">' + c[3][0] + '</span></div><div class="hsv-bar" style="background:' + c[2] + '"></div>' +
         '<label><span data-en="Lower">下限</span><input type="range" min="0" max="' + c[1] + '" data-i="' + i + '" data-b="lo"><output></output></label>' +
         '<label><span data-en="Upper">上限</span><input type="range" min="0" max="' + c[1] + '" data-i="' + i + '" data-b="hi"><output></output></label>';
       box.appendChild(d);
