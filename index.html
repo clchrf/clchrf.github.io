@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pifn828VOcsBeeKZd1hZf8WAMuR/35vITw/RiysWF4s=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-e/33/ELnJMWBoHSFVg3oGISwKlYVTO3iddXnI0t3NBs=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -125,9 +125,11 @@
 
   /* intro: oscilloscope trace that settles into the name */
   #intro{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;
-    transition:opacity .32s ease, transform .32s ease}
-  .hero-title.landed{animation:none!important;opacity:1!important;transform:none!important}
-  #intro.out{opacity:0;transform:scale(1.03);pointer-events:none}
+    transition:opacity .5s ease, transform .5s ease}
+  .hero-title.landed{animation:titleIn .55s ease .2s both!important;transform:none!important}
+  @keyframes titleIn{from{opacity:0}to{opacity:1}}
+  .hero-title.landed .nw{opacity:1}
+  #intro.out{opacity:0;pointer-events:none}
   .intro-scope{position:relative;width:min(640px,86vw);aspect-ratio:600/240}
   .intro-svg{width:100%;height:100%;display:block;overflow:visible;transition:opacity .4s ease}
   .intro-grid{transition:opacity .4s ease}
@@ -3033,23 +3035,41 @@
     INTRO.guard = setTimeout(endIntro, 2600);
   }
   // the intro's name grows into the hero title's name
+  function textBox(el){ var r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect(); }
   function flyName(){
     var tgt = document.querySelector('.hero-title .nw'), src = $('introName').querySelector('small');
     if (!tgt || !src || current !== 'home' || window.scrollY > 120 || !document.body.animate) return;
     var h1 = tgt.closest('h1'); h1.classList.add('landed');
     var z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
-    var tr = tgt.getBoundingClientRect(), sr = src.getBoundingClientRect(), cs = getComputedStyle(tgt);
+    var tr = textBox(tgt), sr = textBox(src), ts = getComputedStyle(tgt), ss = getComputedStyle(src);
     if (!tr.width || !sr.width) return;
+    var srcOpacity = $('introName').classList.contains('on') ? 1 : (parseFloat(getComputedStyle($('introName')).opacity) || 0);
+    // a copy styled exactly like the title name, placed on top of it
     var c = document.createElement('span');
     c.textContent = tgt.textContent; c.setAttribute('aria-hidden', 'true');
-    c.style.cssText = 'position:fixed;margin:0;z-index:250;pointer-events:none;white-space:nowrap;transform-origin:0 0;left:' + (tr.left / z) + 'px;top:' + (tr.top / z) + 'px;' +
-      'font-family:' + cs.fontFamily + ';font-size:' + cs.fontSize + ';font-weight:' + cs.fontWeight + ';letter-spacing:' + cs.letterSpacing + ';line-height:' + cs.lineHeight + ';color:' + cs.color;
+    c.style.cssText = 'position:fixed;left:0;top:0;margin:0;padding:0;z-index:250;pointer-events:none;white-space:nowrap;transform-origin:0 0;will-change:transform,opacity;' +
+      'font-family:' + ts.fontFamily + ';font-size:' + ts.fontSize + ';font-weight:' + ts.fontWeight + ';letter-spacing:' + ts.letterSpacing + ';line-height:1;color:' + ts.color;
     document.body.appendChild(c);
-    var k = sr.height / tr.height, dx = (sr.left + (sr.width - tr.width * k) / 2 - tr.left) / z, dy = (sr.top - tr.top) / z;
-    tgt.style.visibility = 'hidden';
-    var an = c.animate([{transform:'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', opacity:.6}, {transform:'none', opacity:1}], {duration:800, easing:'cubic-bezier(.65,0,.2,1)'});
-    var done = function(){ tgt.style.visibility = ''; c.remove(); };
+    // measure the copy's own glyph box so it lands exactly where the title text sits
+    var cr = textBox(c);
+    var baseX = (tr.left - cr.left) / z, baseY = (tr.top - cr.top) / z;
+    c.style.left = baseX + 'px'; c.style.top = baseY + 'px';
+    // scale around the text itself, not the box edge, so the start lines up with the small name
+    var er = c.getBoundingClientRect(), gr = textBox(c);
+    c.style.transformOrigin = ((gr.left - er.left) / z) + 'px ' + ((gr.top - er.top) / z) + 'px';
+    var k = sr.height / tr.height;
+    var dx = (sr.left + (sr.width - tr.width * k) / 2 - tr.left) / z, dy = (sr.top + (sr.height - tr.height * k) / 2 - tr.top) / z;
+    var lift = Math.min(60, Math.abs(dy) * 0.18);   // a gentle arc instead of a straight line
+    tgt.style.visibility = 'hidden'; src.style.visibility = 'hidden';
+    var small = innerWidth < 700, dur = small ? 780 : 900;
+    var an = c.animate([
+      {transform:'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', color:ss.color, opacity:Math.max(srcOpacity, .35)},
+      {transform:'translate(' + (dx * 0.42) + 'px,' + (dy * 0.42 - lift) + 'px) scale(' + (k + (1 - k) * 0.62) + ')', color:ts.color, opacity:1, offset:0.55},
+      {transform:'translate(0,0) scale(1)', color:ts.color, opacity:1}
+    ], {duration:dur, easing:'cubic-bezier(.45,0,.2,1)', fill:'both'});
+    var done = function(){ tgt.style.visibility = ''; src.style.visibility = ''; requestAnimationFrame(function(){ c.remove(); }); };
     an.onfinish = done; an.oncancel = done;
+    setTimeout(function(){ if (c.isConnected) done(); }, dur + 400);
   }
   function endIntro(){
     if (!INTRO.running) return;
@@ -3059,7 +3079,7 @@
     ov.classList.add('out');
     document.body.classList.remove('intro-play');
     if (document.activeElement === $('introSkip')) $('introSkip').blur();
-    setTimeout(function(){ if (!INTRO.running) ov.hidden = true; }, 340);
+    setTimeout(function(){ if (!INTRO.running) ov.hidden = true; }, 520);
     try { sessionStorage.setItem('hy-intro-seen', '1'); } catch (e) {}
   }
   $('intro').addEventListener('click', endIntro);
