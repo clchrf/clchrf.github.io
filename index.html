@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qSTOh+iF/rwx/YNyAuhWF0P7rIt81yU34NFcY1hr7sg=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-XUyJjYLYO0OvLCZqKZSziW/sgOK4G/ObADTcrCOHfCI=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -415,6 +415,15 @@
   .tool-card p .ln{display:block}
   .privacy{font-size:14px;color:var(--ink-3);margin-top:18px;text-align:center}
 
+  /* cv */
+  .cv-card{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;padding:32px 36px;margin-top:36px}
+  .cv-card h2{font-size:clamp(26px,3.4vw,34px);font-weight:700;letter-spacing:-0.02em;margin-top:4px}
+  .cv-card p{color:var(--ink-2);margin-top:6px;max-width:34em}
+  .cv-side{display:grid;gap:8px;justify-items:start}
+  .cv-date{font-size:13px;color:var(--ink-3);margin:0}
+  .cv-old summary{cursor:pointer;font-size:13px;color:var(--ink-2)}
+  .cv-old ul{margin:6px 0 0;padding-left:1.1em;font-size:14px}
+  @media (max-width:600px){ .cv-card{padding:26px 22px} }
   /* contact */
   .contact{text-align:center;padding:56px 30px;margin-top:36px}
   .contact h2{font-size:clamp(30px,4.4vw,48px);font-weight:700;letter-spacing:-0.02em}
@@ -749,6 +758,19 @@
     </div>
     <div class="tool-grid" data-tool-cards></div>
     <p class="privacy" data-en="Everything runs in your browser with no sign-in. Files you choose are never uploaded.">全部在瀏覽器裡計算，不用登入，選取的檔案不會上傳。</p>
+  </section>
+
+  <section class="card cv-card" id="cv">
+    <div>
+      <div class="label">CV</div>
+      <h2 data-en="Résumé">履歷</h2>
+      <p data-en="A one-page résumé in English. New versions are added here with their upload date.">一頁式英文履歷，之後更新的版本也會放在這裡，標上上傳日期。</p>
+    </div>
+    <div class="cv-side">
+      <a class="pill dark" id="cvLatest" download><span data-en="Download résumé (PDF)">下載履歷（PDF）</span> ↓</a>
+      <p class="cv-date" id="cvDate"></p>
+      <details class="cv-old" id="cvOldBox" hidden><summary data-en="Earlier versions">舊版本</summary><ul id="cvOld"></ul></details>
+    </div>
   </section>
 
   <section class="card contact" id="contact">
@@ -1508,6 +1530,17 @@
     ['img/g-trophy.jpg', ['首獎的獎座', 'The first-prize trophy'], ['SPARKFUL 黑客松 Hack to the Top', 'SPARKFUL Hackathon, Hack to the Top'], ['桌上的首獎大支票、獎座與識別證', 'The first-prize check, trophy and badges on a table']],
     ['img/g-mascot.jpg', ['把問題講清楚', 'Making the problem clear'], ['決賽簡報裡的痛點分析', 'The problem breakdown in a final pitch'], ['李欣妍站在大螢幕旁簡報，螢幕上有手繪吉祥物', 'Hsin-Yen presenting next to a big screen showing a hand-drawn mascot']]
   ];
+  // résumé versions, newest first: add a new entry (and its PDF in cv/) when updating
+  var CVS = [
+    {file:'cv/Hsin-Yen-Lee-CV-2026-11-13.pdf', date:'2026-11-13'}
+  ];
+  function renderCV(){
+    var fmt = function(d){ var p = d.split('-'); return LANG === 'en' ? new Date(+p[0], p[1] - 1, +p[2]).toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'}) : p[0] + ' 年 ' + (+p[1]) + ' 月 ' + (+p[2]) + ' 日'; };
+    var a = $('cvLatest'); a.href = CVS[0].file; a.setAttribute('download', CVS[0].file.split('/').pop());
+    $('cvDate').textContent = t('上傳日期：', 'Uploaded ') + fmt(CVS[0].date);
+    var ul = $('cvOld'); ul.innerHTML = ''; $('cvOldBox').hidden = CVS.length < 2;
+    CVS.slice(1).forEach(function(c){ var li = el('li'), l = el('a', null, fmt(c.date)); l.href = c.file; l.setAttribute('download', ''); li.appendChild(l); ul.appendChild(li); });
+  }
   var TOOLS = [
     {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、電容代碼、LED 限流電阻、分壓、RC 時間常數，|常用計算 All in one。', 'Resistor colors, capacitor codes, LED resistors, dividers and RC time constants.|Everyday calculations, all in one.'],
       icon:'<path d="M3 17h6M25 17h6"/><rect x="9" y="11" width="16" height="12" rx="4"/><path d="M14 11v12M18 11v12M21 11v12"/>'},
@@ -2854,6 +2887,7 @@
     renderRes(); calcLED(); calcDiv(); calcRC(); renderKmap();
     if (TM.segs.length) tmRender(TM.running ? TM.endAt - performance.now() : TM.remain);
     if ($('resReverseMsg').textContent) $('resReverseMsg').textContent = '';
+    renderCV();
     if ($('projDlg').open && PD.key) fillProj();
     calcCap(); if ($('capReverseMsg').textContent) $('capReverseMsg').textContent = '';
     hsvSync(false); if (HSV.hsv) hsvRender(); dlTick();
