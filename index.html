@@ -2,12 +2,21 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0FqyLPE/Ug5D5KEQelU/XzDmPpeCaskzvcxRY/anTAk=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>Hsin-Yen Lee</title>
-<meta name="description" content="李欣妍 Hsin-Yen (Cindy) Lee，台師大電機系。機器人、AI 與黑客松作品集，還有電機系用得到的小工具。">
+<title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
+<meta name="description" id="metaDesc" content="李欣妍 Hsin-Yen (Cindy) Lee，台師大電機系。機器人、AI 與黑客松作品集，還有電機系用得到的小工具。">
 <meta property="og:title" content="李欣妍 Hsin-Yen Lee">
-<meta property="og:description" content="台師大電機系。機器人、AI 與黑客松作品集，還有電機系用得到的小工具。">
-<meta property="og:image" content="https://clchrf.github.io/img/portrait.jpg">
+<meta property="og:description" id="ogDesc" content="台師大電機系。機器人、AI 與黑客松作品集，還有電機系用得到的小工具。">
+<meta property="og:image" content="https://clchrf.github.io/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="李欣妍 Hsin-Yen Lee 作品集">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://clchrf.github.io/">
 <meta property="og:url" content="https://clchrf.github.io/">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231d1d1f'/%3E%3Cpath d='M5 16h7.5M19.5 16H27' stroke='%23f5f5f7' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M13 8v16M19 8v16' stroke='%23f5f5f7' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -72,7 +81,7 @@
   .icon-btn{width:34px;height:34px;border:none;border-radius:50%;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer}
   .icon-btn:hover,.lang-btn:hover{background:var(--line)}
   .icon-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  @media (max-width:600px){ .nav-links{gap:14px;font-size:13px} .nav-links .opt{display:none} }
+  @media (max-width:600px){ .nav-links{gap:12px;font-size:13px} }
   @media (max-width:400px){ .brand span{display:none} }
 
   /* hero */
@@ -180,7 +189,11 @@
     .proj-grid > .proj:last-child:nth-child(odd) .proj-media{flex:0 0 56%}
     .proj-grid > .proj:last-child:nth-child(odd) .proj-body{justify-content:center;padding:32px 36px}
   }
-  .proj{display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;color:inherit;text-decoration:none;
+  .go-btn{border:none;background:none;font-family:inherit;cursor:pointer;padding:8px 0 0;text-align:left}
+  .go-btn::after{content:"";position:absolute;inset:0;border-radius:var(--r-lg)}
+  .go-btn:focus-visible{outline:none}
+  .go-btn:focus-visible::after{outline:3px solid color-mix(in srgb, var(--ink) 40%, transparent);outline-offset:2px}
+  .proj{position:relative;display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;color:inherit;text-decoration:none;
     transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s}
   .proj:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
   .proj-media{aspect-ratio:5/3;background:var(--fill-2);display:block;overflow:hidden}
@@ -502,11 +515,11 @@
 
 <header class="nav">
   <div class="nav-in">
-    <a class="brand" href="#top"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M1 8h9.5M15.5 8H25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.5 1.5v13M15.5 1.5v13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span data-en="Hsin-Yen Lee">李欣妍</span></a>
+    <a class="brand" href="#top" aria-label="李欣妍，回到首頁" data-en-label="Hsin-Yen Lee, back to home"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M1 8h9.5M15.5 8H25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.5 1.5v13M15.5 1.5v13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span data-en="Hsin-Yen Lee">李欣妍</span></a>
     <nav class="nav-links" aria-label="主選單" data-en-label="Main menu">
       <a href="#work" data-en="Work">作品</a>
       <a href="#awards" data-en="Awards">比賽</a>
-      <a href="#experience" class="opt" data-en="Experience">經歷</a>
+      <a href="#experience" data-en="Experience">經歷</a>
       <a href="#tools" data-nav="tools" data-en="Toolbox">工具箱</a>
     </nav>
     <div class="nav-tools">
@@ -579,7 +592,7 @@
         <div class="nums">
           <div><b>6</b><span data-en="competition awards">次比賽得獎</span></div>
           <div><b>15</b><span data-en="hackathons &amp; competitions">場黑客松與競賽</span></div>
-          <div><b>23</b><span data-en="GitHub repositories">個 GitHub 專案</span></div>
+          <div><b>24</b><span data-en="public GitHub repositories">個公開 GitHub 專案</span></div>
           <div><b>4</b><span data-en="technical certificates">張技術證照</span></div>
         </div>
       </div>
@@ -668,7 +681,7 @@
       <p data-en="Little tools every EE student needs and has to look up again every time, so I built my own.">電機系日常會用到、但每次都要重新找的小工具，乾脆自己做一個。</p>
     </div>
     <div class="tool-grid" data-tool-cards></div>
-    <p class="privacy" data-en="Everything runs in your browser. No sign-in, and nothing leaves your device.">全部在瀏覽器裡計算，不用登入，資料也不會離開這台裝置。</p>
+    <p class="privacy" data-en="Everything runs in your browser with no sign-in. Files you choose are never uploaded.">全部在瀏覽器裡計算，不用登入，選取的檔案不會上傳。</p>
   </section>
 
   <section class="card contact" id="contact">
@@ -686,7 +699,7 @@
   <div class="tool-top">
     <a class="back" href="#top" data-en="‹ Home">‹ 首頁</a>
     <h1 class="tool-title" data-en="Toolbox">工具箱</h1>
-    <p class="tool-sub" data-en="Little tools every EE student needs. Everything runs in your browser, and nothing leaves your device.">電機系日常會用到、但每次都要重新找的小工具。全部在瀏覽器裡計算，資料不會離開這台裝置。</p>
+    <p class="tool-sub" data-en="Little tools every EE student needs. Everything runs in your browser, and files you choose are never uploaded.">電機系日常會用到、但每次都要重新找的小工具。全部在瀏覽器裡計算，選取的檔案不會上傳。</p>
   </div>
   <div class="tool-grid" data-tool-cards></div>
 </main>
@@ -804,7 +817,7 @@
   <div class="tool-top">
     <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
     <h1 class="tool-title" data-en="OpenCV HSV Threshold Picker">OpenCV HSV 色彩門檻</h1>
-    <p class="tool-sub" data-en="Upload a photo, drag the sliders and watch the mask update, then copy the lower and upper arrays straight into cv2.inRange. Click the photo to pick a color. The photo never leaves your device.">上傳一張照片，拉滑桿即時看遮罩，再把 lower、upper 陣列直接複製到 cv2.inRange。點照片可以直接吸顏色。照片不會離開這台裝置。</p>
+    <p class="tool-sub" data-en="Upload a photo, drag the sliders and watch the mask update, then copy the lower and upper arrays straight into cv2.inRange. Click the photo to pick a color. The photo you choose is never uploaded.">上傳一張照片，拉滑桿即時看遮罩，再把 lower、upper 陣列直接複製到 cv2.inRange。點照片可以直接吸顏色。選取的照片不會上傳。</p>
   </div>
   <div class="panel">
     <div class="chips" style="align-items:center;gap:12px">
@@ -863,7 +876,7 @@
   <div class="tool-top">
     <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
     <h1 class="tool-title" data-en="File Converter">檔案轉換</h1>
-    <p class="tool-sub" data-en="Files are converted right here in your browser and are never uploaded. The first time you use a converter it downloads its library from a public CDN.">檔案在你的瀏覽器裡直接轉換，不會上傳到任何地方。第一次使用時會從公開 CDN 下載轉檔程式庫。</p>
+    <p class="tool-sub" data-en="Files you choose are converted in your browser and are never uploaded. The first time you use a converter, your browser downloads its conversion library from this site (HEIC about 3 MB, PDF to Word about 2 MB). Limits: up to 30 photos of 40 MB each, 20 PDFs totalling 300 MB for merging, and one PDF of up to 100 MB or 300 pages for Word.">選取的檔案只在你的瀏覽器裡轉換，不會上傳。第一次使用時，瀏覽器會從本站下載轉檔程式（HEIC 約 3 MB、PDF 轉 Word 約 2 MB）。上限：照片一次 30 張、每張 40 MB；PDF 合併 20 個、合計 300 MB；PDF 轉 Word 一次一個、100 MB 或 300 頁以內。</p>
   </div>
   <div class="seg" role="tablist" id="cvTabs" style="margin-top:18px">
     <button type="button" role="tab" aria-selected="true" data-tab="heic" data-en="HEIC → JPG">HEIC → JPG</button>
@@ -958,7 +971,7 @@
   <div class="tool-top">
     <a class="back" href="#tools" data-en="‹ Toolbox">‹ 工具箱</a>
     <h1 class="tool-title" data-en="Pitch Timer">簡報計時器</h1>
-    <p class="tool-sub" data-en="Built for hackathon pitches. When the pitch time runs out the Q&amp;A countdown starts right away, and after the last segment it counts overtime. Shortcuts: Space start/pause, R reset, N next segment, F fullscreen.">黑客松 pitch 用。簡報時間到會直接接 Q&amp;A 倒數，最後一段結束後開始計算超時。快捷鍵：空白鍵開始／暫停、R 重設、N 下一段、F 全螢幕。</p>
+    <p class="tool-sub" data-en="Built for hackathon pitches. When the pitch time runs out the Q&amp;A countdown starts right away, and after the last segment it counts overtime. Shortcuts: Space start/pause, R reset, N next segment, F fullscreen.">黑客松 pitch 用。簡報時間到會直接進入 Q&amp;A 倒數，最後一段結束後開始計算超時。快捷鍵：空白鍵開始／暫停、R 重設、N 下一段、F 全螢幕。</p>
   </div>
   <div class="screen" id="tDisplay" data-state="idle">
     <div class="t-label" id="tLabel"></div>
@@ -1069,6 +1082,10 @@
   function tx(a){ return Array.isArray(a) ? (LANG === 'en' ? a[1] : a[0]) : a; }
   function applyStatic(){
     document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
+    var md = $('metaDesc'), od = $('ogDesc');
+    if (md.__zh == null) { md.__zh = md.content; od.__zh = od.content; }
+    md.content = LANG === 'en' ? 'Hsin-Yen (Cindy) Lee, Electrical Engineering student at National Taiwan Normal University. Robotics, AI and hackathon projects, plus small tools for EE students.' : md.__zh;
+    od.content = LANG === 'en' ? 'EE student at NTNU. Robotics, AI and hackathon projects, plus small tools for EE students.' : od.__zh;
     document.querySelectorAll('[data-en]').forEach(function(e){
       if (e.__zh == null) e.__zh = e.innerHTML;
       e.innerHTML = LANG === 'en' ? e.getAttribute('data-en') : e.__zh;
@@ -1190,10 +1207,10 @@
       tags:['Python','Arduino', ['步進馬達', 'Stepper motors']], url:'https://github.com/clchrf/dancearm'},
     {name:['智慧交通指揮系統', 'Traffic Command System'], meta:['2026 雲湧智生 臺灣生成式 AI 應用黑客松', '2026 Taiwan Generative AI Application Hackathon'], art:'traffic',
       desc:['不是聊天機器人，而是指揮決策中樞：沿時間軸偵測異常、達門檻主動預警，事件發生後 60 秒內給出可以追溯的指揮建議。', 'Not a chatbot but a command center: it watches the timeline for anomalies, raises alerts at thresholds, and within 60 seconds of an incident gives recommendations you can trace back to the data.'],
-      tags:['AWS','Python','Next.js'], url:null},
-    {name:['青年智慧助手', 'Youth Smart Assistant'], meta:['新竹政策黑客松', 'Hsinchu Policy Hackathon'], art:'youth',
+      tags:['AWS','Python','Next.js'], url:null, comp:'zhizhu', ctx:{comp:['2026 雲湧智生：臺灣生成式 AI 應用黑客松', '2026 Taiwan Generative AI Application Hackathon'], year:null, rank:['決賽', 'Finalist']}},
+    {name:['青年智慧助手', 'Youth Smart Assistant'], meta:['2026 梅竹黑客松・卡好審', '2026 Meichu Hackathon · KaHaoShen'], art:'youth',
       desc:['以 LINE 官方帳號為入口的補助查詢系統。民眾可以查補助、確認要準備的文件、追案件進度；後台讓承辦人員自己維護內容。', 'A subsidy lookup service that lives in a LINE official account. People can find subsidies, check which documents they need and track their case, and staff keep the content up to date in a back office.'],
-      tags:['LINE Bot','TypeScript'], url:null},
+      tags:['LINE Bot','TypeScript'], url:null, comp:'kahao', ctx:{comp:['梅竹黑客松（第 14 屆）', 'Meichu Hackathon (14th)'], year:'2026', rank:['第二名', '2nd place']}},
     {name:['機械手臂控制中心', 'Robot Arm Control Center'], meta:['個人專案・機器人', 'Personal project · Robotics'], art:'control',
       desc:['拉滑桿、輸入座標或示教播放來控制三軸機械手臂，旁邊還有 3D 模擬可以先看動作對不對。', 'Drive a 3-axis robot arm with sliders, coordinates or teach-and-playback, with a 3D simulation to check the motion first.'],
       tags:['Python','Arduino'], url:'https://github.com/clchrf/robot-arm-control-center'}
@@ -1362,7 +1379,7 @@
   ];
   var MOMENTS = [
     ['img/g-921.jpg', ['上台 pitch', 'Pitching'], ['921 防災主題的提案', 'A disaster-preparedness pitch about the 921 earthquake'], ['李欣妍在台上簡報，投影片寫著 921 大地震', 'Hsin-Yen presenting on stage with a slide about the 921 earthquake']],
-    ['img/g-youth.jpg', ['青年智慧助手', 'Youth Smart Assistant'], ['新竹政策黑客松決賽簡報', 'Final pitch at the Hsinchu Policy Hackathon'], ['李欣妍在體育館舞台上拿著麥克風簡報', 'Hsin-Yen presenting with a microphone on a gym stage']],
+    ['img/g-youth.jpg', ['青年智慧助手', 'Youth Smart Assistant'], ['2026 梅竹黑客松決賽簡報', 'Final pitch at the 2026 Meichu Hackathon'], ['李欣妍在體育館舞台上拿著麥克風簡報', 'Hsin-Yen presenting with a microphone on a gym stage']],
     ['img/g-qualcomm.jpg', ['高通台灣 AI 黑客松', 'Qualcomm Taiwan AI Hackathon'], ['決賽簡報', 'Final pitch'], ['李欣妍在高通台灣 AI 黑客松背板前簡報', 'Hsin-Yen presenting in front of the Qualcomm Taiwan AI Hackathon backdrop']],
     ['img/g-booth.jpg', ['Plankton 攤位', 'Plankton booth'], ['跟來逛的人介紹我們的作品', 'Showing visitors what we built'], ['李欣妍在攤位前整理展示的植栽裝置', 'Hsin-Yen setting up the planter device at the booth']],
     ['img/g-trophy.jpg', ['首獎的獎座', 'The first-prize trophy'], ['SPARKFUL 黑客松 Hack to the Top', 'SPARKFUL Hackathon, Hack to the Top'], ['桌上的首獎大支票、獎座與識別證', 'The first-prize check, trophy and badges on a table']],
@@ -1396,6 +1413,11 @@
       body.appendChild(el('p', null, tx(p.desc)));
       var tags = el('div', 'tags'); p.tags.forEach(function(g){ tags.appendChild(el('span', 'tag', tx(g))); }); body.appendChild(tags);
       if (p.url) body.appendChild(el('span', 'go', t('在 GitHub 看', 'View on GitHub') + ' ↗'));
+      else if (p.comp) {
+        var gb = el('button', 'go go-btn', t('看介紹', 'See details') + ' →'); gb.type = 'button';
+        gb.addEventListener('click', function(){ openProj(p.comp, p.ctx); });
+        body.appendChild(gb);
+      }
       a.appendChild(media); a.appendChild(body); pg.appendChild(a);
     });
     var ml = $('moreList'); ml.innerHTML = '';
@@ -1795,8 +1817,15 @@
         host.appendChild(b);
       });
     });
-    var sopS = 'F = ' + (sol.sop.length ? sol.sop.map(function(g){ return prodStr(litsOf(g, n)); }).join(' + ') : '0');
-    var posS = 'F = ' + (sol.pos.length ? sol.pos.map(function(g){ return sumStr(litsOf(g, n, true)); }).join('') : '1');
+    // terms listed in variable order (A, B, C, D), so SOP and POS read the same way
+    var byVars = function(inv){ return function(x, y){
+      var lx = litsOf(x, n, inv).map(function(l){ return NAMES.indexOf(l[0]); }), ly = litsOf(y, n, inv).map(function(l){ return NAMES.indexOf(l[0]); });
+      for (var i = 0; i < Math.min(lx.length, ly.length); i++) if (lx[i] !== ly[i]) return lx[i] - ly[i];
+      return lx.length - ly.length;
+    }; };
+    var sopS = 'F = ' + (sol.sop.length ? sol.sop.slice().sort(byVars(false)).map(function(g){ return prodStr(litsOf(g, n)); }).join(' + ') : '0');
+    var posT = sol.pos.slice().sort(byVars(true)).map(function(g){ return litsOf(g, n, true); });
+    var posS = 'F = ' + (posT.length ? posT.map(function(l){ return posT.length > 1 && l.length === 1 ? '(' + l[0] + ')' : sumStr(l); }).join('') : '1');
     $('kmExpr').textContent = KM.form === 'sop' ? sopS : posS;
     $('kmOther').textContent = KM.form === 'sop' ? t('POS 形式：', 'POS form: ') + posS : t('SOP 形式：', 'SOP form: ') + sopS;
     $('kmGroupsNote').textContent = KM.form === 'sop'
@@ -2037,14 +2066,11 @@
   setInterval(function(){ if (current === 'deadline') dlTick(); }, 250);
 
   /* ================= file converter ================= */
-  var CDN = {
-    heic:'https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js',
-    zip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
-    pdflib:'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
-    pdfjs:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
-    pdfworker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
-    cmaps:'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/'
-  };
+  // converter libraries are self-hosted under vendor/ (no third-party scripts at runtime)
+  var VEND = function(p){ return new URL('vendor/' + p, location.href).href; };
+  var CDN = {zip:VEND('jszip.min.js'), pdflib:VEND('pdf-lib.min.js')};
+  var MODS = {};
+  function loadMod(p){ if (!MODS[p]) MODS[p] = import(VEND(p)).catch(function(e){ delete MODS[p]; throw new Error('lib'); }); return MODS[p]; }
   var LIBS = {};
   function loadLib(url){
     if (!LIBS[url]) LIBS[url] = new Promise(function(res, rej){
@@ -2092,15 +2118,18 @@
       var nb = await new Promise(function(r){ c.toBlob(r, 'image/jpeg', q); });
       if (nb) return nb;
     } catch (e) {}
-    await loadLib(CDN.heic);
-    return await window.HeicTo({blob:f, type:'image/jpeg', quality:q});
+    var heic = await loadMod('heic-to.min.js');
+    return await heic.heicTo({blob:f, type:'image/jpeg', quality:q});
   }
   var heicBusy = Promise.resolve();
+  var LIM = {heicN:30, heicMB:40, mergeN:20, mergeMB:300, wordMB:100, wordPages:300}, MB = 1048576;
   dropZone('heicDrop', function(files){
     var q = +$('heicQ').value;
-    files.forEach(function(f){
+    $('heicMsg').textContent = files.length > LIM.heicN ? t('一次最多 ' + LIM.heicN + ' 張，只處理前 ' + LIM.heicN + ' 張。', 'Up to ' + LIM.heicN + ' photos at a time; only the first ' + LIM.heicN + ' were added.') : '';
+    files.slice(0, LIM.heicN).forEach(function(f){
       var row = cvRow('heicList', f.name);
       if (!/\.(heic|heif)$/i.test(f.name) && !/hei[cf]/i.test(f.type)) { row.error(t('不是 HEIC 檔', 'Not a HEIC file')); return; }
+      if (f.size > LIM.heicMB * MB) { row.error(t('超過 ' + LIM.heicMB + ' MB', 'Over ' + LIM.heicMB + ' MB')); return; }
       heicBusy = heicBusy.then(async function(){
         row.status(t('轉換中…', 'Converting…'));
         try {
@@ -2141,10 +2170,17 @@
     $('mergeMsg').textContent = MERGE.length === 1 ? t('再加一個以上的 PDF 就可以合併。', 'Add at least one more PDF to merge.') : '';
   }
   dropZone('mergeDrop', function(files){
-    var bad = 0;
-    files.forEach(function(f){ if (/\.pdf$/i.test(f.name) || f.type === 'application/pdf') MERGE.push(f); else bad++; });
+    var bad = 0, over = 0, total = MERGE.reduce(function(n, f){ return n + f.size; }, 0);
+    files.forEach(function(f){
+      if (!(/\.pdf$/i.test(f.name) || f.type === 'application/pdf')) { bad++; return; }
+      if (MERGE.length >= LIM.mergeN || total + f.size > LIM.mergeMB * MB) { over++; return; }
+      MERGE.push(f); total += f.size;
+    });
     mergeRender();
-    if (bad) $('mergeMsg').textContent = t('有 ' + bad + ' 個檔案不是 PDF，已略過。', bad + ' file(s) weren\'t PDFs and were skipped.');
+    var notes = [];
+    if (bad) notes.push(t('有 ' + bad + ' 個檔案不是 PDF，已略過。', bad + ' file(s) weren\'t PDFs and were skipped.'));
+    if (over) notes.push(t('有 ' + over + ' 個檔案超過上限（最多 ' + LIM.mergeN + ' 個、合計 ' + LIM.mergeMB + ' MB），沒有加入。', over + ' file(s) went over the limit (' + LIM.mergeN + ' files, ' + LIM.mergeMB + ' MB in total) and weren\'t added.'));
+    if (notes.length) $('mergeMsg').textContent = notes.join(' ');
   });
   $('mergeGo').addEventListener('click', async function(){
     var btn = this, msg = $('mergeMsg'); btn.disabled = true; msg.textContent = t('合併中…', 'Merging…');
@@ -2389,11 +2425,11 @@
     });
   }
   async function pdfToDocx(file, keepImgs, prog){
-    await loadLib(CDN.pdfjs);
-    var lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = CDN.pdfworker;
+    var lib = await loadMod('pdfjs/pdf.min.js'); lib.GlobalWorkerOptions.workerSrc = VEND('pdfjs/pdf.worker.min.js');
     var pdf;
-    try { pdf = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()), cMapUrl:CDN.cmaps, cMapPacked:true, isEvalSupported:false}).promise; }
+    try { pdf = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()), cMapUrl:VEND('pdfjs/cmaps/'), cMapPacked:true, standardFontDataUrl:VEND('pdfjs/standard_fonts/'), wasmUrl:VEND('pdfjs/wasm/'), isEvalSupported:false}).promise; }
     catch (e) { throw new Error(e && e.name === 'PasswordException' ? t('這個 PDF 有密碼，請先解除密碼。', 'This PDF is password-protected. Remove the password first.') : t('這個 PDF 打不開，檔案可能損壞。', 'This PDF couldn\'t be opened. It may be damaged.')); }
+    if (pdf.numPages > LIM.wordPages) { var np = pdf.numPages; pdf.destroy(); throw new Error(t('這個 PDF 有 ' + np + ' 頁，一次最多轉 ' + LIM.wordPages + ' 頁。', 'This PDF has ' + np + ' pages; the limit is ' + LIM.wordPages + '.')); }
     await loadLib(CDN.zip);
     var zip = new JSZip(), body = '', rels = '', imgN = 0, textCount = 0, OPS = lib.OPS, S = 2;
     var addImage = function(enc, x, y, w, h){
@@ -2511,6 +2547,7 @@
     var f = files[0], row = cvRow('wordList', f.name);
     $('wordMsg').textContent = files.length > 1 ? t('一次轉一個檔案，只處理第一個。', 'One file at a time; only the first was used.') : '';
     if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { row.error(t('不是 PDF', 'Not a PDF')); return; }
+    if (f.size > LIM.wordMB * MB) { row.error(t('超過 ' + LIM.wordMB + ' MB', 'Over ' + LIM.wordMB + ' MB')); return; }
     var keep = $('wordImgs').checked;
     wordBusy = wordBusy.then(async function(){
       row.status(t('準備中…', 'Preparing…'));
