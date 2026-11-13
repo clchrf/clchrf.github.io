@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0FqyLPE/Ug5D5KEQelU/XzDmPpeCaskzvcxRY/anTAk=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g3DkjBS5tY04qJBnP2rlI7mpnzq/5cfud6uWAjfT9MQ=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>李欣妍 Hsin-Yen Lee｜作品集與工具箱</title>
@@ -60,7 +60,9 @@
   a{color:var(--ink)}
   button{font:inherit;color:inherit}
   :focus-visible{outline:3px solid color-mix(in srgb, var(--link) 55%, transparent);outline-offset:2px}
-  .wrap{max-width:1080px;margin:0 auto}
+  .wrap{max-width:1120px;margin:0 auto}
+  @media (min-width:1280px){ html{zoom:1.08} }
+  @media (min-width:1600px){ html{zoom:1.18} }
   .nw{white-space:nowrap}
 
   /* nav */
@@ -81,7 +83,22 @@
   .icon-btn{width:34px;height:34px;border:none;border-radius:50%;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer}
   .icon-btn:hover,.lang-btn:hover{background:var(--line)}
   .icon-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  @media (max-width:600px){ .nav-links{gap:12px;font-size:13px} }
+  .menu-btn{display:none}
+  .menu-btn path{transition:transform .25s, opacity .2s;transform-origin:12px 12px}
+  .menu-btn[aria-expanded="true"] .m1{transform:translateY(5px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] .m2{opacity:0}
+  .menu-btn[aria-expanded="true"] .m3{transform:translateY(-5px) rotate(-45deg)}
+  @media (max-width:700px){
+    .menu-btn{display:grid}
+    .nav-links{position:absolute;left:0;right:0;top:100%;margin:0;flex-direction:column;gap:0;font-size:17px;background:var(--bg);
+      border-bottom:1px solid var(--line);padding:6px max(20px, env(safe-area-inset-left,0px)) 14px;box-shadow:0 18px 30px -18px rgba(0,0,0,.3);
+      visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .2s, transform .2s, visibility 0s .2s}
+    .nav-links.open{visibility:visible;opacity:1;transform:none;transition:opacity .2s, transform .2s}
+    .nav-links a{padding:12px 0;border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);color:var(--ink)}
+    .nav-links a:last-child{border-bottom:none}
+    .nav-in{position:relative}
+    .nav-tools{margin-left:auto}
+  }
   @media (max-width:400px){ .brand span{display:none} }
 
   /* hero */
@@ -109,6 +126,7 @@
   /* intro: oscilloscope trace that settles into the name */
   #intro{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;
     transition:opacity .32s ease, transform .32s ease}
+  .hero-title.landed{animation:none!important;opacity:1!important;transform:none!important}
   #intro.out{opacity:0;transform:scale(1.03);pointer-events:none}
   .intro-scope{position:relative;width:min(640px,86vw);aspect-ratio:600/240}
   .intro-svg{width:100%;height:100%;display:block;overflow:visible;transition:opacity .4s ease}
@@ -167,14 +185,23 @@
   .nums{display:grid;grid-template-columns:1fr 1fr;gap:22px 12px;margin-top:18px}
   .nums b{display:block;font-size:44px;font-weight:700;letter-spacing:-0.03em;line-height:1.05;font-variant-numeric:tabular-nums}
   .nums span{font-size:14px;color:var(--ink-2)}
-  .path{list-style:none;margin:18px 0 0;padding:0}
-  .path li{position:relative;padding:0 0 16px 26px;font-weight:500}
-  .path li::before{content:"";position:absolute;left:3px;top:.55em;width:10px;height:10px;border-radius:50%;background:var(--card);border:2px solid var(--ink)}
-  .path li::after{content:"";position:absolute;left:8px;top:calc(.55em + 12px);bottom:2px;width:2px;background:var(--line)}
+  .path{list-style:none;margin:20px 0 0;padding:0}
+  .path li{position:relative;padding:0 0 20px 34px;font-weight:600;line-height:1.4}
+  .path li::before{content:"";position:absolute;left:0;top:.2em;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--line);
+    z-index:1;transition:border-color .4s, background .4s, box-shadow .4s, transform .4s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+  .path li::after{content:"";position:absolute;left:7px;top:calc(.2em + 16px);bottom:-.2em;width:2px;
+    background:linear-gradient(var(--ink),var(--ink)) top/2px 0% no-repeat, var(--line);transition:background-size .5s ease-out;transition-delay:calc(var(--d,0s) + .25s)}
   .path li:last-child{padding-bottom:0}
   .path li:last-child::after{display:none}
-  .path li:last-child::before{background:var(--ink)}
-  .path small{display:block;color:var(--ink-3);font-size:13.5px;font-weight:400}
+  .path li.lit::before{border-color:var(--ink);transform:scale(1.08)}
+  .path li.lit:last-child::before{background:var(--ink);box-shadow:0 0 0 6px color-mix(in srgb, var(--ink) 14%, transparent)}
+  .path li.lit::after{background-size:2px 100%, auto}
+  .path li > *, .path li{transition:opacity .4s}
+  .path:not(.ready) li{opacity:1}
+  .path.ready li{opacity:.45;transition:opacity .45s;transition-delay:var(--d,0s)}
+  .path.ready li.lit{opacity:1}
+  @media (prefers-reduced-motion: reduce){ .path li, .path li::before, .path li::after{transition:none} }
+  .path small{display:block;color:var(--ink-3);font-size:13.5px;font-weight:400;margin-top:2px}
   .certs{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:12px}
   .certs li{display:flex;align-items:center;gap:12px;font-weight:500}
   .certs i{width:34px;height:34px;border-radius:10px;background:var(--fill);display:grid;place-items:center;flex:none;font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2)}
@@ -218,8 +245,18 @@
   @keyframes fillx{0%,100%{transform:scaleX(1)}50%{transform:scaleX(var(--sx))}}
   .c-arm{transform-box:view-box;transform-origin:326px 160px;animation:carm 3.4s ease-in-out infinite}
   @keyframes carm{0%,100%{transform:rotate(0)}50%{transform:rotate(-24deg)}}
+  .yb{opacity:0;animation:ybub 8s cubic-bezier(.2,.7,.2,1) infinite}
+  .y1{animation-delay:0s}.y2{animation-delay:1s}.y3{animation-delay:2s}.y4{animation-delay:3s}
+  @keyframes ybub{0%{opacity:0;transform:translateY(8px)}6%,85%{opacity:1;transform:none}95%,100%{opacity:0}}
+  .yt{stroke-dasharray:1;stroke-dashoffset:1;animation:ytrack 8s ease-in-out infinite}
+  @keyframes ytrack{0%,40%{stroke-dashoffset:1}70%,90%{stroke-dashoffset:0}100%{stroke-dashoffset:1}}
+  .yd{transition:fill .3s}
+  .yd0{animation:ydot 8s infinite}.yd1{animation:ydot 8s infinite .9s}.yd2{animation:ydot 8s infinite 1.8s}
+  @keyframes ydot{0%,45%{fill:var(--card)}55%,90%{fill:var(--ink)}100%{fill:var(--card)}}
+  .yf{animation:floatA 4s ease-in-out infinite}
   @media (prefers-reduced-motion: reduce){
-    .iphone,.t-flow,.t-pulse,.c-knob,.c-fill,.c-arm{animation:none}
+    .iphone,.t-flow,.t-pulse,.c-knob,.c-fill,.c-arm,.yt,.yd,.yf{animation:none}
+    .yb{animation:none;opacity:1}
   }
   .proj-body{display:flex;flex-direction:column;gap:8px;padding:24px 28px 28px;flex:1}
   .proj h3{font-size:25px;font-weight:700;letter-spacing:-0.015em}
@@ -256,6 +293,7 @@
   .policy h2{font-size:21px;font-weight:700;letter-spacing:-0.01em;margin-top:30px}
   .policy h2:first-child{margin-top:0}
   .policy ul{margin:12px 0 0;padding-left:1.2em;display:grid;gap:10px}
+  .policy-lead{color:var(--ink-2);font-size:16px;line-height:1.8;margin-bottom:6px}
   .policy li{color:var(--ink-2);font-size:16px;line-height:1.75}
   .shot-open{display:block;width:100%;padding:0;border:none;background:none;cursor:zoom-in}
   #lightbox{border:none;padding:0;background:transparent;max-width:min(92vw,1100px);max-height:92vh;overflow:visible}
@@ -276,8 +314,8 @@
   .tag.fin{border:none;font-family:inherit;cursor:pointer;text-align:left;transition:background .15s}
   .tag.fin::after{content:" →";color:var(--ink-3)}
   .tag.fin:hover{background:var(--line)}
-  .award{position:relative;transition:box-shadow .2s, transform .2s}
-  .award:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+  .award{position:relative;transition:box-shadow .35s, transform .35s cubic-bezier(.2,.7,.2,1)}
+  .award:hover{box-shadow:var(--shadow-hover);transform:translateY(-5px)}
   .award-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
   .award .see{font-size:13px;font-weight:600;color:var(--ink-2)}
   .award:hover .see{color:var(--ink)}
@@ -301,9 +339,9 @@
   .pd-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}
   .pd .rank{display:inline-block;margin-top:0}
   .pd-team{font-size:14px;font-weight:500;color:var(--ink-2)}
-  .pd-media{margin:22px 0 0;border-radius:var(--r-md);overflow:hidden;background:var(--fill-2);aspect-ratio:16/9}
-  .pd-zoom{display:block;width:100%;height:100%;padding:0;border:none;background:none;cursor:zoom-in}
-  .pd-media img{display:block;width:100%;height:100%;object-fit:contain}
+  .pd-media{margin:22px 0 0;border-radius:var(--r-md);overflow:hidden;background:var(--fill-2);display:flex;justify-content:center}
+  .pd-zoom{display:block;padding:0;border:none;background:none;cursor:zoom-in;line-height:0}
+  .pd-media img{display:block;width:auto;max-width:100%;height:auto;max-height:min(64vh,560px)}
   .pd-thumbs{display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
   .pd-thumbs button{flex:0 1 104px;min-width:0;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;
     background:var(--fill-2);cursor:pointer;opacity:.6;transition:opacity .15s}
@@ -316,9 +354,11 @@
   @media (max-width:640px){ .pd-phones{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
     .pd-phones figure{flex:0 0 42%;scroll-snap-align:start} }
   .pd-phones figure{margin:0}
-  .pd-phone{display:block;width:100%;padding:5px;border:none;border-radius:22px;background:#1d1d1f;cursor:zoom-in;
-    box-shadow:0 10px 24px -12px rgba(0,0,0,.35)}
-  .pd-phone img{display:block;width:100%;height:auto;border-radius:17px}
+  .pd-phone{position:relative;display:block;width:100%;padding:5px;border:none;border-radius:13% / 6%;background:#1d1d1f;cursor:zoom-in;
+    box-shadow:0 0 0 1.5px #3a3a3c inset, 0 12px 26px -12px rgba(0,0,0,.4)}
+  .pd-phone img{display:block;width:100%;height:auto;border-radius:11% / 5.2%}
+  .pd-phone::before{content:"";position:absolute;top:3.4%;left:50%;width:32%;height:3.6%;transform:translateX(-50%);background:#000;border-radius:999px;z-index:1}
+  .pd-phone::after{content:"";position:absolute;right:-2.5px;top:22%;width:2.5px;height:11%;border-radius:0 2px 2px 0;background:#2c2c2e}
   .pd-phones figcaption{font-size:13px;line-height:1.5;color:var(--ink-2);margin-top:8px;text-align:center}
   .pd-body{display:grid;gap:22px;margin-top:28px}
   .pd-body h3{font-size:17px;font-weight:700}
@@ -342,10 +382,19 @@
   /* experience */
   .exp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:36px}
   @media (max-width:760px){ .exp-grid{grid-template-columns:1fr} }
-  .exp.design{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:28px;align-items:center}
-  @media (max-width:760px){ .exp.design{grid-template-columns:1fr;gap:18px} }
-  .exp.design .shot-open{border-radius:var(--r-sm);overflow:hidden}
-  .exp.design img{display:block;width:100%;height:auto;aspect-ratio:1}
+  .exp.design{grid-column:1 / -1}
+  .design-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px;align-items:start}
+  @media (max-width:760px){ .design-grid{grid-template-columns:1fr} }
+  .design-grid figure{margin:0}
+  .design-grid .shot-open{border-radius:var(--r-sm);overflow:hidden;background:var(--fill-2)}
+  .design-grid img{display:block;width:100%;height:auto;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .design-grid .shot-open:hover img{transform:scale(1.03)}
+  .design-grid figcaption{margin-top:10px;font-size:14px;color:var(--ink-2);display:grid;gap:2px}
+  .design-grid figcaption b{color:var(--ink);font-size:15px}
+  .exp-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .exp-photos .shot-open{border-radius:var(--r-sm);overflow:hidden}
+  .exp-photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 40%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .exp-photos .shot-open:hover img{transform:scale(1.04)}
   .exp .tag{display:inline-block;margin-bottom:12px}
   .exp p{color:var(--ink-2);font-size:16px;margin-top:8px}
 
@@ -354,9 +403,16 @@
   @media (max-width:860px){ .tool-grid{grid-template-columns:1fr} }
   .tool-card{display:flex;flex-direction:column;gap:12px;color:inherit;text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s}
   .tool-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
+  .tool-card:hover .tile{transform:rotate(-6deg) scale(1.08)}
+  .tile{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .shot{overflow:hidden}
+  .shot img{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .shot-open:hover img{transform:scale(1.04)}
+  @media (prefers-reduced-motion: reduce){ .tool-card:hover .tile, .shot-open:hover img{transform:none} }
   .tile{width:60px;height:60px;border-radius:16px;background:var(--fill);display:grid;place-items:center}
   .tile svg{width:34px;height:34px;stroke:var(--ink);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .tool-card p{color:var(--ink-2);font-size:15.5px}
+  .tool-card p .ln{display:block}
   .privacy{font-size:14px;color:var(--ink-3);margin-top:18px;text-align:center}
 
   /* contact */
@@ -464,6 +520,7 @@
   .hsv-ch .bar{height:10px;border-radius:5px;margin:10px 0 4px}
   .hsv-ch label{display:grid;grid-template-columns:3.2em 1fr 3em;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:6px}
   .hsv-ch input[type=range]{width:100%;accent-color:var(--ink)}
+  #hsvWrap{min-height:3.4em}
   .hsv-ch output{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);font-weight:600}
   /* file converter */
   .drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;
@@ -516,7 +573,7 @@
 <header class="nav">
   <div class="nav-in">
     <a class="brand" href="#top" aria-label="李欣妍，回到首頁" data-en-label="Hsin-Yen Lee, back to home"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M1 8h9.5M15.5 8H25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.5 1.5v13M15.5 1.5v13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span data-en="Hsin-Yen Lee">李欣妍</span></a>
-    <nav class="nav-links" aria-label="主選單" data-en-label="Main menu">
+    <nav class="nav-links" id="mainNav" aria-label="主選單" data-en-label="Main menu">
       <a href="#work" data-en="Work">作品</a>
       <a href="#awards" data-en="Awards">比賽</a>
       <a href="#experience" data-en="Experience">經歷</a>
@@ -525,6 +582,7 @@
     <div class="nav-tools">
       <button type="button" class="lang-btn" id="langBtn">EN</button>
       <button type="button" class="icon-btn" id="themeBtn"></button>
+      <button type="button" class="icon-btn menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav" aria-label="開啟選單" data-en-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="m1" d="M4 7h16"/><path class="m2" d="M4 12h16"/><path class="m3" d="M4 17h16"/></svg></button>
     </div>
   </div>
 </header>
@@ -611,10 +669,10 @@
         <div class="label">CERTIFICATES &amp; SKILLS</div>
         <h3 style="margin-top:6px" data-en="Certificates and skills">證照與技能</h3>
         <ul class="certs">
-          <li data-en="<i>B</i>Digital Electronics, Level B"><i>乙</i>數位電子乙級</li>
-          <li data-en="<i>C</i>Industrial Electronics, Level C"><i>丙</i>工業電子丙級</li>
-          <li data-en="<i>A</i>Occupational Safety &amp; Health Supervisor, Class A"><i>甲</i>甲種職業安全衛生主管</li>
-          <li data-en="<i>C</i>Computer Software Application, Level C"><i>丙</i>電腦軟體應用丙級</li>
+          <li data-en="Digital Electronics, Level B">數位電子乙級</li>
+          <li data-en="Industrial Electronics, Level C">工業電子丙級</li>
+          <li data-en="Occupational Safety &amp; Health Supervisor, Class A">甲種職業安全衛生主管</li>
+          <li data-en="Computer Software Application, Level C">電腦軟體應用丙級</li>
         </ul>
         <div class="skill-tags">
           <span class="tag">Python</span><span class="tag">TypeScript</span><span class="tag">C / C++</span><span class="tag">Swift</span>
@@ -628,7 +686,7 @@
   <section class="sec" id="work">
     <div class="sec-head">
       <h2 data-en="Work">作品</h2>
-      <p data-en="Build it, then make it move.">把東西做出來，然後讓它動起來。</p>
+      <p data-en="Some cool stuff.">一些酷東西</p>
     </div>
     <div class="proj-grid" id="projGrid"></div>
     <div class="card more">
@@ -664,13 +722,22 @@
       <p data-en="Things I learned outside the classroom.">教室以外學到的事。</p>
     </div>
     <div class="exp-grid">
-      <div class="card exp"><span class="tag" data-en="Internship">實習</span><h3>DISCO Corporation</h3><p data-en="Wafer processing and inspection: VHX microscope inspection, dicing, wafer measurement and Broken Blade Detection. I noticed wafers often sat crooked in the cassette and proposed a visual-marker poka-yoke to catch it.">接觸晶圓加工與檢測：VHX 顯微鏡檢測、晶圓切割、晶圓量測、Broken Blade Detection。觀察到晶圓在卡匣裡常常放歪，提出用視覺標記做防呆的想法。</p></div>
+      <div class="card exp"><span class="tag" data-en="Internship">實習</span><h3>DISCO Corporation</h3><p data-en="Wafer processing and inspection: VHX microscope inspection, dicing, wafer measurement and Broken Blade Detection. I noticed wafers often sat crooked in the cassette and proposed a visual-marker poka-yoke to catch it.">接觸晶圓加工與檢測：VHX 顯微鏡檢測、晶圓切割、晶圓量測、Broken Blade Detection。觀察到晶圓在卡匣裡常常放歪，提出用視覺標記做防呆的想法。</p>
+        <div class="exp-photos"><button type="button" class="shot-open" data-lb="img/disco-1.jpg" data-cap="在迪思科高科技台灣分公司" data-en-cap="At DISCO Hi-Tec Taiwan"><img src="img/disco-1.jpg" alt="李欣妍站在迪思科高科技公司的標誌前" data-en-alt="Hsin-Yen in front of the DISCO Hi-Tec Taiwan logo" loading="lazy"></button><button type="button" class="shot-open" data-lb="img/disco-2.jpg" data-cap="實習成果發表：How DISCO Changed My View of Work" data-en-cap="Internship presentation: How DISCO Changed My View of Work"><img src="img/disco-2.jpg" alt="李欣妍在實習成果發表上拿著麥克風簡報" data-en-alt="Hsin-Yen presenting at the internship showcase" loading="lazy"></button></div></div>
       <div class="card exp"><span class="tag" data-en="Research assistant">研究助理</span><h3 data-en="Systematic review of MOOC AI courses">磨課師 AI 課程系統性文獻回顧</h3><p data-en="Part-time research assistant. Surveyed the AI courses on Taiwan's MOE MOOC platform, tagged them by competency, ran validity checks, and turned the results into a public course recommendation site.">論文研究學習型兼任助理。盤點教育部磨課師平台上的 AI 課程，做能力標記與效度檢定，最後做成對外的課程推薦網站。</p></div>
       <div class="card exp"><span class="tag" data-en="Leadership">領導</span><h3 data-en="Student president, in high school and at university">學生會會長，從高中到大學</h3><p data-en="Student council president at my high school, the NTUT-affiliated Taoyuan Agricultural &amp; Industrial Senior High School. At NTNU I led the Transfer Student Association: pulled together what transfer and change-of-major students need, ran events and onboarding, and built the ntnu-trans-hub site and the NtnuTransferHelper Q&amp;A bot.">高中是北科附工學生會會長。上大學後擔任師大轉學生會會長，整理轉學、轉系生需要的資訊，辦活動和新生輔導，也做了 ntnu-trans-hub 資訊站和 NtnuTransferHelper 問答機器人。</p></div>
       <div class="card exp"><span class="tag" data-en="Talks &amp; training">講座・研習</span><h3 data-en="Speaking and learning">講者與學習</h3><p data-en="Invited speaker at an NTNU gender lecture, participant in the Hsinchu Youth Innovation Forum, and a graduate of the “From AI to Inherent Safety” robotics and smart-manufacturing practicum.">師大性別講座受邀講者、新竹市青年創新論壇參與者，也上過「AI 到本質安全：機器人智慧製造場域探索實務班」。</p></div>
       <div class="card exp design">
-        <button type="button" class="shot-open" id="debugOpen" aria-label="放大電機週主視覺" data-en-label="Enlarge the EE Week key visual"><img src="img/design-debug.jpg" alt="電機週主視覺：霓虹燈的 DEBUG 字樣，下面是一個頭部是故障雜訊電視的人" data-en-alt="EE Week key visual: neon DEBUG lettering above a figure whose head is a glitching TV" loading="lazy"></button>
-        <div><span class="tag" data-en="Design">設計</span><h3 data-en="EE Week key visual: DEBUG">電機週主視覺「DEBUG」</h3><p data-en="I designed the key visual for our EE department's EE Week: neon DEBUG lettering and a figure whose head is a glitching old TV.">幫電機系的電機週設計主視覺，主題是 DEBUG：霓虹燈字樣，配上一個頭是故障雜訊老電視的人。</p></div>
+        <div><span class="tag" data-en="Design">設計</span><h3 data-en="Visual design">視覺設計</h3>
+          <p data-en="Besides building things, I also design. Click a piece to see it in full.">除了做作品，我也做設計。點圖可以看完整的大圖。</p></div>
+        <div class="design-grid">
+          <figure><button type="button" class="shot-open" data-lb="img/design-debug.jpg" data-cap="電機週主視覺「DEBUG」" data-en-cap="EE Week key visual: DEBUG"><img src="img/design-debug.jpg" alt="電機週主視覺：霓虹燈的 DEBUG 字樣，下面是一個頭部是故障雜訊電視的人" data-en-alt="EE Week key visual: neon DEBUG lettering above a figure whose head is a glitching TV" loading="lazy"></button>
+            <figcaption><b data-en="EE Week key visual: DEBUG">電機週主視覺「DEBUG」</b><span data-en="Neon lettering and a figure whose head is a glitching old TV.">霓虹燈字樣，配上頭是故障雜訊老電視的人。</span></figcaption></figure>
+          <figure><button type="button" class="shot-open" data-lb="img/design-stamp-2.jpg" data-cap="2026 師大國際文化節集章卡（正面）" data-en-cap="2026 NTNU International Cultural Festival stamp card (front)"><img src="img/design-stamp-2.jpg" alt="「永續旅記」國際文化節集章卡正面，露營車和野餐插畫" data-en-alt="Front of the Sustainable Travelogue stamp card with a camper van and picnic illustration" loading="lazy"></button>
+            <figcaption><b data-en="Cultural Festival stamp card">國際文化節集章卡</b><span data-en="“Sustainable Travelogue”, front and back, with a raffle stub.">「永續旅記」主題，正反兩面加抽獎聯。</span></figcaption></figure>
+          <figure><button type="button" class="shot-open" data-lb="img/design-stamp-1.jpg" data-cap="2026 師大國際文化節集章卡（背面）" data-en-cap="2026 NTNU International Cultural Festival stamp card (back)"><img src="img/design-stamp-1.jpg" alt="集章卡背面，野餐墊上有五個集章格" data-en-alt="Back of the stamp card with five stamp spots on a picnic blanket" loading="lazy"></button>
+            <figcaption><b data-en="Stamp card, back">集章卡背面</b><span data-en="Five stamp spots laid out on a picnic blanket.">五個集章格放在野餐墊上。</span></figcaption></figure>
+        </div>
       </div>
     </div>
   </section>
@@ -686,9 +753,10 @@
 
   <section class="card contact" id="contact">
     <h2 data-en="Want to chat?">想聊聊嗎？</h2>
-    <p data-en="Project collaborations, hackathon teams or internships, I'm happy to hear from you.">專案合作、比賽組隊或實習機會，都歡迎找我。</p>
+    <p data-en="Project collaborations, hackathon teams or internships, I'm happy to hear from you.">專案合作、比賽組隊或實習機會，都歡迎跟我聯絡！</p>
     <div class="btns">
-      <a class="pill dark" href="https://www.linkedin.com/in/cindy-lee-a92231382" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="pill dark" href="mailto:hihiclchrf@gmail.com">✉ hihiclchrf@gmail.com</a>
+      <a class="pill gray" href="https://www.linkedin.com/in/cindy-lee-a92231382" target="_blank" rel="noopener">LinkedIn ↗</a>
       <a class="pill gray" href="https://github.com/clchrf" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </section>
@@ -1008,29 +1076,48 @@
   <div class="tool-top">
     <a class="back" href="#top" data-en="‹ Home">‹ 首頁</a>
     <h1 class="tool-title" data-en="Site policy">網站政策</h1>
-    <p class="tool-sub" data-en="Last updated: November 12, 2026">最後更新：2026 年 11 月 12 日</p>
+    <p class="tool-sub" data-en="Last updated: November 13, 2026">最後更新：2026 年 11 月 13 日</p>
   </div>
   <div class="panel policy">
-    <h2 data-en="Privacy">隱私</h2>
+    <p class="policy-lead" data-en="This policy explains how clchrf.github.io (the “Site”) handles information, intellectual property and the use of its tools. By using the Site, you agree to the terms below.">本政策說明 clchrf.github.io（以下稱「本網站」）在資訊處理、智慧財產權及工具使用上的原則。使用本網站即表示您同意下列條款。</p>
+    <h2 data-en="1. Collection of personal data">一、個人資料之蒐集</h2>
     <ul>
-      <li data-en="This site uses no analytics, ads or tracking cookies, and it doesn't collect your personal information.">這個網站沒有使用分析工具、廣告或追蹤 cookie，也不會蒐集你的個人資料。</li>
-      <li data-en="Your browser (localStorage / sessionStorage) remembers three things: your language, your light or dark setting, and whether you've already seen the intro this visit. This stays on your device and you can clear it from your browser at any time.">網站會在你的瀏覽器裡（localStorage／sessionStorage）記住三件事：語言、深淺色設定，以及這次瀏覽是否看過開場動畫。這些資料只存在你的裝置上，可以隨時從瀏覽器清除。</li>
-      <li data-en="Every toolbox calculation runs in your browser. The values you type are never sent to a server.">工具箱的所有計算都在你的瀏覽器裡完成，輸入的數值不會傳到任何伺服器。</li>
-      <li data-en="The site is hosted on GitHub Pages and its fonts come from Google Fonts. When the page loads, these services may log connection details such as your IP address under their own privacy policies.">網站架設在 GitHub Pages，字型由 Google Fonts 提供；載入網頁時，這兩個服務可能依它們自己的隱私政策記錄連線資訊，例如 IP 位址。</li>
+      <li data-en="The Site does not use analytics, advertising or tracking cookies, and does not actively collect personally identifiable information.">本網站未使用網站分析、廣告或追蹤型 Cookie，亦不主動蒐集可識別個人身分之資料。</li>
+      <li data-en="If you contact the Site owner by email, your address and message are used only to reply and are not provided to third parties.">如您透過電子郵件聯繫本網站作者，您的電子郵件地址及來信內容僅用於回覆，不會提供予第三方。</li>
     </ul>
-    <h2 data-en="Content and copyright">內容與著作權</h2>
+    <h2 data-en="2. Local storage">二、本機儲存</h2>
     <ul>
-      <li data-en="Unless noted otherwise, the text, photos and illustrations on this site are © Hsin-Yen Lee. Please ask before reposting them or using them commercially.">網站上的文字、照片與插圖，除另有標示外，著作權屬於李欣妍。轉載或商業使用前請先取得同意。</li>
-      <li data-en="Some projects were built together with teammates, and their results belong to the whole team. Competition names, logos and backdrop designs shown in photos belong to their organizers.">部分作品是和隊友一起完成的團隊專案，成果屬於整個團隊；照片中的比賽名稱、標誌與背板設計，屬於各主辦單位。</li>
-      <li data-en="Linked sites (GitHub, LinkedIn, project demos) are run by their own providers, and this site isn't responsible for their content.">連到的外部網站（GitHub、LinkedIn、作品示範頁）由各自的服務提供者管理，內容不在本站負責範圍內。</li>
+      <li data-en="The Site uses the browser’s localStorage and sessionStorage only to remember your language, color theme, whether the intro has been shown, and the deadline you set in the countdown tool. This data stays on your device and can be cleared through your browser settings at any time.">本網站僅使用瀏覽器之 localStorage 與 sessionStorage，記錄語言、顯示主題、開場動畫是否已播放，以及倒數工具中您設定之截止時間。上述資料僅存放於您的裝置，您可隨時透過瀏覽器設定清除。</li>
     </ul>
-    <h2 data-en="Toolbox disclaimer">工具箱聲明</h2>
+    <h2 data-en="3. Tools and file processing">三、工具與檔案處理</h2>
     <ul>
-      <li data-en="Toolbox results are for learning and reference. Double-check them before using them in a real circuit design or anything important.">工具箱的計算結果僅供學習與參考，實際設計電路或用於重要用途前，請再自行驗算。</li>
+      <li data-en="All toolbox calculations, image processing and file conversions run locally in your browser. Values you enter and files you select are not uploaded to any server.">工具箱之計算、影像處理及檔案轉換，均於您的瀏覽器內執行。您輸入之數值及選取之檔案，不會上傳至任何伺服器。</li>
+      <li data-en="On first use, the browser downloads the required conversion libraries from this Site. These libraries are open-source software, used under their respective licenses.">首次使用轉換功能時，瀏覽器將自本網站下載所需之轉換程式庫；該等程式庫為開放原始碼軟體，依其各自授權條款使用。</li>
     </ul>
-    <h2 data-en="Contact">聯絡</h2>
+    <h2 data-en="4. Third-party services">四、第三方服務</h2>
     <ul>
-      <li data-en="If you appear in a photo or in the content and would like it changed or removed, or if you have questions about this policy, please reach me through LinkedIn or GitHub.">如果照片或內容中有你，希望修改或移除，或對本政策有任何問題，請透過 LinkedIn 或 GitHub 聯絡我。</li>
+      <li data-en="The Site is hosted on GitHub Pages and loads fonts from Google Fonts. These providers may record connection data such as IP addresses under their own privacy policies.">本網站由 GitHub Pages 代管，並由 Google Fonts 提供字型。上述服務提供者可能依其隱私權政策記錄連線資訊（如 IP 位址）。</li>
+    </ul>
+    <h2 data-en="5. Intellectual property">五、智慧財產權</h2>
+    <ul>
+      <li data-en="Unless otherwise stated, the text, photographs, illustrations and designs on the Site are © Hsin-Yen Lee. Reproduction, adaptation or commercial use requires prior written consent.">除另有標示外，本網站之文字、照片、插圖及設計，著作權均屬李欣妍所有。未經書面同意，不得轉載、改作或作商業使用。</li>
+      <li data-en="Team projects are presented with credit to all team members; the results belong to the respective teams. Competition names, logos and event materials shown belong to their organizers.">團隊專案之成果屬各該團隊所有，本網站僅就作者參與部分進行介紹；照片中之競賽名稱、標誌及活動視覺，屬各主辦單位所有。</li>
+    </ul>
+    <h2 data-en="6. External links">六、外部連結</h2>
+    <ul>
+      <li data-en="Links to external sites (such as GitHub, LinkedIn and project demos) are provided for convenience. The Site is not responsible for their content or privacy practices.">本網站所提供之外部連結（如 GitHub、LinkedIn 及作品展示頁）僅為便利使用者參考，其內容及隱私保護措施不在本網站責任範圍內。</li>
+    </ul>
+    <h2 data-en="7. Disclaimer">七、免責聲明</h2>
+    <ul>
+      <li data-en="Toolbox results are for learning and reference only. Please verify them independently before use in actual circuit design or any important application. The Site accepts no liability for any loss arising from their use.">工具箱之計算及轉換結果僅供學習與參考。用於實際電路設計或其他重要用途前，請自行驗證；因使用結果所生之任何損失，本網站不負賠償責任。</li>
+    </ul>
+    <h2 data-en="8. Changes to this policy">八、政策修訂</h2>
+    <ul>
+      <li data-en="This policy may be updated as needed. The revised version takes effect when published on this page, as shown by the “Last updated” date above.">本政策得視需要修訂，修訂後之內容自公告於本頁時生效，並以本頁上方之「最後更新」日期為準。</li>
+    </ul>
+    <h2 data-en="9. Contact">九、聯絡方式</h2>
+    <ul>
+      <li data-en="For questions about this policy, or to request correction or removal of content in which you appear, please email hihiclchrf@gmail.com.">如對本政策有任何疑問，或希望更正、移除涉及您本人之內容，請來信 <a href="mailto:hihiclchrf@gmail.com">hihiclchrf@gmail.com</a>。</li>
     </ul>
   </div>
 </main>
@@ -1115,6 +1202,28 @@
   }
   var savedTheme = load('hy-theme', null);
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.setAttribute('data-theme', savedTheme);
+  /* learning path: nodes light up one by one when the card scrolls into view */
+  (function(){
+    var path = document.querySelector('.path'); if (!path) return;
+    var lis = [].slice.call(path.children);
+    lis.forEach(function(li, i){ li.style.setProperty('--d', (i * 0.35) + 's'); });
+    if (RM || !('IntersectionObserver' in window)) { lis.forEach(function(li){ li.classList.add('lit'); }); return; }
+    path.classList.add('ready');
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { lis.forEach(function(li){ li.classList.add('lit'); }); io.disconnect(); } });
+    }, {threshold:0.4});
+    io.observe(path);
+  })();
+  /* mobile menu */
+  function setMenu(open){
+    $('mainNav').classList.toggle('open', open); $('menuBtn').setAttribute('aria-expanded', String(open));
+    $('menuBtn').setAttribute('aria-label', open ? t('關閉選單', 'Close menu') : t('開啟選單', 'Open menu'));
+  }
+  $('menuBtn').addEventListener('click', function(){ setMenu(!$('mainNav').classList.contains('open')); });
+  $('mainNav').addEventListener('click', function(e){ if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('mainNav').classList.contains('open')) { setMenu(false); $('menuBtn').focus(); } });
+  document.addEventListener('click', function(e){ if ($('mainNav').classList.contains('open') && !e.target.closest('.nav')) setMenu(false); });
+  window.addEventListener('hashchange', function(){ setMenu(false); });
   $('themeBtn').addEventListener('click', function(){
     var next = effTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next); save('hy-theme', next); drawThemeBtn();
@@ -1180,8 +1289,20 @@
         t('60 秒內給建議', 'Advice in 60 s') + '</text>');
     },
     youth: function(){
-      return '<div class="phones"><div class="iphone a"><img src="img/line-1.jpg" alt="' + t('青年智慧助手的 LINE 選單畫面', 'Youth Smart Assistant menu in LINE') + '" loading="lazy"></div>' +
-        '<div class="iphone b"><img src="img/line-2.jpg" alt="' + t('青年智慧助手回覆補助資訊的 LINE 畫面', 'Youth Smart Assistant replying with subsidy details in LINE') + '" loading="lazy"></div></div>';
+      // line-art phone with a LINE-style chat that builds up, plus a case tracker beside it
+      var B = function(cls, x, y, w, h, fill, inner){ return '<g class="yb ' + cls + '"><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="10" style="fill:' + fill + '"/>' + (inner || '') + '</g>'; };
+      var ln = function(x, y, w, c){ return '<path d="M' + x + ' ' + y + 'h' + w + '" stroke-width="4" style="stroke:' + c + '" ' + S + '/>'; };
+      return sv('<rect x="138" y="14" width="124" height="212" rx="24" stroke-width="5" style="fill:var(--card);stroke:var(--ink)"/>' +
+        '<rect x="181" y="24" width="38" height="10" rx="5" style="fill:var(--ink)"/>' +
+        B('y1', 192, 50, 58, 22, 'var(--ink)', ln(202, 61, 36, 'var(--card)')) +
+        B('y2', 150, 82, 84, 40, 'var(--fill)', ln(160, 94, 60, 'var(--ink-2)') + ln(160, 108, 44, 'var(--ink-2)')) +
+        B('y3', 200, 132, 50, 22, 'var(--ink)', ln(210, 143, 28, 'var(--card)')) +
+        B('y4', 150, 164, 92, 44, 'var(--fill)', '<circle cx="166" cy="186" r="8" style="fill:var(--link)"/><path d="M162 186l3 3 6-6" stroke-width="2.5" style="stroke:var(--card)" ' + S + '/>' + ln(182, 180, 48, 'var(--ink-2)') + ln(182, 193, 34, 'var(--ink-2)')) +
+        '<g transform="translate(300 60)"><path d="M0 0V110" stroke-width="4" style="stroke:var(--fill)" ' + S + '/><path class="yt" d="M0 0V110" pathLength="1" stroke-width="4" style="stroke:var(--ink)" ' + S + '/>' +
+        [0, 55, 110].map(function(y, i){ return '<circle class="yd yd' + i + '" cx="0" cy="' + y + '" r="9" stroke-width="4" style="fill:var(--card);stroke:var(--ink)"/>'; }).join('') +
+        '<text x="18" y="5" font-size="12" font-weight="600" style="fill:var(--ink-2)">' + t('送件', 'Sent') + '</text><text x="18" y="60" font-size="12" font-weight="600" style="fill:var(--ink-2)">' + t('審核', 'Review') + '</text><text x="18" y="115" font-size="12" font-weight="600" style="fill:var(--ink-2)">' + t('核准', 'Approved') + '</text></g>' +
+        '<g transform="translate(70 70)"><rect x="0" y="0" width="44" height="56" rx="6" stroke-width="4" style="fill:var(--card);stroke:var(--ink)"/>' + ln(10, 16, 24, 'var(--ink-2)') + ln(10, 28, 24, 'var(--ink-2)') + ln(10, 40, 14, 'var(--ink-2)') +
+        '<g class="yf"><rect x="-14" y="62" width="44" height="56" rx="6" stroke-width="4" style="fill:var(--card);stroke:var(--ink)"/>' + ln(-4, 78, 24, 'var(--ink-2)') + ln(-4, 90, 24, 'var(--ink-2)') + '</g></g>');
     },
     control: function(){
       var s = '';
@@ -1275,7 +1396,7 @@
       imgs:['c-planter-1', 'c-planter-2', 'c-planter-3'], role:null, links:[]},
     mindpal: {name:['MindPal 心靈夥伴', 'MindPal'],
       pitch:['你的心靈，我來相伴。', 'Your mind, with company.'],
-      desc:['結合認知行為治療（CBT）和佛教正念的 AI 情緒陪伴 App，給半夜睡不著、不知道找誰說的年輕人一個隨時可以用、完全匿名的地方。', 'An AI emotional-support app that combines cognitive behavioural therapy with Buddhist mindfulness, giving young people an anonymous place to turn at any hour.'],
+      desc:['結合認知行為治療（CBT）和正念練習的 AI 情緒陪伴 App，給半夜睡不著、不知道找誰說的年輕人一個隨時可以用、完全匿名的地方。', 'An AI emotional-support app that combines cognitive behavioural therapy with mindfulness practice, giving young people an anonymous place to turn at any hour.'],
       did:[['情緒日記支援文字和語音，用 NLP 辨識 10 種自動化負面思考', 'Mood journal by text or voice, with NLP that spots 10 kinds of automatic negative thoughts'],
         ['CBT 認知重構：一步步引導找出想法、換個角度看', 'CBT reframing that walks you through finding and rethinking the thought'],
         ['偵測到焦慮時推送 3 到 5 分鐘的呼吸練習', 'Pushes a 3–5 minute breathing exercise when it detects anxiety'],
@@ -1386,17 +1507,17 @@
     ['img/g-mascot.jpg', ['把問題講清楚', 'Making the problem clear'], ['決賽簡報裡的痛點分析', 'The problem breakdown in a final pitch'], ['李欣妍站在大螢幕旁簡報，螢幕上有手繪吉祥物', 'Hsin-Yen presenting next to a big screen showing a hand-drawn mascot']]
   ];
   var TOOLS = [
-    {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、電容代碼、LED 限流電阻、分壓、RC 時間常數，數值可以直接打 4.7k。', 'Resistor colors, capacitor codes, LED resistors, voltage dividers and RC time constants. Type values like 4.7k.'],
+    {href:'#calc', name:['電子計算機', 'Electronics Calculator'], desc:['電阻色碼、電容代碼、LED 限流電阻、分壓、RC 時間常數，|常用計算 All in one。', 'Resistor colors, capacitor codes, LED resistors, dividers and RC time constants.|Everyday calculations, all in one.'],
       icon:'<path d="M3 17h6M25 17h6"/><rect x="9" y="11" width="16" height="12" rx="4"/><path d="M14 11v12M18 11v12M21 11v12"/>'},
-    {href:'#kmap', name:['卡諾圖化簡', 'Karnaugh Map Solver'], desc:['點格子或輸入 Σm，自動化簡成 SOP／POS，順便畫出邏輯電路。', 'Click cells or type Σm. Get the minimal SOP / POS form and the logic circuit.'],
+    {href:'#kmap', name:['卡諾圖化簡', 'Karnaugh Map Solver'], desc:['點格子或輸入 Σm，自動化簡成 SOP／POS，|還可以畫出邏輯閘電路圖！', 'Click cells or type Σm to get the minimal SOP / POS form.|It draws the logic gate circuit too!'],
       icon:'<path d="M4 12h8M4 22h8M12 7h7a10 10 0 0 1 0 20h-7z M29 17h3"/>'},
-    {href:'#timer', name:['簡報計時器', 'Pitch Timer'], desc:['黑客松 pitch 用。簡報接 Q&A 連續倒數，剩一分鐘變黃、三十秒變紅。', 'For hackathon pitches. Pitch then Q&A back to back; amber at one minute, red at thirty seconds.'],
+    {href:'#timer', name:['簡報計時器', 'Pitch Timer'], desc:['簡報用計時器，|Pitch、Demo 計時好方便。', 'A timer for presentations.|Handy for pitches and demos.'],
       icon:'<circle cx="17" cy="19" r="11"/><path d="M17 19v-6M13 4h8M17 4v4M26 9l2-2"/>'},
-    {href:'#hsv', name:['OpenCV HSV 色彩門檻', 'OpenCV HSV Picker'], desc:['上傳照片拉滑桿，即時看遮罩，直接複製 lower、upper 陣列。做顏色追蹤必備。', 'Upload a photo, drag the sliders, watch the mask, and copy the lower and upper arrays for color tracking.'],
+    {href:'#hsv', name:['OpenCV HSV 色彩門檻', 'OpenCV HSV Picker'], desc:['上傳照片拉滑桿，即時看遮罩，|直接複製 lower、upper 陣列。|做顏色追蹤必備。', 'Upload a photo and drag the sliders to watch the mask.|Copy the lower and upper arrays.|A must for color tracking.'],
       icon:'<path d="M22 5l7 7-3 3-7-7z M19 8L7 20l-2 7 7-2 12-12"/><path d="M9 21l4 4"/>'},
-    {href:'#deadline', name:['比賽倒數', 'Deadline Countdown'], desc:['設定繳交截止時間，大字倒數可以全螢幕投影。跟簡報計時器是一對。', 'Set the submission deadline and project a big countdown. A pair with the pitch timer.'],
+    {href:'#deadline', name:['比賽倒數', 'Deadline Countdown'], desc:['在比賽時可以設定繳交截止時間，|大字倒數好刺激。', 'Set the submission deadline during a competition.|A big countdown that keeps the adrenaline going.'],
       icon:'<path d="M9 4h16M9 30h16M11 4c0 8 12 8 12 13s-12 5-12 13M23 4c0 8-12 8-12 13s12 5 12 13"/>'},
-    {href:'#convert', name:['檔案轉換', 'File Converter'], desc:['HEIC 轉 JPG、PDF 合併、PDF 轉可編輯的 Word。全部在瀏覽器裡轉，檔案不會上傳。', 'HEIC to JPG, merge PDFs, and PDF to editable Word. Everything converts in your browser; nothing is uploaded.'],
+    {href:'#convert', name:['檔案轉換', 'File Converter'], desc:['不論你要 HEIC 轉 JPG、PDF 合併、|PDF 轉可編輯的 Word 都 OK！|全部都在瀏覽器裡處理，檔案不會上傳。', 'HEIC to JPG, merging PDFs, or PDF to editable Word, all OK!|Everything runs in your browser and no file is uploaded.'],
       icon:'<path d="M8 4h12l6 6v8M8 4v26h10M20 4v6h6"/><path d="M22 24h9M27 20l4 4-4 4"/>'}
   ];
 
@@ -1465,7 +1586,7 @@
       TOOLS.forEach(function(tl){
         var a = el('a', 'card tool-card'); a.href = tl.href;
         a.innerHTML = '<div class="tile"><svg viewBox="0 0 34 34" aria-hidden="true">' + tl.icon + '</svg></div>';
-        a.appendChild(el('h3', null, tx(tl.name))); a.appendChild(el('p', null, tx(tl.desc))); a.appendChild(el('span', 'go', t('打開 →', 'Open →')));
+        a.appendChild(el('h3', null, tx(tl.name))); var dp = el('p'); tx(tl.desc).split('|').forEach(function(l){ dp.appendChild(el('span', 'ln', l)); }); a.appendChild(dp); a.appendChild(el('span', 'go', t('打開 →', 'Open →')));
         box.appendChild(a);
       });
     });
@@ -1943,7 +2064,8 @@
     });
     var lo = HSV.lo, hi = HSV.hi, wrap = lo[0] > hi[0];
     $('hsvWrap').textContent = wrap ? t('H 下限大於上限，代表範圍跨過 0（像紅色）。OpenCV 不會自動繞回，所以程式碼會用兩段 inRange 再合起來。', 'The H lower bound is above the upper bound, so the range wraps past 0 (like red). OpenCV doesn\'t wrap, so the code ORs two inRange calls.') :
-      (lo[1] > hi[1] || lo[2] > hi[2]) ? t('S 或 V 的下限比上限大，這樣什麼都選不到。', 'An S or V lower bound is above its upper bound, so nothing will match.') : '';
+      (lo[1] > hi[1] || lo[2] > hi[2]) ? t('S 或 V 的下限比上限大，這樣什麼都選不到。', 'An S or V lower bound is above its upper bound, so nothing will match.') :
+      t('小提醒：紅色跨過 H = 0，把 H 下限拉得比上限大就能選到。', 'Tip: red wraps past H = 0. Set the H lower bound above the upper bound to select it.');
     var arr = function(a){ return 'np.array([' + a.join(', ') + '])'; };
     $('hsvCode').textContent = 'import cv2\nimport numpy as np\n\nhsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\n' + (wrap ?
       'lower1 = ' + arr([lo[0], lo[1], lo[2]]) + '\nupper1 = ' + arr([179, hi[1], hi[2]]) + '\nlower2 = ' + arr([0, lo[1], lo[2]]) + '\nupper2 = ' + arr([hi[0], hi[1], hi[2]]) +
@@ -2665,7 +2787,7 @@
   }
   function closeLightbox(){ var d = $('lightbox'); if (d.close) d.close(); else d.removeAttribute('open'); }
   $('lbClose').addEventListener('click', closeLightbox);
-  $('debugOpen').addEventListener('click', function(){ openLightbox('img/design-debug.jpg', t('電機週主視覺「DEBUG」', 'EE Week key visual: DEBUG')); });
+  document.querySelectorAll('[data-lb]').forEach(function(b){ b.addEventListener('click', function(){ openLightbox(b.getAttribute('data-lb'), LANG === 'en' ? b.getAttribute('data-en-cap') : b.getAttribute('data-cap')); }); });
   $('lightbox').addEventListener('click', function(e){ if (e.target === this) closeLightbox(); });
 
   /* ================= competition project dialog ================= */
@@ -2781,10 +2903,30 @@
     clearTimeout(INTRO.guard);
     INTRO.guard = setTimeout(endIntro, 2600);
   }
+  // the intro's name grows into the hero title's name
+  function flyName(){
+    var tgt = document.querySelector('.hero-title .nw'), src = $('introName').querySelector('small');
+    if (!tgt || !src || current !== 'home' || window.scrollY > 120 || !document.body.animate) return;
+    var h1 = tgt.closest('h1'); h1.classList.add('landed');
+    var z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+    var tr = tgt.getBoundingClientRect(), sr = src.getBoundingClientRect(), cs = getComputedStyle(tgt);
+    if (!tr.width || !sr.width) return;
+    var c = document.createElement('span');
+    c.textContent = tgt.textContent; c.setAttribute('aria-hidden', 'true');
+    c.style.cssText = 'position:fixed;margin:0;z-index:250;pointer-events:none;white-space:nowrap;transform-origin:0 0;left:' + (tr.left / z) + 'px;top:' + (tr.top / z) + 'px;' +
+      'font-family:' + cs.fontFamily + ';font-size:' + cs.fontSize + ';font-weight:' + cs.fontWeight + ';letter-spacing:' + cs.letterSpacing + ';line-height:' + cs.lineHeight + ';color:' + cs.color;
+    document.body.appendChild(c);
+    var k = sr.height / tr.height, dx = (sr.left + (sr.width - tr.width * k) / 2 - tr.left) / z, dy = (sr.top - tr.top) / z;
+    tgt.style.visibility = 'hidden';
+    var an = c.animate([{transform:'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', opacity:.6}, {transform:'none', opacity:1}], {duration:800, easing:'cubic-bezier(.65,0,.2,1)'});
+    var done = function(){ tgt.style.visibility = ''; c.remove(); };
+    an.onfinish = done; an.oncancel = done;
+  }
   function endIntro(){
     if (!INTRO.running) return;
     INTRO.running = false; cancelAnimationFrame(INTRO.raf); clearTimeout(INTRO.guard);
     var ov = $('intro');
+    flyName();
     ov.classList.add('out');
     document.body.classList.remove('intro-play');
     if (document.activeElement === $('introSkip')) $('introSkip').blur();
